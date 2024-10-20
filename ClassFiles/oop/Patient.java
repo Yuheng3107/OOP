@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 import java.time.Duration;
 import java.util.ArrayList;
+import oop.UserLogic.Role;
 
 public class Patient extends Role {
     private Hospital hospital; //patient needs to be under a certain hospital

@@ -1,4 +1,4 @@
-package oop;
+package oop.UserLogic;
 
 public abstract class Role {
     String name;
