@@ -1,6 +1,8 @@
 package oop;
 
 import java.util.ArrayList;
+
+import oop.AdministratorLogic.Inventory;
 public class Hospital {
     public ArrayList<HospitalStaff> staff;
     public ArrayList<Inventory> inventory;
@@ -9,6 +11,10 @@ public class Hospital {
     public Hospital()
     {
         staff = new ArrayList<>();
+    }
+
+    public ArrayList<HospitalStaff> getStaff() {
+        return staff;
     }
 
     public int numberOfDoctors()
