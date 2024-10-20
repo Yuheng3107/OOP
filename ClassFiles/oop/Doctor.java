@@ -11,15 +11,17 @@ import java.util.List;
 public class Doctor extends HospitalStaff{
     public String name;
     public String doctorID;
+    public int age;
+    public Gender gender;
     public ArrayList<Patient> patients;
     public ArrayList<Appointment> schedule;
     private ArrayList<TimeSlot> availableSlots;
     private ArrayList<Appointment> pendingAppointments;
 
-    public Doctor(String name, String doctorID)
+
+    public Doctor(String name, String doctorID, int age, Gender gender)
     {
-        this.name = name;
-        this.doctorID = doctorID;
+        super(name, doctorID, age, gender);
         this.availableSlots = generateDefaultTimeSlots();
         patients = new ArrayList<>();
         schedule = new ArrayList<>();

@@ -7,6 +7,8 @@ import oop.MedicineStock;
 import oop.Patient;
 import oop.MedicineStock;
 import oop.AppointmentOutcome;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 import oop.Gender;
 
@@ -14,6 +16,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     public Hospital hospital;
 
 
+    
     @Override
     public void viewAppointmentDetails(Appointment appointment)
     {
@@ -58,11 +61,14 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
                 System.out.println("Enter staff ID: ");
                 String staffID = sc.next();
 
+                System.out.println("Enter staff role: ");
+                String role = sc.next();
+
                 System.out.println("Enter staff gender: ");
                 try {
                     String genderString = sc.next();
                     Gender gender = Gender.valueOf(genderString);
-                    addStaffMember(staffName, age, staffID, gender);
+                    addStaffMember(staffName, age, staffID, gender, role);
                 }
 
                 catch (IllegalArgumentException e) {
@@ -94,8 +100,11 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
         sc.close();
 
     }
-    public void addStaffMember(String staffName, int age, String staffID, Gender gender)
+    public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
     {
+
+        // add staff member to hospital
+        hospital.addStaffMember(staffName, age, staffID, gender, role);
 
     }
     public void updateStaffMember(String staffName)
@@ -105,11 +114,37 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     }
     public void removeStaffMember(String staffName)
     {
-        
+        hospital.removeStaffMember(staffName);
     }
     public void displayStaff(String filter)
     {
+        ArrayList<HospitalStaff> staffMembers = hospital.getStaff();
+        switch (filter) {
+            
+            case "role":
+                // sort by role
+                staffMembers.sort((s1, s2) -> s1.getRole().compareTo(s2.getRole()));
+                break;
 
+            case "age":
+                // sort by age
+                staffMembers.sort((s1, s2) -> s1.getAge() - s2.getAge());
+                break;
+
+            case "gender":
+                // sort by gender
+                staffMembers.sort((s1, s2) -> s1.getGender().compareTo(s2.getGender()));
+                break;
+        }
+
+        for (HospitalStaff member : staffMembers) {
+            // print out staff information
+            System.out.println("Name of Staff: " + member.getName());
+            System.out.println("Age: " + member.getAge());
+            System.out.println("ID: " + member.getStaffID());
+            System.out.println("Role: " + member.getRole());
+            System.out.println("Gender: " + member.getGender());
+        }
     }
     public void viewInventory()
     {
