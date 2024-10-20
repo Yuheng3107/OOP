@@ -1,5 +1,10 @@
 package oop;
 
+import oop.AdministratorLogic.Inventory;
+import oop.AdministratorLogic.Administrator;
+import oop.UserLogic.Role;
+import oop.MedicineStock;
+
 public class Pharmacist extends HospitalStaff {
     
     public Pharmacist(String name, String staffID, int age, Gender gender) {
@@ -11,7 +16,7 @@ public class Pharmacist extends HospitalStaff {
     {
 
     }
-    public void updatePrescriptionStatus(String status, AppoointmentOutcome appointmentOutcome)
+    public void updatePrescriptionStatus(String status, AppointmentOutcome appointmentOutcome)
     {
 
     }
@@ -19,7 +24,7 @@ public class Pharmacist extends HospitalStaff {
     {
 
     }
-    public void submitReplenishRequest(Medicine medicine, int amount, Administrator administrator)
+    public void submitReplenishRequest(MedicineStock medicine, int amount, Administrator administrator)
     {
         
     }

@@ -1,6 +1,9 @@
-package oop;
+package oop.AdministratorLogic;
+
+import oop.MedicineStock;
+import java.util.ArrayList;
 public class Inventory {
-    public MedicineStock[] medicine;
+    public ArrayList<MedicineStock> medicine;
 
     public int getStock(String name)
     {

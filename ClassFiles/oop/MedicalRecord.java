@@ -6,20 +6,16 @@ public class MedicalRecord {
     private String name;
     private LocalDate dateOfBirth;
     private Gender gender;
-    private String phoneNumber;
-    private String address;
     private BloodType bloodType;
     private MedicalHistory medicalHistory;
     private String email;
 
-    public MedicalRecord(String patientID, String name, LocalDate dateOfBirth, Gender gender, String phoneNumber, String address, BloodType bloodType, MedicalHistory medicalHistory, String email)
+    public MedicalRecord(String patientID, String name, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email)
     {
         this.patientID = patientID;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
         this.bloodType = bloodType;
         this.medicalHistory = medicalHistory;
         this.email = email;
@@ -41,14 +37,8 @@ public class MedicalRecord {
     {
         return gender;
     }
-    public String getPhoneNumber()
-    {
-        return phoneNumber;
-    }
-    public String getAddress()
-    {
-        return address;
-    }
+    
+   
     public BloodType getBloodType()
     {
         return bloodType;
@@ -62,14 +52,8 @@ public class MedicalRecord {
         return email;
     }
 
-    public void setPhoneNumber(String number)
-    {
-        phoneNumber = number;
-    }
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
+    
+   
     public void setEmail(String email)
     {
         this.email = email;

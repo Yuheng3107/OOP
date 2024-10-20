@@ -1,4 +1,9 @@
-package oop;
+package oop.AdministratorLogic;
+
+import java.util.ArrayList;
+
+import oop.MedicineStock;
+
 public interface InventoryInitialiserInterface {
-    public Inventory importInventory(String filename);
+    public abstract ArrayList<MedicineStock> importInventory(String filename);
 }

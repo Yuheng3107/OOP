@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import oop.AdministratorLogic.Inventory;
 public class Hospital {
     public ArrayList<HospitalStaff> staff;
-    public ArrayList<Inventory> inventory;
+    public Inventory inventory;
     public ArrayList<Appointment> appointments;
+    public ArrayList<Patient> patients;
 
     public Hospital()
     {
-        staff = new ArrayList<>();
+        this.staff = new ArrayList<HospitalStaff>();
+        this.patients = new ArrayList<Patient>();
+        this.inventory = new Inventory();
+        this.appointments = new ArrayList<Appointment>();
     }
 
     public ArrayList<HospitalStaff> getStaff() {

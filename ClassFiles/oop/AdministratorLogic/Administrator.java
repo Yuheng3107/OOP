@@ -5,12 +5,22 @@ import oop.Hospital;
 import oop.HospitalStaff;
 import oop.MedicineStock;
 import oop.Patient;
+import oop.Pharmacist;
 import oop.MedicineStock;
 import oop.AppointmentOutcome;
+import oop.BloodType;
+import oop.Doctor;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
+
 import oop.Gender;
+import oop.AdministratorLogic.TextDB;
 
 public class Administrator implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
     public Hospital hospital;
@@ -171,20 +181,139 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     public void updateLowStockLevel(String name, int newLevel) {
 
     }
-    public HospitalStaff[] importStaff(String filename)
-    {
-        return HospitalStaff[0]; //Filler
+
+    public static final String SEPARATOR = ",";
+
+    // an example of reading
+	public  ArrayList<MedicineStock> importInventory(String filename) {
+		// read String from text file
+		ArrayList stringArray = (ArrayList) read(filename);
+		ArrayList<MedicineStock> alr = new ArrayList<MedicineStock>();
+
+		for (int i = 0; i < stringArray.size(); i++) {
+			String st = (String) stringArray.get(i);
+			// get individual 'fields' of the string separated by SEPARATOR
+			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
+//Medicine Name,Initial Stock,Low Stock Level Alert
+			String medicineName = star.nextToken().trim(); // first token
+			String stock = star.nextToken().trim(); // second token
+			String lowStockLevel = star.nextToken().trim(); // third token
+			
+			MedicineStock medicine = new MedicineStock(medicineName, Integer.parseInt(stock), Integer.parseInt(lowStockLevel));
+
+			// add to Professors list
+			alr.add(medicine);
+		}
+		return alr;
+	}
+	
+	// an example of reading
+	public ArrayList<Patient> importPatients(String filename, Hospital hospital) {
+		// read String from text file
+		ArrayList stringArray = (ArrayList) read(filename);
+		ArrayList<Patient> alr = new ArrayList<Patient>();
+
+		for (int i = 0; i < stringArray.size(); i++) {
+			String st = (String) stringArray.get(i);
+			// get individual 'fields' of the string separated by SEPARATOR
+			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
+//Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information
+			String patientID = star.nextToken().trim(); 
+			String name = star.nextToken().trim(); 
+			String dob = star.nextToken().trim(); 
+			String gender = star.nextToken().trim(); 
+			String bloodType = star.nextToken().trim(); 
+			String email = star.nextToken().trim();
+
+			LocalDate dateOfBirth = LocalDate.parse(dob);
+			
+			// need to process information into parsable format
+
+			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital
+			Patient patient = new Patient(name, patientID, dateOfBirth, Gender.valueOf(gender),
+					BloodType.valueOf(bloodType), null, email, hospital);
+
+			// add to patients list
+			alr.add(patient);
+		}
+		return alr;
+	}
+	
+	// an example of reading
+	public ArrayList<HospitalStaff> importStaff(String filename)  {
+		// read String from text file
+		ArrayList stringArray = (ArrayList) read(filename);
+		ArrayList<HospitalStaff> alr = new ArrayList<HospitalStaff>();
+
+		for (int i = 0; i < stringArray.size(); i++) {
+			String st = (String) stringArray.get(i);
+			// get individual 'fields' of the string separated by SEPARATOR
+			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
+//Staff ID,Name,Role,Gender,Age
+			String staffID = star.nextToken().trim(); // first token
+			String name = star.nextToken().trim(); // second token
+			String role = star.nextToken().trim().toLowerCase(); // third token
+			String gender = star.nextToken().trim(); // fourth token
+			String age = star.nextToken().trim(); // fifth token
+			
+			HospitalStaff staff;
+			if (role == "doctor") {
+				staff = new Doctor(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
+			}
+			else if (role == "pharmacist") {
+				staff = new Pharmacist(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
+			}
+			else {
+				System.out.println("Invalid role: " + role);
+				return null;
+			}
+
+
+			// add to staff list
+			alr.add(staff);
+		}
+		return alr;
+	}
+
+
+  /** Read the contents of the given file. */
+  public static List read(String fileName) throws IOException {
+	List data = new ArrayList() ;
+    Scanner scanner = new Scanner(new FileInputStream(fileName));
+    try {
+      while (scanner.hasNextLine()){
+        data.add(scanner.nextLine());
+      }
     }
-    public Patient[] importPatients(String filename)
-    {
-        return Patient[0]; //Filler
+    finally{
+      scanner.close();
     }
-    public Inventory importInventory(String filename)
+    return data;
+  }
+    public void initialise(String staffFilename, String patientFilename, String inventoryFilename)
     {
-        return Inventory; //Filler
-    }
-    public void initialise(String staffFilename, String patientFilename, Inventory inventoryFilename)
-    {
+        // create the hospital
+        Hospital hospital = new Hospital();
+
+        
+        try {
+            // initialise staff
+            ArrayList<HospitalStaff> staff = importStaff(staffFilename);
+            hospital.staff = staff;
+            // initialise patients
+            ArrayList<Patient> patients = importPatients(patientFilename, hospital);
+            hospital.patients = patients;
+            // initialise inventory
+            ArrayList<MedicineStock> medicineStock = importInventory(inventoryFilename);
+            Inventory inventory = new Inventory();
+            inventory.medicine = medicineStock;
+            hospital.inventory = inventory;
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+            // handle error
+        }
 
     }
 }

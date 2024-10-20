@@ -15,11 +15,11 @@ public class Patient extends Role {
     public String name;
     public String patientID;
 
-    public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, String phoneNumber, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
+    public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
     {
-        this.name = name;
+        super(name, gender);
         this.patientID = patientID;
-        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, phoneNumber, address, bloodType, medicalHistory, email);
+        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, medicalHistory, email);
         this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();

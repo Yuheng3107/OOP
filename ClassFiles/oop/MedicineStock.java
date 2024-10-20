@@ -4,6 +4,12 @@ public class MedicineStock {
     private int stock;
     public int lowStockLevel;
 
+    public MedicineStock(String name, int stock, int lowStockLevel) {
+        this.name = name;
+        this.stock = stock;
+        this.lowStockLevel = lowStockLevel;
+    }
+
     public String getName()
     {
         return name;
