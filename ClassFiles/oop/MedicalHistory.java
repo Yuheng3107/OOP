@@ -12,4 +12,12 @@ public class MedicalHistory {
         this.pastDiagnoses = pastDiagnoses;
         this.pastTreatments = pastTreatments;
     }
+
+    public String[] getPastDiagnoses() {
+        return pastDiagnoses;
+    }
+
+    public String[] getPastTreatments() {
+        return pastTreatments;
+    }
 }

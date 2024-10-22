@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import oop.UserLogic.Role;
 
 public class Patient extends Role {
@@ -164,5 +165,29 @@ public class Patient extends Role {
     // {
         
     // }
+
+        // Patient medical record management
+        public void getMedicalRecord() {
+
+            // test case 1: display Patient ID, Name, DOB, Gender, Contact Info, Blood Type, Past Diagnoses & Treatments
+    
+            System.out.println("Personal Information:");
+            System.out.println("Patient ID: \t" + medicalRecord.getPatientID());
+            System.out.println("Name: \t\t" + medicalRecord.getName());
+            System.out.println("Date of Birth: \t" + medicalRecord.getDateOfBirth());
+            System.out.println("Gender: \t" + medicalRecord.getGender());
+            System.out.println("Blood Type: \t" + medicalRecord.getBloodType() + "\n");
+    
+            System.out.println("Contact Information:");
+            System.out.println("Phone number: \t" + medicalRecord.getPhoneNumber());
+            System.out.println("Email Address: \t" + medicalRecord.getEmail() + "\n");
+    
+            System.out.println("Past Diagnoses: ");
+    
+            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastDiagnoses()) + "\n");
+    
+            System.out.println("Past Treatments: ");
+            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastTreatments()) + "\n");
+        }
 
 }
