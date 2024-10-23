@@ -3,6 +3,8 @@ package oop;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.List;
 
 public class App {
     public static void main(String[] args)
@@ -31,7 +33,7 @@ public class App {
         patient1.viewAvailableAppointmentSlots();
         */
 
-        
+        /*
         // testing for medicalrecord for patient and doc
         Hospital hospital = new Hospital();
         String[] s = new String[1];
@@ -42,7 +44,68 @@ public class App {
         //patient1.getMedicalRecord();
 
         Doctor doctor1 = new Doctor("John", "D01", 100, Gender.Male);
-        doctor1.viewMedicalRecord(patient1);
-    
+        doctor1.viewMedicalRecord(patient1);*/
+        Menu();
+    }
+
+    public static void Menu()
+    {
+        Scanner sc = new Scanner(System.in);
+
+        String patientFilePath = "D:\\GitHub\\OOP\\Patient_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
+        String medFilePath = "D:\\GitHub\\OOP\\Medicine_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
+        List<Patient> patients = ImportUsers.readPatientsFromCSV(patientFilePath);
+        for (Patient patient : patients) {
+            System.out.println(patient.getGender());
+            System.out.println(patient.getName());
+        }
+        List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
+        for (MedicineStock medStock : medStocks) {
+            System.out.println(medStock.getName());
+            System.out.println(medStock.getStock());
+        }
+
+        while (true)
+        {
+            printMenu();
+            int choice = sc.nextInt();
+            if (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5)
+            {
+                System.out.println("Invalid input! Please enter again!\n");
+                continue;
+            }
+            switch(choice)
+            {
+                case 1:
+                    System.out.println("Patient");
+                    break;
+                case 2:
+                    System.out.println("Doctor");
+                    break;
+                case 3:
+                    System.out.println("Pharmacist");
+                    break;
+                case 4:
+                    System.out.println("Administrator");
+                    break;
+                case 5:
+                    System.out.println("Quit");
+                    return;
+            }
+        }
+    }
+
+    public static void printMenu()
+    {
+        System.out.println("=============================================");
+        System.out.println("|        Hospital Management System         |");
+        System.out.println("=============================================");
+        System.out.println("|        Select from the following          |");
+        System.out.println("| 1. Patient                                |");
+        System.out.println("| 2. Doctor                                 |");
+        System.out.println("| 3. Pharmacist                             |");
+        System.out.println("| 4. Administrator                          |");
+        System.out.println("| 5. Quit                                   |");
+        System.out.println("=============================================");
     }
 }
