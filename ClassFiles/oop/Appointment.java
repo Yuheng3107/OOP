@@ -57,5 +57,9 @@ public class Appointment {
     {
         this.status = status;
     }
+    public void setAppointmentOutcome(AppointmentOutcome appointmentOutcome)
+    {
+        this.appointmentOutcome[0] = appointmentOutcome; //To be fixed again
+    }
 
 }

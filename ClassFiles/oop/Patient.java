@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import oop.UserLogic.Role;
 
 public class Patient extends Role {
@@ -15,12 +16,15 @@ public class Patient extends Role {
     public String name;
     public String patientID;
 
-    public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
+    //Temporarily remove MedHistory and Hospital to test code
+    //public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
+    public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, String email)
     {
         super(name, gender);
+        this.name = name;
         this.patientID = patientID;
-        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, medicalHistory, email);
-        this.hospital = hospital;
+        //this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, medicalHistory, email);
+        //this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
     }
@@ -167,4 +171,56 @@ public class Patient extends Role {
         
     // }
 
+    // Patient medical record management
+    public void getMedicalRecord() {
+        String blood = "";
+        switch(medicalRecord.getBloodType().toString())
+        {
+            case "ABMinus":
+                blood = "AB-";
+                break;
+            case "ABPlus":
+                blood = "AB+";
+                break;
+            case "APlus":
+                blood = "A+";
+                break;
+            case "AMinus":
+                blood = "A-";
+                break;
+            case "BPlus":
+                blood = "B+";
+                break;
+            case "BMinus":
+                blood = "B-";
+                break;
+            case "OPLus":
+                blood = "O+";
+                break;
+            case "OMinus":
+                blood = "O-";
+                break;
+        }
+
+
+        System.out.println("Personal Information:");
+        System.out.println("Patient ID: \t" + medicalRecord.getPatientID());
+        System.out.println("Name: \t\t" + medicalRecord.getName());
+        System.out.println("Date of Birth: \t" + medicalRecord.getDateOfBirth());
+        System.out.println("Gender: \t" + medicalRecord.getGender());
+        System.out.println("Blood Type: \t" + blood + "\n");
+        //System.out.println("Blood Type: \t" + medicalRecord.getBloodType() + "\n");
+
+        System.out.println("Contact Information:");
+        System.out.println("Phone number: \t" + medicalRecord.getPhoneNumber());
+        System.out.println("Email Address: \t" + medicalRecord.getEmail() + "\n");
+
+        System.out.println("Past Diagnoses: ");
+
+        System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastDiagnoses()) + "\n");
+
+        System.out.println("Past Treatments: ");
+        System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastTreatments()) + "\n");
+    }
+    
 }

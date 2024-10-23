@@ -52,12 +52,12 @@ public class Doctor extends HospitalStaff{
     {
         return name;
     }
-    /* 
+    
     public void viewMedicalRecord(Patient patient)
     {
-
-
+        patient.getMedicalRecord();
     }
+    /*
     public void updateMedicalRecord(String diagnosis, String prescription, String treatmentPlan)
     {
 

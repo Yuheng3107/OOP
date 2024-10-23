@@ -6,6 +6,8 @@ public class MedicalRecord {
     private String name;
     private LocalDate dateOfBirth;
     private Gender gender;
+    private String phoneNumber;
+    //private String address; (uncommment when necessary)
     private BloodType bloodType;
     private MedicalHistory medicalHistory;
     private String email;
@@ -46,6 +48,9 @@ public class MedicalRecord {
     public MedicalHistory getMedicalHistory()
     {
         return medicalHistory;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
     public String getEmail()
     {
