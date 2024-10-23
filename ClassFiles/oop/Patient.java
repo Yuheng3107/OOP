@@ -64,6 +64,7 @@ public class Patient extends Role {
         {
             System.out.println("Invalid choice.");
         }
+        sc.close();
     }
 
     public boolean checkForValidTimeSlot(Doctor doctor, TimeSlot timeSlot)
@@ -132,8 +133,9 @@ public class Patient extends Role {
                 tempStart = tempStart.plusHours(1);
             }
             doctor.addPendingAppointment(appointment);
-            
+
         }
+        sc.close();
     }
 
     public void addAppointmentToScheduledAppointments(Appointment appointment)

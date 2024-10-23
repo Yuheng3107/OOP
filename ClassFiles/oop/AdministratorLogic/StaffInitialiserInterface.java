@@ -6,5 +6,5 @@ import java.util.ArrayList;
 import oop.HospitalStaff;
 
 public interface StaffInitialiserInterface {
-    public abstract ArrayList<HospitalStaff> importStaff(String filename);
+    public abstract ArrayList<HospitalStaff> importStaff(String filename) throws IOException;
 }

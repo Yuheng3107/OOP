@@ -6,7 +6,6 @@ import oop.HospitalStaff;
 import oop.MedicineStock;
 import oop.Patient;
 import oop.Pharmacist;
-import oop.MedicineStock;
 import oop.AppointmentOutcome;
 import oop.BloodType;
 import oop.Doctor;
@@ -20,13 +19,60 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import oop.Gender;
-import oop.AdministratorLogic.TextDB;
 
 public class Administrator implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
     public Hospital hospital;
 
 
-    
+    public void manageInventory() {
+        // choose whether to add, update, remove or delete inventory
+        System.out.println("Choose an option: ");
+        System.out.println("1. Add to inventory");
+        System.out.println("2. Update medicine stock in inventory");
+        System.out.println("3. Remove medicine from inventory");
+        System.out.println("4. View Inventory");
+
+        Scanner scanner = new Scanner(System.in);
+        String name;
+        int quantity;
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+
+                // add inventory
+                System.out.println("Enter name of the medicine: ");
+                name = scanner.next();
+                System.out.println("Enter quantity of the medicine: ");
+                quantity = scanner.nextInt();
+                System.out.println("Enter low stock level of the medicine: ");
+                int lowStockLevel = scanner.nextInt();
+                MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel);
+                addMedicineStock(stock);
+                break;
+            case 2:
+                // update inventory
+                System.out.println("Enter name of the medicine to update: ");
+                name = scanner.next();
+                System.out.println("Enter new quantity of the medicine: ");
+                quantity = scanner.nextInt();
+                updateMedicineStock(name, quantity);
+                break;
+            case 3:
+
+                // remove inventory
+                System.out.println("Enter name of the medicine to remove: ");
+                name = scanner.next();
+                deleteMedicineStock(name);
+                break;
+            case 4:
+
+                // view inventory
+                viewInventory();
+                break;
+        }
+        scanner.close();
+    }
+
     @Override
     public void viewAppointmentDetails(Appointment appointment)
     {
@@ -43,7 +89,8 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
         System.out.println("End time: " + appointment.timeSlot.end);
         // print appointment outcomes
         for (AppointmentOutcome outcome : appointment.appointmentOutcome) {
-            // TODO implement logic to get appointment outcomes
+            System.out.println("Appointment outcome: ");
+            outcome.printAppointmentOutcomeRecord();
         }
     }
 
@@ -102,9 +149,9 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
                 System.out.println("Enter filter: ");
                 String filter = sc.next();
                 displayStaff(filter);
+                break;
             default:
                 System.out.println("Invalid option. Please try again.");
-                break;
         }
 
         sc.close();
@@ -159,6 +206,15 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     public void viewInventory()
     {
 
+        // prints out inventory information
+        Inventory inventory = hospital.inventory;
+
+        for (MedicineStock stock : inventory.medicine) {
+            System.out.println("Name: " + stock.getName());
+            System.out.println("Quantity: " + stock.getStock());
+            System.out.println("Low stock level: " + stock.getLowStockLevel());
+        }
+
     }
     public void approveReplenishmentRequest(MedicineStock medicine, int amount)
     {
@@ -167,25 +223,34 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     public void addMedicineStock(MedicineStock stock)
     {
 
+        hospital.inventory.medicine.add(stock);
+
+
     }
-    public void updateMedicineStock(MedicineStock stock)
+    public void updateMedicineStock(String name, int count) 
     {
         
     }
-    public void deleteMedicineStock(MedicineStock stock)
+    public void deleteMedicineStock(String name)
     {
-        return;
+        for (int i = 0; i < hospital.inventory.medicine.size(); i++) {
+            if (hospital.inventory.medicine.get(i).getName().equals(name)) {
+                hospital.inventory.medicine.remove(i);
+                break; // Exit the loop after removing
+            }
+        }
     }
     
-    @Override
     public void updateLowStockLevel(String name, int newLevel) {
 
     }
+    
+
 
     public static final String SEPARATOR = ",";
 
     // an example of reading
-	public  ArrayList<MedicineStock> importInventory(String filename) {
+	public  ArrayList<MedicineStock> importInventory(String filename) throws IOException {
 		// read String from text file
 		ArrayList stringArray = (ArrayList) read(filename);
 		ArrayList<MedicineStock> alr = new ArrayList<MedicineStock>();
@@ -208,7 +273,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 	}
 	
 	// an example of reading
-	public ArrayList<Patient> importPatients(String filename, Hospital hospital) {
+	public ArrayList<Patient> importPatients(String filename, Hospital hospital) throws IOException {
 		// read String from text file
 		ArrayList stringArray = (ArrayList) read(filename);
 		ArrayList<Patient> alr = new ArrayList<Patient>();
@@ -240,7 +305,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 	}
 	
 	// an example of reading
-	public ArrayList<HospitalStaff> importStaff(String filename)  {
+	public ArrayList<HospitalStaff> importStaff(String filename) throws IOException  {
 		// read String from text file
 		ArrayList stringArray = (ArrayList) read(filename);
 		ArrayList<HospitalStaff> alr = new ArrayList<HospitalStaff>();
@@ -279,7 +344,15 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
   /** Read the contents of the given file. */
   public static List read(String fileName) throws IOException {
 	List data = new ArrayList() ;
-    Scanner scanner = new Scanner(new FileInputStream(fileName));
+    Scanner scanner;
+    try {
+        scanner = new Scanner(new FileInputStream(fileName));
+    }
+
+    catch (IOException e) {
+        e.printStackTrace();
+        throw e;
+    }
     try {
       while (scanner.hasNextLine()){
         data.add(scanner.nextLine());

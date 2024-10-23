@@ -1,6 +1,5 @@
 package oop.AdministratorLogic;
 
-import oop.HospitalStaff;
 import oop.Gender;
 
 public interface StaffManagementInterface {

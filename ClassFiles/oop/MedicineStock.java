@@ -26,4 +26,12 @@ public class MedicineStock {
     {
         this.stock = newStock;
     }
+
+    public int getLowStockLevel() {
+        return this.lowStockLevel;
+    }
+
+    public void setLowStockLevel(int lowStockLevel) {
+        this.lowStockLevel = lowStockLevel;
+    }
 }
