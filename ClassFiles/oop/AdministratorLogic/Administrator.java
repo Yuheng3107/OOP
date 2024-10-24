@@ -324,7 +324,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 	}
 	
 	// an example of reading
-	public ArrayList<Patient> importPatients(String filename, Hospital Hospital) throws IOException {
+	public ArrayList<Patient> importPatients(String filename) throws IOException {
 		// read String from text file
 		ArrayList stringArray = (ArrayList) read(filename);
 		ArrayList<Patient> alr = new ArrayList<Patient>();
@@ -416,8 +416,6 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
   }
     public void initialise(String staffFilename, String patientFilename, String inventoryFilename)
     {
-        // create the Hospital
-        Hospital Hospital = new Hospital();
 
         
         try {
@@ -425,7 +423,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
             ArrayList<HospitalStaff> staff = importStaff(staffFilename);
             Hospital.staff = staff;
             // initialise patients
-            ArrayList<Patient> patients = importPatients(patientFilename, Hospital);
+            ArrayList<Patient> patients = importPatients(patientFilename);
             Hospital.patients = patients;
             // initialise inventory
             ArrayList<MedicineStock> medicineStock = importInventory(inventoryFilename);
