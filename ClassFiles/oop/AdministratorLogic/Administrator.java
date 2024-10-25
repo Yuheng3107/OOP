@@ -19,9 +19,9 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import oop.Gender;
-
+import oop.AdministratorLogic.ReplenishmentRequest;
 public class Administrator implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
-    public Hospital hospital;
+    
 
 
     public void manageInventory() {
@@ -31,6 +31,9 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
         System.out.println("2. Update medicine stock in inventory");
         System.out.println("3. Remove medicine from inventory");
         System.out.println("4. View Inventory");
+        System.out.println("5. Update low stock level alert line of medicine");
+        System.out.println("6. Approve replenishment request:");
+        System.out.println("Enter your choice: ");
 
         Scanner scanner = new Scanner(System.in);
         String name;
@@ -68,6 +71,24 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 
                 // view inventory
                 viewInventory();
+                break;
+            case 5:
+
+                // update low stock level alert line of medicine
+                System.out.println("Enter name of the medicine to update: ");
+                name = scanner.next();
+                System.out.println("Enter new low stock level of the medicine: ");
+                lowStockLevel = scanner.nextInt();
+                updateLowStockLevel(name, lowStockLevel);
+                break;
+            case 6:
+
+                // approve replenishment request
+                System.out.println("Enter name of the medicine to approve: ");
+                name = scanner.next();
+                System.out.println("Enter quantity of the medicine in replenishment request: ");
+                quantity = scanner.nextInt();
+                approveReplenishmentRequest(name, quantity);
                 break;
         }
         scanner.close();
@@ -160,8 +181,8 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
     {
 
-        // add staff member to hospital
-        hospital.addStaffMember(staffName, age, staffID, gender, role);
+        // add staff member to Hospital
+        Hospital.addStaffMember(staffName, age, staffID, gender, role);
 
     }
     public void updateStaffMember(String staffName)
@@ -171,11 +192,11 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     }
     public void removeStaffMember(String staffName)
     {
-        hospital.removeStaffMember(staffName);
+        Hospital.removeStaffMember(staffName);
     }
     public void displayStaff(String filter)
     {
-        ArrayList<HospitalStaff> staffMembers = hospital.getStaff();
+        ArrayList<HospitalStaff> staffMembers = Hospital.getStaff();
         switch (filter) {
             
             case "role":
@@ -207,7 +228,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
     {
 
         // prints out inventory information
-        Inventory inventory = hospital.inventory;
+        Inventory inventory = Hospital.inventory;
 
         for (MedicineStock stock : inventory.medicine) {
             System.out.println("Name: " + stock.getName());
@@ -216,32 +237,62 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
         }
 
     }
-    public void approveReplenishmentRequest(MedicineStock medicine, int amount)
+    public void approveReplenishmentRequest(String medicineName, int amount)
     {
+        // search for for replenishmnet request
+
+        for (int i = 0; i < Hospital.replenishmentRequests.size(); i++) {
+            if (Hospital.replenishmentRequests.get(i).medicineName.equals(medicineName)
+                    && Hospital.replenishmentRequests.get(i).amount == amount) {
+                Hospital.removeReplenishmentRequest(Hospital.replenishmentRequests.get(i));
+                // add amount to stock for medicine
+                updateMedicineStock(medicineName, amount);
+                return;
+            }
+        }
+        System.out.println("No matching replenishment request found.");
 
     }
     public void addMedicineStock(MedicineStock stock)
     {
 
-        hospital.inventory.medicine.add(stock);
+        Hospital.inventory.medicine.add(stock);
 
 
     }
     public void updateMedicineStock(String name, int count) 
     {
-        
+        // first we need to find the index of the medicine
+        int lowStockLevel = 0;
+        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
+
+            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
+                count += Hospital.inventory.medicine.get(i).getStock();
+                lowStockLevel = Hospital.inventory.medicine.get(i).getLowStockLevel();
+                Hospital.inventory.medicine.remove(i);
+                break; // Exit the loop after removing
+            }
+            addMedicineStock(new MedicineStock(name, count, lowStockLevel));
+        }
     }
     public void deleteMedicineStock(String name)
     {
-        for (int i = 0; i < hospital.inventory.medicine.size(); i++) {
-            if (hospital.inventory.medicine.get(i).getName().equals(name)) {
-                hospital.inventory.medicine.remove(i);
+        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
+            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
+                Hospital.inventory.medicine.remove(i);
                 break; // Exit the loop after removing
             }
         }
     }
     
     public void updateLowStockLevel(String name, int newLevel) {
+        // first we need to find the index of the medicine
+        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
+            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
+                Hospital.inventory.medicine.get(i).setLowStockLevel(newLevel);
+                break; // Exit the loop after removing
+            }
+        }
 
     }
     
@@ -273,7 +324,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 	}
 	
 	// an example of reading
-	public ArrayList<Patient> importPatients(String filename, Hospital hospital) throws IOException {
+	public ArrayList<Patient> importPatients(String filename) throws IOException {
 		// read String from text file
 		ArrayList stringArray = (ArrayList) read(filename);
 		ArrayList<Patient> alr = new ArrayList<Patient>();
@@ -294,9 +345,9 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 			
 			// need to process information into parsable format
 
-			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital
+			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital Hospital
 			Patient patient = new Patient(name, patientID, dateOfBirth, Gender.valueOf(gender),
-					BloodType.valueOf(bloodType), null, email, hospital);
+					BloodType.valueOf(bloodType), null, email, Hospital);
 
 			// add to patients list
 			alr.add(patient);
@@ -365,22 +416,20 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
   }
     public void initialise(String staffFilename, String patientFilename, String inventoryFilename)
     {
-        // create the hospital
-        Hospital hospital = new Hospital();
 
         
         try {
             // initialise staff
             ArrayList<HospitalStaff> staff = importStaff(staffFilename);
-            hospital.staff = staff;
+            Hospital.staff = staff;
             // initialise patients
-            ArrayList<Patient> patients = importPatients(patientFilename, hospital);
-            hospital.patients = patients;
+            ArrayList<Patient> patients = importPatients(patientFilename);
+            Hospital.patients = patients;
             // initialise inventory
             ArrayList<MedicineStock> medicineStock = importInventory(inventoryFilename);
             Inventory inventory = new Inventory();
             inventory.medicine = medicineStock;
-            hospital.inventory = inventory;
+            Hospital.inventory = inventory;
         }
 
         catch (Exception e) {
