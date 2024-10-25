@@ -35,6 +35,11 @@ public class Patient extends Role {
         return name;
     }
 
+    public String getPatientID()
+    {
+        return patientID;
+    }
+
     public void viewAvailableAppointmentSlots() //timeslots will be printed per hour
     {
         Scanner sc = new Scanner(System.in);

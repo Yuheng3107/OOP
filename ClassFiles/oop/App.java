@@ -54,48 +54,55 @@ public class App {
 
         String patientFilePath = "D:\\GitHub\\OOP\\Patient_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
         String medFilePath = "D:\\GitHub\\OOP\\Medicine_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
-        List<Patient> patients = ImportUsers.readPatientsFromCSV(patientFilePath);
-        for (Patient patient : patients) {
-            System.out.println(patient.getGender());
-            System.out.println(patient.getName());
-        }
-        List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
-        for (MedicineStock medStock : medStocks) {
-            System.out.println(medStock.getName());
-            System.out.println(medStock.getStock());
-        }
 
-        while (true)
+        List<Patient> patients = ImportUsers.readPatientsFromCSV(patientFilePath);
+        //for (Patient patient : patients) {
+        //    System.out.println(patient.getGender());
+        //    System.out.println(patient.getName());
+        //}
+        List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
+        //for (MedicineStock medStock : medStocks) {
+        //    System.out.println(medStock.getName());
+        //    System.out.println(medStock.getStock());
+        //}
+        
+        String id = "";
+        String password = "";
+        System.out.print("Enter your id: ");
+        id = sc.nextLine();
+        System.out.print("Enter your password: ");
+        password = sc.nextLine();
+        System.out.println("Your id is " + id + ", password is " + password);
+
+        //Patient
+        if ((id.charAt(0) == 'P' || id.charAt(0) == 'p') && (id.length() == 5))
         {
-            printMenu();
-            int choice = sc.nextInt();
-            if (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5)
+            for (Patient patient : patients)
             {
-                System.out.println("Invalid input! Please enter again!\n");
-                continue;
+                if (patient.getPatientID().equalsIgnoreCase(id))
+                {
+                    System.out.println("Welcome " + patient.getName() + "!");
+                    printPatientMenu();
+                }
             }
-            switch(choice)
-            {
-                case 1:
-                    System.out.println("Patient");
-                    break;
-                case 2:
-                    System.out.println("Doctor");
-                    break;
-                case 3:
-                    System.out.println("Pharmacist");
-                    break;
-                case 4:
-                    System.out.println("Administrator");
-                    break;
-                case 5:
-                    System.out.println("Quit");
-                    return;
-            }
+        }
+        //Pharmacist
+        else if ((id.charAt(0) == 'P' || id.charAt(0) == 'p') && (id.length() == 4))
+        {
+            printPharmacistMenu();;
+        }
+        else if (id.charAt(0) == 'D' || id.charAt(0) == 'd')
+        {
+            printDoctorMenu();
+        }
+        else if (id.charAt(0) == 'A' || id.charAt(0) == 'a')
+        {
+            printAdminMenu();
         }
     }
 
-    public static void printMenu()
+    //Might not be needed anymore
+    /*public static void printMainMenu()
     {
         System.out.println("=============================================");
         System.out.println("|        Hospital Management System         |");
@@ -106,6 +113,69 @@ public class App {
         System.out.println("| 3. Pharmacist                             |");
         System.out.println("| 4. Administrator                          |");
         System.out.println("| 5. Quit                                   |");
+        System.out.println("=============================================");
+    }*/
+
+    public static void printPatientMenu()
+    {
+        System.out.println("=============================================");
+        System.out.println("|                 Patient                   |");
+        System.out.println("=============================================");
+        System.out.println("|        Select from the following          |");
+        System.out.println("| 1. View Medical Record                    |");
+        System.out.println("| 2. Update Personal Information            |");
+        System.out.println("| 3. View Available Appointment Slots       |");
+        System.out.println("| 4. Schedule an Appointment                |");
+        System.out.println("| 5. Reschedule an Appointment              |");
+        System.out.println("| 6. Cancel an Appointment                  |");
+        System.out.println("| 7. View Scheduled Appointments            |");
+        System.out.println("| 8. View Past Appointment Outcome Records  |");
+        System.out.println("| 9. Logout                                 |");
+        System.out.println("=============================================");
+    }
+
+    public static void printDoctorMenu()
+    {
+        System.out.println("=============================================");
+        System.out.println("|                  Doctor                   |");
+        System.out.println("=============================================");
+        System.out.println("|        Select from the following          |");
+        System.out.println("| 1. View Patient Medical Records           |");
+        System.out.println("| 2. Update Patient Medical Records         |");
+        System.out.println("| 3. View Personal Schedule                 |");
+        System.out.println("| 4. Set Availability for Appointments      |");
+        System.out.println("| 5. Accept or Decline Appointment Request  |");
+        System.out.println("| 6. View Upcoming Appointments             |");
+        System.out.println("| 7. Record Outcome Records                 |");
+        System.out.println("| 8. Logout                                 |");
+        System.out.println("=============================================");
+    }
+
+    public static void printPharmacistMenu()
+    {
+        System.out.println("=============================================");
+        System.out.println("|                Pharmacist                 |");
+        System.out.println("=============================================");
+        System.out.println("|        Select from the following          |");
+        System.out.println("| 1. View Appointment Outcomcords           |");
+        System.out.println("| 2. Update Prescription Status             |");
+        System.out.println("| 3. View Medication Inventory              |");
+        System.out.println("| 4. Submit Replenishment Request           |");
+        System.out.println("| 5. Logout                                 |");
+        System.out.println("=============================================");
+    }
+
+    public static void printAdminMenu()
+    {
+        System.out.println("=============================================");
+        System.out.println("|              Administrator                |");
+        System.out.println("=============================================");
+        System.out.println("|        Select from the following          |");
+        System.out.println("| 1. View and Manage Hospital Staff         |");
+        System.out.println("| 2. View Appointments Details              |");
+        System.out.println("| 3. View and Manage Medication Inventory   |");
+        System.out.println("| 4. Approve Replenishment Requests         |");
+        System.out.println("| 5. Logout                                 |");
         System.out.println("=============================================");
     }
 }
