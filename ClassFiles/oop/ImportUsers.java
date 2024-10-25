@@ -1,22 +1,22 @@
 package oop;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalDate;
+
+import java.io.*;
+import java.util.*;
+import java.time.*;
 
 public class ImportUsers {
-
-    public static List<Patient> readPatientsFromCSV(String filePath) {
+    public static List<Patient> readPatientsFromCSV(String filePath)
+    {
         List<Patient> patients = new ArrayList<>();
         String line;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+        {
             String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
 
             // Read each line in the CSV
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null)
+            {
                 String[] values = line.split(",");
                 String patientId = values[0];
                 String name = values[1];
@@ -53,14 +53,40 @@ public class ImportUsers {
                         bloodType = BloodType.ABMinus;
                         break;
                 }
-
                 Patient patient = new Patient(name, patientId, dateOfBirth, gender, bloodType, email);
                 patients.add(patient);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
+        File databaseFile = new File("PatientCredentialsDatabase.csv");
+        if (!databaseFile.exists())
+        {
+            //Write to database the ID and the default password
+            try (PrintWriter writer = new PrintWriter(new FileWriter("PatientCredentialsDatabase.csv")))
+            {
+                writer.println("ID,Password");
+                // Write patient data
+                for (Patient patient : patients)
+                {
+                    String patientID = patient.getPatientID();
+                    String defaultPassword = "password";
+                    writer.println(patientID + "," + defaultPassword);
+                }
+                System.out.println("Database file created successfully.");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Database file already exists.");
+        }
         return patients;
     }
 
@@ -68,10 +94,12 @@ public class ImportUsers {
         List<MedicineStock> medStocks = new ArrayList<>();
         String line;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+        {
             String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
 
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null)
+            {
                 String[] values = line.split(",");
                 String name = values[0];
                 int iniStock = Integer.parseInt(values[1]);
@@ -80,10 +108,11 @@ public class ImportUsers {
                 MedicineStock medStock = new MedicineStock(name, iniStock, lowStockLevel);
                 medStocks.add(medStock);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-
         return medStocks;
     }
 }

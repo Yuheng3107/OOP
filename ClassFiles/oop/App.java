@@ -1,10 +1,8 @@
 package oop;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.time.*;
 
 public class App {
     public static void main(String[] args)
@@ -45,49 +43,108 @@ public class App {
 
         Doctor doctor1 = new Doctor("John", "D01", 100, Gender.Male);
         doctor1.viewMedicalRecord(patient1);*/
-        Menu();
+        login();
     }
 
-    public static void Menu()
+    public static void login()
     {
         Scanner sc = new Scanner(System.in);
 
-        String patientFilePath = "D:\\GitHub\\OOP\\Patient_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
-        String medFilePath = "D:\\GitHub\\OOP\\Medicine_List.csv"; //Need to change this path for anyone that wants to run this w.r.t. your local copy
+        boolean loginSuccess = false;
+        String id = "", password = "", line = "";
+        String newPassword1 = "", newPassword2 = "";
+
+        String patientFilePath = "Patient_List.csv";
+        String medFilePath = "Medicine_List.csv";
+        String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
 
         List<Patient> patients = ImportUsers.readPatientsFromCSV(patientFilePath);
-        //for (Patient patient : patients) {
-        //    System.out.println(patient.getGender());
-        //    System.out.println(patient.getName());
-        //}
         List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
-        //for (MedicineStock medStock : medStocks) {
-        //    System.out.println(medStock.getName());
-        //    System.out.println(medStock.getStock());
-        //}
-        
-        String id = "";
-        String password = "";
-        System.out.print("Enter your id: ");
-        id = sc.nextLine();
-        System.out.print("Enter your password: ");
-        password = sc.nextLine();
-        System.out.println("Your id is " + id + ", password is " + password);
+        /*for (Patient patient : patients) {
+            System.out.println(patient.getGender());
+            System.out.println(patient.getName());
+        }
+        for (MedicineStock medStock : medStocks) {
+            System.out.println(medStock.getName());
+            System.out.println(medStock.getStock());
+        }*/
 
-        //Patient
-        if ((id.charAt(0) == 'P' || id.charAt(0) == 'p') && (id.length() == 5))
+        while (loginSuccess != true)
         {
+            System.out.print("Enter your id: ");
+            id = sc.nextLine();
+            System.out.print("Enter your password: ");
+            password = sc.nextLine();
+            //Run through the list of patients and see if we can find any patient with the same ID as the one entered by user
+            Patient matchedRecord = null;
             for (Patient patient : patients)
             {
                 if (patient.getPatientID().equalsIgnoreCase(id))
                 {
-                    System.out.println("Welcome " + patient.getName() + "!");
-                    printPatientMenu();
+                    matchedRecord = patient;
+                    break;
                 }
             }
+            //Check if such a record exist in our database
+            if (matchedRecord == null)
+            {
+                System.out.println("Invalid ID. Please try again!");
+            }
+            //This part means there exist a record for the entered ID, now we check the password that is entered by the user
+            try (BufferedReader reader = new BufferedReader(new FileReader(patientCredentialsDatabase)))
+            {
+                while ((line = reader.readLine()) != null)
+                {
+                    String[] columns = line.split(",");
+                    if (columns[0].equalsIgnoreCase(id))
+                    {
+                        String storedPassword = columns[1]; //The password that we read from our database file
+                        if (password.equals(storedPassword)) //Check if entered password = password in db
+                        {
+                            if (password.equals("password")) // Check if default password
+                            {
+                                System.out.println("You are required to change your password!");
+                                do
+                                {
+                                    System.out.print("Enter new password: ");
+                                    newPassword1 = sc.nextLine();
+                                    System.out.print("Enter new password again: ");
+                                    newPassword2 = sc.nextLine();
+                                    //Verify password entered is the same
+                                    if (!newPassword1.equals(newPassword2))
+                                    {
+                                        System.out.println("Passwords do not match, please try again!");
+                                    }
+                                } while (newPassword1.equals(newPassword2) == false);
+                                updatePasswordInCSV(patientCredentialsDatabase, id.toUpperCase(), newPassword1);
+                                System.out.println("Your new password has been set.");
+                            }
+                            loginSuccess = true;
+                            break;
+                        }
+                        else
+                        {
+                            System.out.println("Wrong password, enter again.");
+                        }
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            if (loginSuccess == false)
+            {
+                System.out.println("Invalid credentials or user ID not found.");
+            }
+            else
+            {
+                System.out.println("Welcome " + matchedRecord.getName() + "!");
+                printPatientMenu();
+            }
         }
-        //Pharmacist
-        else if ((id.charAt(0) == 'P' || id.charAt(0) == 'p') && (id.length() == 4))
+        /*Pharmacist
+        if ((id.charAt(0) == 'P' || id.charAt(0) == 'p') && (id.length() == 4))
         {
             printPharmacistMenu();;
         }
@@ -98,23 +155,61 @@ public class App {
         else if (id.charAt(0) == 'A' || id.charAt(0) == 'a')
         {
             printAdminMenu();
-        }
+        }*/
     }
 
-    //Might not be needed anymore
-    /*public static void printMainMenu()
+    public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
     {
-        System.out.println("=============================================");
-        System.out.println("|        Hospital Management System         |");
-        System.out.println("=============================================");
-        System.out.println("|        Select from the following          |");
-        System.out.println("| 1. Patient                                |");
-        System.out.println("| 2. Doctor                                 |");
-        System.out.println("| 3. Pharmacist                             |");
-        System.out.println("| 4. Administrator                          |");
-        System.out.println("| 5. Quit                                   |");
-        System.out.println("=============================================");
-    }*/
+        List<String> lines = new ArrayList<>();
+        String line;
+        boolean isUpdated = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath)))
+        {
+            // Read each line from the CSV file
+            while ((line = reader.readLine()) != null)
+            {
+                String[] columns = line.split(",");
+
+                // Check if this line contains the patient ID we want to update
+                if (columns[0].equals(String.valueOf(patientID)))
+                {
+                    // Update the password field
+                    columns[1] = newPassword;
+                    line = String.join(",", columns);
+                    isUpdated = true;
+                }
+
+                // Add the line (updated or not) to the list
+                lines.add(line);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (isUpdated == true)
+        {
+            // Write all lines back to the CSV file
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filePath)))
+            {
+                for (String updatedLine : lines)
+                {
+                    writer.println(updatedLine);
+                }
+                System.out.println("Password updated successfully for PatientID: " + patientID);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("PatientID not found: " + patientID);
+        }
+    }
 
     public static void printPatientMenu()
     {
