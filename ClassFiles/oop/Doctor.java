@@ -1,5 +1,6 @@
 package oop;
 
+import java.io.ObjectInputFilter.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -7,16 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 public class Doctor extends HospitalStaff{
-    public String name;
-    public String doctorID;
-    public int age;
-    public Gender gender;
     public ArrayList<Patient> patients;
-    public ArrayList<Appointment> schedule;
+    private ArrayList<Appointment> schedule; //for confirmed appointments
     private ArrayList<TimeSlot> availableSlots;
-    private ArrayList<Appointment> pendingAppointments;
+    private ArrayList<Appointment> pendingAppointments; //for pending appointments
 
 
     public Doctor(String name, String doctorID, int age, Gender gender)
@@ -26,6 +24,7 @@ public class Doctor extends HospitalStaff{
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
         pendingAppointments = new ArrayList<>();
+        Hospital.staff.add(this);
     }
 
     public ArrayList<TimeSlot> generateDefaultTimeSlots() //generates hourly time slots for the next two months (starting from the next day)
@@ -80,27 +79,40 @@ public class Doctor extends HospitalStaff{
         }
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
     }
-   public void acceptAppointmentRequest(Appointment appointment)
+   public void acceptAppointmentRequest()
    {
-        appointment.status = StatusOfAppointment.Accepted;
+        viewPendingAppointments();
+        System.out.println("Choose the appointment to accept: (enter index)");
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+        if (choice > pendingAppointments.size())
+        {
+            System.out.println("Invalid appointment number. Please try again.");
+            return;
+        }
+        Appointment appointment = pendingAppointments.get(choice-1);
+        appointment.status = StatusOfAppointment.Confirmed;
         schedule.add(appointment);
         pendingAppointments.remove(appointment);
+        System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");
    }
-   public void declineAppointmentRequest(Appointment appointment)
+   public void declineAppointmentRequest()
     {
-        appointment.status = StatusOfAppointment.Rejected;
-        //add timeslots back into doctor's available timeslots
-        for (LocalTime i = appointment.timeSlot.start; i.isBefore(appointment.timeSlot.end); i = i.plusHours(1)) {
-            TimeSlot timeSlot = new TimeSlot(appointment.date, i, i.plusHours(1));  // Use 'i' for the start time
-            availableSlots.add(timeSlot);
+        viewPendingAppointments();
+        System.out.println("Choose the appointment to decline: (enter index)");
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+        if (choice > pendingAppointments.size())
+        {
+            System.out.println("Invalid appointment number. Please try again.");
+            return;
         }
-        Collections.sort(availableSlots, new Comparator<TimeSlot>() {
-            @Override
-            public int compare(TimeSlot t1, TimeSlot t2) {
-                return t1.start.compareTo(t2.start); // Compare the start times
-            }
-        });
+        Appointment appointment = pendingAppointments.get(choice-1);
+        appointment.status = StatusOfAppointment.Canceled;
+        //add timeslots back into doctor's available timeslots
+        addTimeSlotToAvailableSlots(appointment);
         pendingAppointments.remove(appointment);
+        System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been declined.");
    }
 
    public void deleteAvailableSlots(TimeSlot timeSlot)
@@ -113,21 +125,94 @@ public class Doctor extends HospitalStaff{
         pendingAppointments.add(appointment);
    }
 
+   public void deleteScheduleAppointment(Appointment appointment)
+   {
+        schedule.remove(appointment);
+        addTimeSlotToAvailableSlots(appointment);
+
+   }
+
+   public void deletePendingAppointment(Appointment appointment)
+   {
+        pendingAppointments.remove(appointment);
+        addTimeSlotToAvailableSlots(appointment);
+   }
+
+   public void addTimeSlotToAvailableSlots(Appointment appointment)
+   {
+        //add timeslots back into doctor's available timeslots
+        for (LocalTime i = appointment.timeSlot.start; i.isBefore(appointment.timeSlot.end); i = i.plusHours(1)) {
+            TimeSlot timeSlot = new TimeSlot(appointment.date, i, i.plusHours(1));  // Use 'i' for the start time
+            availableSlots.add(timeSlot);
+        }
+        Collections.sort(availableSlots, new Comparator<TimeSlot>() {
+            @Override
+            public int compare(TimeSlot t1, TimeSlot t2) {
+                return t1.start.compareTo(t2.start); // Compare the start times
+            }
+        });
+   }
+
    public void viewPendingAppointments()
    {
+        int i = 1;
         for (Appointment appointment : pendingAppointments)
         {
+            System.out.println("---Appointment " + i + "---");
             System.out.println("Date: " + appointment.date);
             System.out.println("Start time: " + appointment.timeSlot.start);
             System.out.println("Start time: " + appointment.timeSlot.end);
+            i++;
         }
    }
-    //public void viewUpcomingAppointments()
-   // {
+    public void viewUpcomingAppointments() //prints confirmed appointments
+   {
+        int i = 1;  
+        System.out.println("Here are your upcoming appointments for the next 2 months:");  
+        for (Appointment appointment : schedule)
+        {
+            System.out.println("--- Appointment " + i+ " ---");
+            System.out.println("Date: " + appointment.date);
+            System.out.println("Start Time: " + appointment.timeSlot.start);
+            System.out.println("End Time: " + appointment.timeSlot.end);
+            System.out.println("Patient Name: " + Hospital.getPatientNameFromPatientID(appointment.patientId));
+            i++;
+        }
+   }
+    public void recordAppointmentOutcome()
+    {
+        System.out.println("Please select the appointment to record the outcome (enter index)");
+        viewUpcomingAppointments();
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+        sc.nextLine();
+        Appointment appointment = schedule.get(choice-1); 
+        appointment.status = StatusOfAppointment.Completed;//set status to completed
+        System.out.println("What is the service given to the patient?");
+        String service = sc.nextLine();
+        // Collect prescribed medications
+        List<PrescribedMedication> medications = new ArrayList<>();
+        System.out.println("Please specify the medications to prescribe for the patient.");
+        while (true) {
+            System.out.print("Enter medication name (or 'done' to finish): ");
+            String medicationName = sc.nextLine();
+            if (medicationName.equalsIgnoreCase("done")) {
+                break;
+            }
+            
+            PrescribedMedication medication = new PrescribedMedication();
+            medication.name = medicationName;
+            medications.add(medication);
+        }
 
-   // }
-    //public void recordAppointmentOutcome(LocalDate date, String serviceType)
-    //{
-        
-    //}
+        // Collect consultation notes
+        System.out.println("Enter any consultation notes:");
+        String consultationNotes = sc.nextLine();
+
+        // Create an array of prescribed medications for the AppointmentOutcome
+        PrescribedMedication[] prescribedMedications = medications.toArray(new PrescribedMedication[0]);
+        AppointmentOutcome appointmentOutcome = new AppointmentOutcome(appointment.date,service,prescribedMedications,consultationNotes);
+        appointment.setAppointmentOutcome(appointmentOutcome);
+        System.out.println("Appointment outcome recorded successfully.");
+    }
 }

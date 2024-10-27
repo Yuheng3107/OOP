@@ -2,6 +2,7 @@ package oop;
 
 import java.util.ArrayList;
 
+
 import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.ReplenishmentRequest;
 public class Hospital {
@@ -43,7 +44,7 @@ public class Hospital {
         {
             if (member instanceof Doctor)
             {
-                System.out.println(i + ". Dr. " + member.getName());
+                System.out.println(i + ") Dr. " + member.getName());
             }
             i++;
         }
@@ -63,6 +64,30 @@ public class Hospital {
         System.out.println("Invalid index. Please choose a valid doctor.");
         return null;
     }
+
+    public static String getDoctorNameByStaffID(String staffID)
+    {
+        for (HospitalStaff member : staff)
+        {
+            if (member instanceof Doctor && member.getStaffID().equals(staffID))
+            {
+
+                return member.getName();
+
+            }
+        }
+        return null;
+    }
+
+    public static Doctor getDoctorObjectByStaffID(String staffID) {
+        for (HospitalStaff member : staff) {
+            if (member instanceof Doctor && member.getStaffID().equals(staffID)) {
+                return (Doctor) member; // Cast to Doctor
+            }
+        }
+        return null; // Return null if no matching doctor is found
+    }
+    
     
     public static void addStaffMember(String staffName, int age, String staffID, Gender gender, String role) {
         // check whether role is valid
@@ -76,6 +101,7 @@ public class Hospital {
         HospitalStaff staffMember;
         if (role == "doctor") {
             staffMember = new Doctor(staffName, staffID, age, gender);
+
         } else if (role == "pharmacist") {
             staffMember = new Pharmacist(staffName, staffID, age, gender);
         } else {
@@ -92,6 +118,35 @@ public class Hospital {
                 break;
             }
         }
+    }
+
+    public static String getPatientNameFromPatientID(String patientID)
+    {
+        for (Patient patient : patients)
+        {
+            if (patient.getPatientID().equals(patientID))
+            {
+
+                return patient.getName();
+
+            }
+        }
+        return null;
+    }
+
+
+    public static Patient getPatientFromPatientID(String patientID)
+    {
+        for (Patient patient : patients)
+        {
+            if (patient.getPatientID().equals(patientID))
+            {
+
+                return patient;
+
+            }
+        }
+        return null;
     }
 
 }

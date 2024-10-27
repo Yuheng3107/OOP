@@ -347,7 +347,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 
 			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital Hospital
 			Patient patient = new Patient(name, patientID, dateOfBirth, Gender.valueOf(gender),
-					BloodType.valueOf(bloodType), null, email, Hospital);
+					BloodType.valueOf(bloodType), email);
 
 			// add to patients list
 			alr.add(patient);

@@ -1,5 +1,4 @@
 package oop;
-
 import java.io.*;
 import java.util.*;
 import java.time.*;
@@ -7,29 +6,56 @@ import java.time.*;
 public class App {
     public static void main(String[] args)
     {
-        // TimeSlot[] timeSlots = new TimeSlot[] {
-        //     new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(10, 0), LocalTime.of(11, 0)),
-        //     new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(11, 0), LocalTime.of(12, 0)),
-        //     new TimeSlot(LocalDate.of(2024, 10, 21), LocalTime.of(9, 0), LocalTime.of(10, 0))
-        // };
+        TimeSlot[] timeSlots = new TimeSlot[] {
+            new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(10, 0), LocalTime.of(11, 0)),
+            new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(11, 0), LocalTime.of(12, 0)),
+            new TimeSlot(LocalDate.of(2024, 10, 21), LocalTime.of(9, 0), LocalTime.of(10, 0))
+        };
 
-        /*
-        Doctor doctor1 = new Doctor("Mike Adams", "D0001");
-        Doctor doctor2 = new Doctor("Mikey Mike", "D0002");
+        
+        Doctor doctor1 = new Doctor("Mike Adams", "D0001", 40, Gender.Male);
+        Doctor doctor2 = new Doctor("Mikey Mike", "D0002", 22, Gender.Female);
         String[] s = new String[1]; //placeholder to create medicalHistory
         s[0] = "a";
-        Hospital hospital = new Hospital();
-        hospital.staff.add(doctor1);
-        hospital.staff.add(doctor2);
-        MedicalHistory medic = new MedicalHistory(s,s,s,s);
-        Patient patient1 = new Patient("Mary Lamb", "P0001", LocalDate.of(2000, 1, 1), Gender.Female, "111", "ntu address", BloodType.ABMinus, medic, "hi@gmail.com", hospital);
+        Patient patient1 = new Patient("Mary Lamb", "P0001", LocalDate.of(2000, 1, 1), Gender.Female, BloodType.ABMinus, "hi@gmail.com");
+        // //Test Case 3
+        // patient1.viewAvailableAppointmentSlots();
+        // //Test Case 4
+        // patient1.scheduleAppointment();
+        // patient1.viewScheduledAppointmentStatus();
+        // doctor1.viewPendingAppointments();
+        // patient1.viewAvailableAppointmentSlots();
+        // doctor1.acceptAppointmentRequest();
+        // patient1.viewScheduledAppointmentStatus();
+        // //Test Case 5
+        // patient1.rescheduleAppointment();
+        // patient1.viewAvailableAppointmentSlots();
+        // //Test Case 6
+        // patient1.scheduleAppointment();
+        // patient1.viewAvailableAppointmentSlots();
+        // patient1.cancelAppointment();
+        // patient1.viewAvailableAppointmentSlots();
+        //Test Case 7
+        // patient1.scheduleAppointment();
+        // patient1.scheduleAppointment();
+        // patient1.viewScheduledAppointments();
+        // Test Case 8
+        // patient1.viewAppointmentOutcomeRecords();
+        
+
+        //Test Case 14
+        // patient1.scheduleAppointment();
+        // patient1.scheduleAppointment();
+        // patient1.scheduleAppointment();
+        // doctor1.viewPendingAppointments();
+        // doctor1.acceptAppointmentRequest();
+        // doctor1.acceptAppointmentRequest();
+        // doctor1.viewUpcomingAppointments();
+        //Test Case 15
         patient1.scheduleAppointment();
-        patient1.viewAvailableAppointmentSlots();
-        doctor1.viewPendingAppointments();
-        doctor1.declineAppointmentRequest(patient1.getScheduledAppointments().get(0));
-        doctor1.viewPendingAppointments();
-        patient1.viewAvailableAppointmentSlots();
-        */
+        doctor1.acceptAppointmentRequest();
+        doctor1.recordAppointmentOutcome();
+        patient1.viewAppointmentOutcomeRecords();
 
         /*
         // testing for medicalrecord for patient and doc
@@ -43,8 +69,9 @@ public class App {
 
         Doctor doctor1 = new Doctor("John", "D01", 100, Gender.Male);
         doctor1.viewMedicalRecord(patient1);*/
-        login();
+        //login();
     }
+    /* 
 
     public static void login()
     {
@@ -67,7 +94,7 @@ public class App {
         for (MedicineStock medStock : medStocks) {
             System.out.println(medStock.getName());
             System.out.println(medStock.getStock());
-        }*/
+        }
 
         while (loginSuccess != true)
         {
@@ -158,6 +185,7 @@ public class App {
         }*/
     }
 
+    /* 
     public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
     {
         List<String> lines = new ArrayList<>();
@@ -274,3 +302,4 @@ public class App {
         System.out.println("=============================================");
     }
 }
+ */

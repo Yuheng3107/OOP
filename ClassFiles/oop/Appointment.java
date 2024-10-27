@@ -7,14 +7,14 @@ public class Appointment {
     public String doctorId;
     public String patientId;
     public StatusOfAppointment status = StatusOfAppointment.Pending;
-    public AppointmentOutcome[] appointmentOutcome;
+    public AppointmentOutcome appointmentOutcome;
 
     public Appointment(LocalDate date, TimeSlot timeSlot, String doctorID, String patientID)
     {
         this.date = date;
         this.timeSlot = timeSlot;
-        doctorId = doctorID;
-        patientId = patientID;
+        this.doctorId = doctorID;
+        this.patientId = patientID;
     }
     public LocalDate getAppointmentDate()
     {
@@ -36,10 +36,12 @@ public class Appointment {
     {
         return status;
     }
-    //public ApppointmentOutcome getAppointmentOutcome()
-    //{
-    //    return appointmentOutcome; //Array
-    //}
+    public void setAppointmentOutcome(AppointmentOutcome appointmentOutcome)
+    {
+       this.appointmentOutcome = appointmentOutcome;
+       Patient patient = Hospital.getPatientFromPatientID(patientId);
+       patient.appointmentOutcomes.add(appointmentOutcome);
+    }
     
     public void setAppointmentDate(LocalDate Date)
     {
@@ -57,9 +59,19 @@ public class Appointment {
     {
         this.status = status;
     }
-    public void setAppointmentOutcome(AppointmentOutcome appointmentOutcome)
+    // public void setAppointmentOutcome(AppointmentOutcome appointmentOutcome)
+    // {
+    //     this.appointmentOutcome[0] = appointmentOutcome; //To be fixed again
+    // }
+
+    public void viewAppointment()
     {
-        this.appointmentOutcome[0] = appointmentOutcome; //To be fixed again
+        System.out.println("Doctor: " + Hospital.getDoctorNameByStaffID(doctorId));
+        System.out.println("Date: " + date);
+        System.out.println("Start Time: " + timeSlot.start);
+        System.out.println("End Time: " + timeSlot.end);
+        System.out.println("Appointment Status: " + status);
+
     }
 
 }
