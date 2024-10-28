@@ -52,10 +52,10 @@ public class App {
         // doctor1.acceptAppointmentRequest();
         // doctor1.viewUpcomingAppointments();
         //Test Case 15
-        patient1.scheduleAppointment();
-        doctor1.acceptAppointmentRequest();
-        doctor1.recordAppointmentOutcome();
-        patient1.viewAppointmentOutcomeRecords();
+        //patient1.scheduleAppointment();
+        //doctor1.acceptAppointmentRequest();
+        //doctor1.recordAppointmentOutcome();
+        //patient1.viewAppointmentOutcomeRecords();
 
         /*
         // testing for medicalrecord for patient and doc
@@ -69,9 +69,9 @@ public class App {
 
         Doctor doctor1 = new Doctor("John", "D01", 100, Gender.Male);
         doctor1.viewMedicalRecord(patient1);*/
-        //login();
+        login();
     }
-    /* 
+     
 
     public static void login()
     {
@@ -83,10 +83,22 @@ public class App {
 
         String patientFilePath = "Patient_List.csv";
         String medFilePath = "Medicine_List.csv";
+        String doctorFilePath = "Doctors.csv";
+        String adminFilePath = "Administrators.csv";
+        String pharmacistFilePath = "Pharmacists.csv";
+
         String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
+        String doctorCredentialsDatabase = "DoctorsCredentialsDatabase.csv";
+        String pharmacistCredentialsDatabase = "PharmacistsCredentialsDatabase.csv";
+        String administratorCredentialsDatabase = "AdministratorsCredentialsDatabase.csv";
+        ImportUsers.splitStaffList();
 
         List<Patient> patients = ImportUsers.readPatientsFromCSV(patientFilePath);
+        List<Doctor> doctors = ImportUsers.readDoctorFromCSV(doctorFilePath);
         List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
+        List<Pharmacist> pharmacists = ImportUsers.readPharmacistFromCSV(pharmacistFilePath);
+        //List<Administrator> administrators = ImportUsers.readAdminstratorFromCSV(adminFilePath);
+        
         /*for (Patient patient : patients) {
             System.out.println(patient.getGender());
             System.out.println(patient.getName());
@@ -94,7 +106,7 @@ public class App {
         for (MedicineStock medStock : medStocks) {
             System.out.println(medStock.getName());
             System.out.println(medStock.getStock());
-        }
+        }*/
 
         while (loginSuccess != true)
         {
@@ -184,8 +196,7 @@ public class App {
             printAdminMenu();
         }*/
     }
-
-    /* 
+ 
     public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
     {
         List<String> lines = new ArrayList<>();
@@ -302,4 +313,3 @@ public class App {
         System.out.println("=============================================");
     }
 }
- */

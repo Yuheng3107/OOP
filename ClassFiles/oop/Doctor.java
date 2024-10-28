@@ -15,12 +15,13 @@ public class Doctor extends HospitalStaff{
     private ArrayList<Appointment> schedule; //for confirmed appointments
     private ArrayList<TimeSlot> availableSlots;
     private ArrayList<Appointment> pendingAppointments; //for pending appointments
-
+    private String doctorID;
 
     public Doctor(String name, String doctorID, int age, Gender gender)
     {
         super(name, doctorID, age, gender);
         this.availableSlots = generateDefaultTimeSlots();
+        this.doctorID = doctorID;
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
         pendingAppointments = new ArrayList<>();
@@ -50,6 +51,11 @@ public class Doctor extends HospitalStaff{
     public String getName()
     {
         return name;
+    }
+
+    public String getID()
+    {
+        return doctorID;
     }
     
     public void viewMedicalRecord(Patient patient)

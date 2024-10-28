@@ -6,12 +6,20 @@ import oop.UserLogic.Role;
 import oop.MedicineStock;
 
 public class Pharmacist extends HospitalStaff {
+
+    private String pharmacistID;
     
     public Pharmacist(String name, String staffID, int age, Gender gender) {
         super(name, staffID, age, gender);
+        this.pharmacistID = staffID;
         Hospital.staff.add(this);
     }
     private Inventory inventory;
+
+    public String getID()
+    {
+        return pharmacistID;
+    }
 
     public void viewAppointmentOutcomeRecord(AppointmentOutcome appointmentOutcome)
     {
