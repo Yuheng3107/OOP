@@ -201,6 +201,61 @@ public class ImportUsers {
         return pharmacists;
     }
 
+    public static List<Administrator> readAdministratorFromCSV(String filePath)
+    {
+        List<Administrator> administrators = new ArrayList<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+        {
+            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
+
+            // Read each line in the CSV
+            while ((line = br.readLine()) != null)
+            {
+                String[] values = line.split(",");
+                String adminId = values[0];
+                String name = values[1];
+                Gender gender = values[3].equalsIgnoreCase("Male") ? Gender.Male : Gender.Female;
+                int age = Integer.parseInt(values[4]);
+
+                Administrator administrator = new Administrator(name, adminId, gender, age);
+                administrators.add(administrator);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        File databaseFile = new File("AdministratorCredentialsDatabase.csv");
+        if (!databaseFile.exists())
+        {
+            //Write to database the ID and the default password
+            try (PrintWriter writer = new PrintWriter(new FileWriter("AdministratorCredentialsDatabase.csv")))
+            {
+                writer.println("ID,Password");
+                // Write patient data
+                for (Administrator administrator : administrators)
+                {
+                    String adminID = administrator.getAdminID();
+                    String defaultPassword = "password";
+                    writer.println(adminID + "," + defaultPassword);
+                }
+                System.out.println("Administrator Credentials file created successfully.");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Administrator Credentials file already exists.");
+        }
+        return administrators;
+    }
+
 
     public static List<MedicineStock> readMedicineFromCSV(String filePath) {
         List<MedicineStock> medStocks = new ArrayList<>();

@@ -22,7 +22,23 @@ import oop.Gender;
 import oop.AdministratorLogic.ReplenishmentRequest;
 public class Administrator implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
     
+    private String id;
+    private String name;
+    private Gender gender;
+    private int age;
 
+    public Administrator(String name, String id, Gender gender, int age)
+    {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+    }
+
+    public String getAdminID()
+    {
+        return id;
+    }
 
     public void manageInventory() {
         // choose whether to add, update, remove or delete inventory

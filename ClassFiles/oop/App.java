@@ -1,6 +1,9 @@
 package oop;
 import java.io.*;
 import java.util.*;
+
+import oop.AdministratorLogic.Administrator;
+
 import java.time.*;
 
 public class App {
@@ -97,7 +100,7 @@ public class App {
         List<Doctor> doctors = ImportUsers.readDoctorFromCSV(doctorFilePath);
         List<MedicineStock> medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
         List<Pharmacist> pharmacists = ImportUsers.readPharmacistFromCSV(pharmacistFilePath);
-        //List<Administrator> administrators = ImportUsers.readAdminstratorFromCSV(adminFilePath);
+        List<Administrator> administrators = ImportUsers.readAdministratorFromCSV(adminFilePath);
         
         /*for (Patient patient : patients) {
             System.out.println(patient.getGender());
