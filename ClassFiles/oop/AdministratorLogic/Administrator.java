@@ -9,6 +9,7 @@ import oop.Pharmacist;
 import oop.AppointmentOutcome;
 import oop.BloodType;
 import oop.Doctor;
+import oop.UserLogic.Role;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.StringTokenizer;
 
 import oop.Gender;
 import oop.AdministratorLogic.ReplenishmentRequest;
-public class Administrator implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
+public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
     
     private String id;
     private String name;
@@ -29,6 +30,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
 
     public Administrator(String name, String id, Gender gender, int age)
     {
+        super(name, id, age, gender);
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -437,7 +439,7 @@ public class Administrator implements StaffManagementInterface, AppointmentManag
         try {
             // initialise staff
             ArrayList<HospitalStaff> staff = importStaff(staffFilename);
-            Hospital.staff = staff;
+            Hospital.staffs = staff;
             // initialise patients
             ArrayList<Patient> patients = importPatients(patientFilename);
             Hospital.patients = patients;

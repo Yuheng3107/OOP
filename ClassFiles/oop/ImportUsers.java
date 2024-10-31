@@ -2,13 +2,16 @@ package oop;
 
 import java.io.*;
 import java.util.*;
+
+import oop.AdministratorLogic.Administrator;
+
 import java.time.*;
 import java.nio.*;
 
 public class ImportUsers {
-    public static List<Patient> readPatientsFromCSV(String filePath)
+    public static ArrayList<Patient> readPatientsFromCSV(String filePath)
     {
-        List<Patient> patients = new ArrayList<>();
+        ArrayList<Patient> patients = new ArrayList<Patient>();
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
@@ -77,7 +80,7 @@ public class ImportUsers {
                     String defaultPassword = "password";
                     writer.println(patientID + "," + defaultPassword);
                 }
-                System.out.println("Patient Credentials file created successfully.");
+                System.out.println("DEBUG: Patient Credentials file created successfully.");
             }
             catch (IOException e)
             {
@@ -86,11 +89,74 @@ public class ImportUsers {
         }
         else
         {
-            System.out.println("Patient Credentials file already exists.");
+            System.out.println("DEBUG: Patient Credentials file already exists.");
         }
         return patients;
     }
 
+    public static ArrayList<HospitalStaff> readStaffFromCSV(String filePath)
+    {
+        ArrayList<HospitalStaff> staff = new ArrayList<HospitalStaff>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String headerLine = br.readLine(); // Skip the header line
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                String staffId = values[0];
+                String name = values[1];
+                String role = values[2];
+                Gender gender = values[3].equalsIgnoreCase("Male") ? Gender.Male : Gender.Female;
+                int age = Integer.parseInt(values[4]);
+
+                // Instantiate the appropriate subclass based on the role
+                HospitalStaff hospitalStaff = null;
+                switch (role) {
+                    case "Doctor":
+                        hospitalStaff = new Doctor(name, staffId, age, gender);
+                        break;
+                    case "Pharmacist":
+                        hospitalStaff = new Pharmacist(name, staffId, age, gender);
+                        break;
+                    case "Administrator":
+                        hospitalStaff = new Administrator(name, staffId, gender, age);
+                        break;
+                    default:
+                        System.out.println("Unknown role: " + role);
+                }
+
+                if (hospitalStaff != null) {
+                    staff.add(hospitalStaff);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File databaseFile = new File("StaffCredentialsDatabase.csv");
+        if (!databaseFile.exists()) {
+            // Write the ID and a default password to the credentials database
+            try (PrintWriter writer = new PrintWriter(new FileWriter(databaseFile))) {
+                writer.println("ID,Password");
+
+                // Write staff credentials
+                for (HospitalStaff hospitalStaff : staff) {
+                    String staffID = hospitalStaff.getStaffID();
+                    String defaultPassword = "password";
+                    writer.println(staffID + "," + defaultPassword);
+                }
+                System.out.println("DEBUG: Staff Credentials file created successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("DEBUG: Staff Credentials file already exists.");
+        }
+        return staff;
+    }
+
+    /*
     public static List<Doctor> readDoctorFromCSV(String filePath)
     {
         List<Doctor> doctors = new ArrayList<>();
@@ -146,7 +212,7 @@ public class ImportUsers {
         return doctors;
     }
 
-    public static List<Pharmacist> readPharmacistFromCSV(String filePath)
+    /*public static List<Pharmacist> readPharmacistFromCSV(String filePath)
     {
         List<Pharmacist> pharmacists = new ArrayList<>();
         String line;
@@ -256,7 +322,6 @@ public class ImportUsers {
         return administrators;
     }
 
-
     public static List<MedicineStock> readMedicineFromCSV(String filePath) {
         List<MedicineStock> medStocks = new ArrayList<>();
         String line;
@@ -328,4 +393,5 @@ public class ImportUsers {
             e.printStackTrace();
         }
     }
+    */
 }

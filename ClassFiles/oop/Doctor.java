@@ -25,7 +25,7 @@ public class Doctor extends HospitalStaff{
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
         pendingAppointments = new ArrayList<>();
-        Hospital.staff.add(this);
+        Hospital.staffs.add(this);
     }
 
     public ArrayList<TimeSlot> generateDefaultTimeSlots() //generates hourly time slots for the next two months (starting from the next day)

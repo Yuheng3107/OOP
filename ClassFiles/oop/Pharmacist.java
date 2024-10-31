@@ -12,7 +12,7 @@ public class Pharmacist extends HospitalStaff {
     public Pharmacist(String name, String staffID, int age, Gender gender) {
         super(name, staffID, age, gender);
         this.pharmacistID = staffID;
-        Hospital.staff.add(this);
+        Hospital.staffs.add(this);
     }
     private Inventory inventory;
 
