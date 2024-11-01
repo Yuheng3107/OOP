@@ -44,7 +44,7 @@ public class Menu {
         System.out.println("|                Pharmacist                 |");
         System.out.println("=============================================");
         System.out.println("|        Select from the following          |");
-        System.out.println("| 1. View Appointment Outcomcords           |");
+        System.out.println("| 1. View Appointment Outcome Records           |");
         System.out.println("| 2. Update Prescription Status             |");
         System.out.println("| 3. View Medication Inventory              |");
         System.out.println("| 4. Submit Replenishment Request           |");

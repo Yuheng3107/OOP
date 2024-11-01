@@ -2,6 +2,7 @@ package oop;
 import java.io.*;
 import java.util.*;
 
+import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.ReplenishmentRequest;
 public class Hospital {
@@ -142,7 +143,7 @@ public class Hospital {
                                 int docChoice = 0;
                                 Menu.printDoctorMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Doctor doc = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -158,8 +159,7 @@ public class Hospital {
                                         System.out.println("Set Availability for Appointments");
                                         break;
                                     case 5:
-                                        int loop = 1;
-                                        while (loop != -1)
+                                        while (true)
                                         {
                                             System.out.println("Accept or Decline Appointment Request");
                                             System.out.println("1. Accept\n2. Decline\nEnter your choice: ");
@@ -167,12 +167,12 @@ public class Hospital {
                                             
                                             if (docChoice == 1)
                                             {
-                                                doc.acceptAppointmentRequest();
+                                                doctor.acceptAppointmentRequest();
                                                 break;
                                             }
                                             else if (docChoice == 2)
                                             {
-                                                doc.declineAppointmentRequest();
+                                                doctor.declineAppointmentRequest();
                                                 break;
                                             }
                                             else if (docChoice == -1)
@@ -186,13 +186,13 @@ public class Hospital {
                                         }
                                         break;
                                     case 6:
-                                        doc.viewUpcomingAppointments();
+                                        doctor.viewUpcomingAppointments();
                                         break;
                                     case 7:
-                                        doc.recordAppointmentOutcome();
+                                        doctor.recordAppointmentOutcome();
                                         break;
                                     case 8:
-                                        System.out.println("Goodbye " + doc.getName() + "!\n");
+                                        System.out.println("Goodbye " + doctor.getName() + "!\n");
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;
@@ -202,14 +202,64 @@ public class Hospital {
                                 }
                                 break;
                             case "Pharmacist":
+                                int pharChoice = 0;
                                 Menu.printPharmacistMenu();
                                 System.out.print("Choice: ");
                                 menuChoice = Integer.parseInt(sc.nextLine());
+                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        System.out.println("View Appointment Outcomes Records");
+                                        break;
+                                    case 2:
+                                        System.out.println("Update Prescription Status");
+                                        break;
+                                    case 3:
+                                        System.out.println("View Medication Inventory");
+                                        break;
+                                    case 4:
+                                        System.out.println("Submit Replenishment Request");
+                                        break;
+                                    case 5:
+                                        System.out.println("Goodbye " + pharmacist.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
                                 break;
                             case "Staff Member":
+                                int adminChoice = 0;
                                 Menu.printAdminMenu();
                                 System.out.print("Choice: ");
                                 menuChoice = Integer.parseInt(sc.nextLine());
+                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        System.out.println("View and Manage Hospital Staff");
+                                        break;
+                                    case 2:
+                                        System.out.println("View Appointments Details");
+                                        break;
+                                    case 3:
+                                        System.out.println("View and Manage Medication Inventory");
+                                        break;
+                                    case 4:
+                                        System.out.println("Approve Replenishment Requests");
+                                        break;
+                                    case 5:
+                                        System.out.println("Goodbye " + administrator.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
                                 break;
                             default:
                                 System.out.println("Invalid input! Please try again!");
@@ -397,6 +447,24 @@ public class Hospital {
         for (HospitalStaff member : staffs) {
             if (member instanceof Doctor && member.getStaffID().equals(staffID)) {
                 return (Doctor) member; // Cast to Doctor
+            }
+        }
+        return null; // Return null if no matching doctor is found
+    }
+
+    public static Pharmacist getPharmacistObjectByStaffID(String staffID) {
+        for (HospitalStaff member : staffs) {
+            if (member instanceof Pharmacist && member.getStaffID().equals(staffID)) {
+                return (Pharmacist) member; // Cast to Pharmacist
+            }
+        }
+        return null; // Return null if no matching doctor is found
+    }
+
+    public static Administrator getAdministratorObjectByStaffID(String staffID) {
+        for (HospitalStaff member : staffs) {
+            if (member instanceof Administrator && member.getStaffID().equals(staffID)) {
+                return (Administrator) member; // Cast to Administrator
             }
         }
         return null; // Return null if no matching doctor is found
