@@ -108,6 +108,7 @@ public class Patient extends Role {
         System.out.println("Which doctor do you want to schedule an appointment with? (enter index)");
         Hospital.namesOfDoctors();
         Scanner sc = new Scanner(System.in);
+        System.out.print("Choice: ");
         int choiceOfDoctor = sc.nextInt();
         Doctor doctor = Hospital.getDoctorByIndex(choiceOfDoctor-1);
         if (doctor == null)
@@ -213,7 +214,7 @@ public class Patient extends Role {
 
     public void viewScheduledAppointmentStatus()
     {
-        System.out.println("Choose the appointment to view status: (enter index)");
+        //System.out.println("Choose the appointment to view status: (enter index)");
         int i = 1;
         for (Appointment appointment : scheduledAppointments)
         {
@@ -224,6 +225,7 @@ public class Patient extends Role {
             System.out.println("End Time: " + String.valueOf(appointment.timeSlot.end));
             i++;
         }
+        System.out.println("Choose the appointment to view status: (enter index)");
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
         System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
@@ -288,7 +290,6 @@ public class Patient extends Role {
         System.out.println("Date of Birth: \t" + medicalRecord.getDateOfBirth());
         System.out.println("Gender: \t" + medicalRecord.getGender());
         System.out.println("Blood Type: \t" + blood + "\n");
-        //System.out.println("Blood Type: \t" + medicalRecord.getBloodType() + "\n");
 
         System.out.println("Contact Information:");
         System.out.println("Phone number: \t" + medicalRecord.getPhoneNumber());

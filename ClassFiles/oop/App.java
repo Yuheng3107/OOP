@@ -16,11 +16,11 @@ public class App {
         };
 
         
-        Doctor doctor1 = new Doctor("Mike Adams", "D0001", 40, Gender.Male);
-        Doctor doctor2 = new Doctor("Mikey Mike", "D0002", 22, Gender.Female);
+        // Doctor doctor1 = new Doctor("Mike Adams", "D0001", 40, Gender.Male);
+        // Doctor doctor2 = new Doctor("Mikey Mike", "D0002", 22, Gender.Female);
         String[] s = new String[1]; //placeholder to create medicalHistory
         s[0] = "a";
-        Patient patient1 = new Patient("Mary Lamb", "P0001", LocalDate.of(2000, 1, 1), Gender.Female, BloodType.ABMinus, "hi@gmail.com");
+        // Patient patient1 = new Patient("Mary Lamb", "P0001", LocalDate.of(2000, 1, 1), Gender.Female, BloodType.ABMinus, "hi@gmail.com");
         // //Test Case 3
         // patient1.viewAvailableAppointmentSlots();
         // //Test Case 4

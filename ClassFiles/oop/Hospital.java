@@ -40,7 +40,7 @@ public class Hospital {
             userLogout = false;
             while ((loginSuccess == false) && (userLogout == false))
             {
-                System.out.print("Enter your id: ");
+                System.out.print("--------------\nEnter -1 to quit\nEnter your id: ");
                 id = sc.nextLine();
                 if (id.equals("-1"))
                 {
@@ -88,7 +88,7 @@ public class Hospital {
                 }
                 else if (matchedPatient != null)
                 {
-                    System.out.println("Welcome " + matchedPatient.getName() + "!");
+                    System.out.println("\nWelcome " + matchedPatient.getName() + "!");
                     loginSuccess = true;
                     while (userLogout == false)
                     {
@@ -132,25 +132,89 @@ public class Hospital {
                 }
                 else if (matchedHospitalStaff != null)
                 {
-                    System.out.println("Welcome " + matchedHospitalStaff.getName() + "!");
+                    System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
                     loginSuccess = true;
-                    switch (matchedHospitalStaff.getRole())
+                    while (userLogout == false)
                     {
-                        case "Doctor":
-                            Menu.printDoctorMenu();
-                            System.out.print("Choice: ");
-                            menuChoice = Integer.parseInt(sc.nextLine());
-                            break;
-                        case "Pharmacist":
-                            Menu.printPharmacistMenu();
-                            System.out.print("Choice: ");
-                            menuChoice = Integer.parseInt(sc.nextLine());
-                            break;
-                        case "Staff Member":
-                            Menu.printAdminMenu();
-                            System.out.print("Choice: ");
-                            menuChoice = Integer.parseInt(sc.nextLine());
-                            break;
+                        switch (matchedHospitalStaff.getRole())
+                        {
+                            case "Doctor":
+                                int docChoice = 0;
+                                Menu.printDoctorMenu();
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                Doctor doc = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        System.out.println("View Patient Medical Records");
+                                        break;
+                                    case 2:
+                                        System.out.println("Update Patient Medical Records");
+                                        break;
+                                    case 3:
+                                        System.out.println("View Personal Schedule");
+                                        break;
+                                    case 4:
+                                        System.out.println("Set Availability for Appointments");
+                                        break;
+                                    case 5:
+                                        int loop = 1;
+                                        while (loop != -1)
+                                        {
+                                            System.out.println("Accept or Decline Appointment Request");
+                                            System.out.println("1. Accept\n2. Decline\nEnter your choice: ");
+                                            docChoice = Integer.parseInt(sc.nextLine());
+                                            
+                                            if (docChoice == 1)
+                                            {
+                                                doc.acceptAppointmentRequest();
+                                                break;
+                                            }
+                                            else if (docChoice == 2)
+                                            {
+                                                doc.declineAppointmentRequest();
+                                                break;
+                                            }
+                                            else if (docChoice == -1)
+                                            {
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                System.out.println("Invalid input! Enter -1 to return to previous menu...");
+                                            }
+                                        }
+                                        break;
+                                    case 6:
+                                        doc.viewUpcomingAppointments();
+                                        break;
+                                    case 7:
+                                        doc.recordAppointmentOutcome();
+                                        break;
+                                    case 8:
+                                        System.out.println("Goodbye " + doc.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
+                                break;
+                            case "Pharmacist":
+                                Menu.printPharmacistMenu();
+                                System.out.print("Choice: ");
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                break;
+                            case "Staff Member":
+                                Menu.printAdminMenu();
+                                System.out.print("Choice: ");
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                break;
+                            default:
+                                System.out.println("Invalid input! Please try again!");
+                                break;
+                        }
                     }
                 }
             }

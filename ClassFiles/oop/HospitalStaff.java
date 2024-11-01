@@ -20,6 +20,11 @@ public abstract class HospitalStaff extends Role {
         return staffID;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
     public String getRole() {
         if (this instanceof Doctor) {
             return "Doctor";
