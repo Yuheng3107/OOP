@@ -36,7 +36,9 @@ public class Hospital {
         sc = new Scanner(System.in);
         while (systemLogout != true)
         {
-            while (!loginSuccess)
+            loginSuccess = false;
+            userLogout = false;
+            while ((loginSuccess == false) && (userLogout == false))
             {
                 System.out.print("Enter your id: ");
                 id = sc.nextLine();
@@ -80,21 +82,18 @@ public class Hospital {
                 }
 
                 int menuChoice;
-                if (!loginSuccess)
+                if (loginSuccess == false)
                 {
                     System.out.println("Invalid credentials or user ID not found.");
                 }
                 else if (matchedPatient != null)
                 {
                     System.out.println("Welcome " + matchedPatient.getName() + "!");
-                    System.out.println("Press ENTER to continue...");
-                    sc.nextLine();
                     loginSuccess = true;
                     while (userLogout == false)
                     {
                         Menu.printPatientMenu();
-                        menuChoice = sc.nextInt();
-                        sc.nextLine();
+                        menuChoice = Integer.parseInt(sc.nextLine());
                         switch (menuChoice) {
                             case 1:
                                 System.out.println("View Medical Record");
@@ -121,7 +120,7 @@ public class Hospital {
                                 System.out.println("View Past Appointment Outcome Records");
                                 break;
                             case 9:
-                                System.out.println("Goodbye " + matchedPatient.getName() + "!");
+                                System.out.println("Goodbye " + matchedPatient.getName() + "!\n");
                                 userLogout = true;
                                 loginSuccess = false;
                                 break;
@@ -134,22 +133,23 @@ public class Hospital {
                 else if (matchedHospitalStaff != null)
                 {
                     System.out.println("Welcome " + matchedHospitalStaff.getName() + "!");
-                    System.out.println("Press ENTER to continue...");
                     loginSuccess = true;
                     switch (matchedHospitalStaff.getRole())
                     {
                         case "Doctor":
                             Menu.printDoctorMenu();
                             System.out.print("Choice: ");
-                            menuChoice = sc.nextInt();
+                            menuChoice = Integer.parseInt(sc.nextLine());
                             break;
                         case "Pharmacist":
                             Menu.printPharmacistMenu();
-                            menuChoice = sc.nextInt();
+                            System.out.print("Choice: ");
+                            menuChoice = Integer.parseInt(sc.nextLine());
                             break;
                         case "Staff Member":
                             Menu.printAdminMenu();
-                            menuChoice = sc.nextInt();
+                            System.out.print("Choice: ");
+                            menuChoice = Integer.parseInt(sc.nextLine());
                             break;
                     }
                 }
