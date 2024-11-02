@@ -1,12 +1,15 @@
 package oop;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import oop.AdministratorLogic.Administrator;
-
-import java.time.*;
-import java.nio.*;
 
 public class ImportUsers {
     public static ArrayList<Patient> readPatientsFromCSV(String filePath)
