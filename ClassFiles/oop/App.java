@@ -1,8 +1,16 @@
 package oop;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Scanner;
+
+import oop.AdministratorLogic.Administrator;
 
 public class App {
+    private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
+    private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     public static void main(String[] args)
     {
         TimeSlot[] timeSlots = new TimeSlot[] {
@@ -10,65 +18,241 @@ public class App {
             new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(11, 0), LocalTime.of(12, 0)),
             new TimeSlot(LocalDate.of(2024, 10, 21), LocalTime.of(9, 0), LocalTime.of(10, 0))
         };
-
-        
-        // Doctor doctor1 = new Doctor("Mike Adams", "D0001", 40, Gender.Male);
-        // Doctor doctor2 = new Doctor("Mikey Mike", "D0002", 22, Gender.Female);
         String[] s = new String[1]; //placeholder to create medicalHistory
         s[0] = "a";
-        // Patient patient1 = new Patient("Mary Lamb", "P0001", LocalDate.of(2000, 1, 1), Gender.Female, BloodType.ABMinus, "hi@gmail.com");
-        // //Test Case 3
-        // patient1.viewAvailableAppointmentSlots();
-        // //Test Case 4
-        // patient1.scheduleAppointment();
-        // patient1.viewScheduledAppointmentStatus();
-        // doctor1.viewPendingAppointments();
-        // patient1.viewAvailableAppointmentSlots();
-        // doctor1.acceptAppointmentRequest();
-        // patient1.viewScheduledAppointmentStatus();
-        // //Test Case 5
-        // patient1.rescheduleAppointment();
-        // patient1.viewAvailableAppointmentSlots();
-        // //Test Case 6
-        // patient1.scheduleAppointment();
-        // patient1.viewAvailableAppointmentSlots();
-        // patient1.cancelAppointment();
-        // patient1.viewAvailableAppointmentSlots();
-        //Test Case 7
-        // patient1.scheduleAppointment();
-        // patient1.scheduleAppointment();
-        // patient1.viewScheduledAppointments();
-        // Test Case 8
-        // patient1.viewAppointmentOutcomeRecords();
         
-
-        //Test Case 14
-        // patient1.scheduleAppointment();
-        // patient1.scheduleAppointment();
-        // patient1.scheduleAppointment();
-        // doctor1.viewPendingAppointments();
-        // doctor1.acceptAppointmentRequest();
-        // doctor1.acceptAppointmentRequest();
-        // doctor1.viewUpcomingAppointments();
-        //Test Case 15
-        //patient1.scheduleAppointment();
-        //doctor1.acceptAppointmentRequest();
-        //doctor1.recordAppointmentOutcome();
-        //patient1.viewAppointmentOutcomeRecords();
-
-        /*
-        // testing for medicalrecord for patient and doc
         Hospital hospital = new Hospital();
-        String[] s = new String[1];
-        s[0] = "test";
-        MedicalHistory medicH = new MedicalHistory(s,s,s,s);
+        App.program();
+    }
 
-        Patient patient1 = new Patient("kai", "P01", LocalDate.of(2000, 1, 1), Gender.Female, BloodType.ABMinus, medicH, "kai.com", hospital);
-        //patient1.getMedicalRecord();
+    public static void program()
+    {
+        Scanner sc;
+        boolean loginSuccess = false, userLogout = false, systemLogout = false;
+        String id, password;
+        sc = new Scanner(System.in);
+        while (systemLogout != true)
+        {
+            loginSuccess = false;
+            userLogout = false;
+            while ((loginSuccess == false) && (userLogout == false))
+            {
+                System.out.print("--------------\nEnter -1 to quit\nEnter your id: ");
+                id = sc.nextLine();
+                if (id.equals("-1"))
+                {
+                    systemLogout = true;
+                    break;
+                }
+                System.out.print("Enter your password: ");
+                password = sc.nextLine();
 
-        Doctor doctor1 = new Doctor("John", "D01", 100, Gender.Male);
-        doctor1.viewMedicalRecord(patient1);*/
+                Patient matchedPatient = Hospital.findPatientById(id);
+                HospitalStaff matchedHospitalStaff = Hospital.findStaffById(id);
 
-        Hospital hospital = new Hospital();
+                if ((matchedPatient != null) && (matchedHospitalStaff == null)) //Found patient
+                {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(patientCredentialsDatabase)))
+                    {
+                        loginSuccess = Hospital.processLoginPatient(reader, id, password, matchedPatient, sc);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else if ((matchedPatient == null) && (matchedHospitalStaff != null)) //Found hospitalstaff
+                {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(staffCredentialsDatabase)))
+                    {
+                        loginSuccess = Hospital.processLoginHospitalStaff(reader, id, password, matchedHospitalStaff, sc);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    System.out.println("Invalid ID. Please try again!");
+                    continue;
+                }
+
+                int menuChoice;
+                if (loginSuccess == false)
+                {
+                    System.out.println("Invalid credentials or user ID not found.");
+                }
+                else if (matchedPatient != null)
+                {
+                    System.out.println("\nWelcome " + matchedPatient.getName() + "!");
+                    loginSuccess = true;
+                    while (userLogout == false)
+                    {
+                        Menu.printPatientMenu();
+                        menuChoice = Integer.parseInt(sc.nextLine());
+                        switch (menuChoice) {
+                            case 1:
+                                matchedPatient.getMedicalRecord();
+                                break;
+                            case 2:
+                                matchedPatient.updatePersonalInformation(matchedPatient.getPatientID());
+                                break;
+                            case 3:
+                                matchedPatient.viewAvailableAppointmentSlots();
+                                break;
+                            case 4:
+                                matchedPatient.scheduleAppointment();
+                                break;
+                            case 5:
+                                matchedPatient.rescheduleAppointment();
+                                break;
+                            case 6:
+                                matchedPatient.cancelAppointment();
+                                break;
+                            case 7:
+                                matchedPatient.viewScheduledAppointments();
+                                break;
+                            case 8:
+                                matchedPatient.viewAppointmentOutcomeRecords();
+                                break;
+                            case 9:
+                                matchedPatient.viewScheduledAppointmentStatus();
+                                break;
+                            case 10:
+                                System.out.println("Goodbye " + matchedPatient.getName() + "!\n");
+                                userLogout = true;
+                                loginSuccess = false;
+                                break;
+                            default:
+                                System.out.println("Invalid input! Please try again!");
+                                break;
+                        }
+                    }
+                }
+                else if (matchedHospitalStaff != null)
+                {
+                    System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
+                    loginSuccess = true;
+                    while (userLogout == false)
+                    {
+                        switch (matchedHospitalStaff.getRole())
+                        {
+                            case "Doctor":
+                                int docChoice = 0;
+                                Menu.printDoctorMenu();
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        System.out.println("View Patient Medical Records");
+                                        break;
+                                    case 2:
+                                        System.out.println("Update Patient Medical Records");
+                                        break;
+                                    case 3:
+                                        System.out.println("View Personal Schedule");
+                                        break;
+                                    case 4:
+                                        System.out.println("Set Availability for Appointments");
+                                        break;
+                                    case 5:                                    
+                                        doctor.acceptOrDeclineAppointmentRequest();
+                                        break;
+                                    case 6:
+                                        doctor.viewUpcomingAppointments();
+                                        break;
+                                    case 7:
+                                        doctor.recordAppointmentOutcome();
+                                        break;
+                                    case 8:
+                                        System.out.println("Goodbye " + doctor.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
+                                break;
+                            case "Pharmacist":
+                                int pharChoice = 0;
+                                Menu.printPharmacistMenu();
+                                System.out.print("Choice: ");
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        System.out.println("View Appointment Outcomes Records");
+                                        break;
+                                    case 2:
+                                        System.out.println("Update Prescription Status");
+                                        break;
+                                    case 3:
+                                        System.out.println("View Medication Inventory");
+                                        break;
+                                    case 4:
+                                        System.out.println("Submit Replenishment Request");
+                                        break;
+                                    case 5:
+                                        System.out.println("Goodbye " + pharmacist.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
+                                break;
+                            case "Staff Member":
+                                int adminChoice = 0;
+                                Menu.printAdminMenu();
+                                System.out.print("Choice: ");
+                                menuChoice = Integer.parseInt(sc.nextLine());
+                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                switch (menuChoice)
+                                {
+                                    case 1:
+                                        administrator.manageHospitalStaff();
+                                        //Some errors
+                                        break;
+                                    case 2:
+                                        System.out.println("View Appointments Details");
+                                        //administrator.viewAppointmentDetails(null);
+                                        break;
+                                    case 3:
+                                        System.out.println("View and Manage Medication Inventory");
+                                        administrator.manageInventory();
+                                        break;
+                                    case 4:
+                                        System.out.println("Approve Replenishment Requests");
+                                        //@ Yu Heng this part I not very sure how you implemented this
+                                        System.out.println("Enter name of the medicine to approve: ");
+                                        String name = sc.next();
+                                        System.out.println("Enter quantity of the medicine in replenishment request: ");
+                                        int quantity = Integer.parseInt(sc.nextLine());
+                                        administrator.approveReplenishmentRequest(name, quantity);
+                                        break;
+                                    case 5:
+                                        System.out.println("Goodbye " + administrator.getName() + "!\n");
+                                        userLogout = true;
+                                        loginSuccess = false;
+                                        break;
+                                    default:
+                                        System.out.println("Invalid input! Please try again!");
+                                        break;
+                                }
+                                break;
+                            default:
+                                System.out.println("Invalid input! Please try again!");
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        sc.close();
     }
 }
