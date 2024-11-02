@@ -1,17 +1,17 @@
 package oop;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import oop.UserLogic.Role;
 
@@ -86,37 +86,52 @@ public class Patient extends Role {
 
     public void viewAvailableAppointmentSlots() //timeslots will be printed per hour
     {
+        int year;
+        int month;
+        int day;
         Scanner sc = new Scanner(System.in);
-        System.out.println("Type the year to view available appointment slots:");
-        int year = sc.nextInt();
-        System.out.println("Type the month to view available appointment slots:");
-        int month = sc.nextInt();
-        System.out.println("Type the day to view available appointment slots:");
-        int day = sc.nextInt();
-        LocalDate date = LocalDate.of(year, month, day);
-        System.out.println("Choose the doctor to view available appointment slots: (enter number)");
-        Hospital.namesOfDoctors();
-
-
-        int choice = sc.nextInt() - 1; // subtract 1 to match array index (as patient enters 1 for first doctor)
-
-        // ensure the choice is valid
-        if (choice >= 0 && choice < Hospital.numberOfDoctors()) 
-        {
-            Doctor chosenDoctor = Hospital.getDoctorByIndex(choice); // get the selected doctor through choice
+        try{
+            System.out.println("Type the year to view available appointment slots:");
+            year = sc.nextInt();
+            System.out.println("Type the month to view available appointment slots:");
+            month = sc.nextInt();
+            System.out.println("Type the day to view available appointment slots:");
+            day = sc.nextInt();
+            LocalDate date = LocalDate.of(year, month, day);
+            
     
-            // Print available time slots for the selected doctor
-            TimeSlot[] availableSlots = chosenDoctor.getAvailability(date);
-            System.out.println("Available slots for Dr. " + chosenDoctor.getName() + " on " + date + ":");
-            for (TimeSlot slot : availableSlots)
+            // ensure the choice is valid
+            while (true)
             {
-                System.out.println(slot.start + " to " + slot.end);
+                System.out.println("Choose the doctor to view available appointment slots: (enter number)");
+                Hospital.namesOfDoctors();
+    
+                int choice = sc.nextInt() - 1; // subtract 1 to match array index (as patient enters 1 for first doctor)
+                if (choice >= 0 && choice < Hospital.numberOfDoctors()) 
+                {
+                    Doctor chosenDoctor = Hospital.getDoctorByIndex(choice); // get the selected doctor through choice
+            
+                    // Print available time slots for the selected doctor
+                    TimeSlot[] availableSlots = chosenDoctor.getAvailability(date);
+                    System.out.println("Available slots for Dr. " + chosenDoctor.getName() + " on " + date + ":");
+                    for (TimeSlot slot : availableSlots)
+                    {
+                        System.out.println(slot.start + " to " + slot.end);
+                    }
+                    return;
+                }
+                else
+                {
+                    System.out.println("Invalid choice of doctor. Please try again.");
+                }
             }
         }
-        else
+        catch (Exception e)
         {
-            System.out.println("Invalid choice.");
+            System.out.println("Invalid input. Returning to main menu.");
+            return;
         }
+
     }
 
     public boolean checkForValidTimeSlot(Doctor doctor, TimeSlot timeSlot)
@@ -148,45 +163,62 @@ public class Patient extends Role {
     }
     public void scheduleAppointment()
     {
-        System.out.println("Which doctor do you want to schedule an appointment with? (enter index)");
-        Hospital.namesOfDoctors();
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Choice: ");
-        int choiceOfDoctor = sc.nextInt();
-        Doctor doctor = Hospital.getDoctorByIndex(choiceOfDoctor-1);
-        if (doctor == null)
-        {
-            return;
-        }
-        System.out.println("Type the year to book appointment:");
-        int year = sc.nextInt();
-        System.out.println("Type the month to book appointment:");
-        int month = sc.nextInt();
-        System.out.println("Type the day to book appointment:");
-        int day = sc.nextInt();
-        LocalDate date = LocalDate.of(year, month, day);
-        System.out.println("Type the start time of the appointment (24 hour clock)");
-        int start = sc.nextInt();
-        System.out.println("Type the end time of the appointment (24 hour clock)");
-        int end = sc.nextInt();
-        TimeSlot timeSlot = new TimeSlot(date, LocalTime.of(start,0), LocalTime.of(end,0));
-        
-        
-        //check if time slot is available
-        if (checkForValidTimeSlot(doctor, timeSlot) == true)
-        {
-            //schedule appointment
-            Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getStaffID(), patientID);
-            addAppointmentToScheduledAppointments(appointment);
-            //remove timeslots from doctor's array of available timeslots
-            LocalTime tempStart = timeSlot.start;
-            while (!tempStart.isAfter(timeSlot.end.minusHours(1))) {
-                TimeSlot tempSlot = new TimeSlot(timeSlot.date, tempStart, tempStart.plusHours(1));
-                doctor.deleteAvailableSlots(tempSlot);
-                tempStart = tempStart.plusHours(1);
-            }
-            doctor.addPendingAppointment(appointment);
+        Doctor doctor = null;
 
+        try
+        {
+            Scanner sc;
+            while (true)
+            {
+                System.out.println("Which doctor do you want to schedule an appointment with? (enter index)");
+                Hospital.namesOfDoctors();
+                sc = new Scanner(System.in);
+                System.out.print("Choice: ");
+                int choiceOfDoctor = sc.nextInt();
+                doctor = Hospital.getDoctorByIndex(choiceOfDoctor-1);
+                if (doctor == null)
+                {
+                    continue;
+                }
+                else{
+                    break;
+                }
+            }
+            System.out.println("Type the year to book appointment:");
+            int year = sc.nextInt();
+            System.out.println("Type the month to book appointment:");
+            int month = sc.nextInt();
+            System.out.println("Type the day to book appointment:");
+            int day = sc.nextInt();
+            LocalDate date = LocalDate.of(year, month, day);
+            System.out.println("Type the start time of the appointment (24 hour clock)");
+            int start = sc.nextInt();
+            System.out.println("Type the end time of the appointment (24 hour clock)");
+            int end = sc.nextInt();
+            TimeSlot timeSlot = new TimeSlot(date, LocalTime.of(start,0), LocalTime.of(end,0));
+            
+            
+            //check if time slot is available
+            if (checkForValidTimeSlot(doctor, timeSlot) == true)
+            {
+                //schedule appointment
+                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getStaffID(), patientID);
+                addAppointmentToScheduledAppointments(appointment);
+                //remove timeslots from doctor's array of available timeslots
+                LocalTime tempStart = timeSlot.start;
+                while (!tempStart.isAfter(timeSlot.end.minusHours(1))) {
+                    TimeSlot tempSlot = new TimeSlot(timeSlot.date, tempStart, tempStart.plusHours(1));
+                    doctor.deleteAvailableSlots(tempSlot);
+                    tempStart = tempStart.plusHours(1);
+                }
+                doctor.addPendingAppointment(appointment);
+    
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input. Returning to main menu.");
+            return;
         }
     }
 
@@ -206,33 +238,52 @@ public class Patient extends Role {
 
     public void rescheduleAppointment()
     {
-        viewScheduledAppointments();
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please choose the appointment to reschedule: (enter index)");
-        int index = sc.nextInt();
-        if (index > scheduledAppointments.size())
+        int check = viewScheduledAppointments();
+        if (check == -1)
         {
-            System.out.println("Invalid appointment number. Please try again.");
             return;
         }
-        Appointment appointment = scheduledAppointments.get(index-1);
-        Doctor doctor = Hospital.getDoctorObjectByStaffID(scheduledAppointments.get(index-1).doctorId);//remove from doctor's appointments
-        if (appointment.status == StatusOfAppointment.Pending)
-        {
-            doctor.deletePendingAppointment(appointment);
+        Scanner sc = new Scanner(System.in);
+        
+        try {
+            int index;
+            while (true)
+            {
+                System.out.println("Please choose the appointment to reschedule: (enter index)");
+                index = sc.nextInt();
+                if (index > scheduledAppointments.size())
+                {
+                    System.out.println("Invalid appointment number. Please try again.");
+                    return;
+                }
+            }
+            Appointment appointment = scheduledAppointments.get(index-1);
+            Doctor doctor = Hospital.getDoctorObjectByStaffID(scheduledAppointments.get(index-1).doctorId);//remove from doctor's appointments
+            if (appointment.status == StatusOfAppointment.Pending)
+            {
+                doctor.deletePendingAppointment(appointment);
+            }
+            else
+            {
+                doctor.deleteScheduleAppointment(appointment);
+            }
+            scheduledAppointments.remove(index-1); //remove from patient's appointments
+            scheduleAppointment();
         }
-        else
+        catch (Exception e)
         {
-            doctor.deleteScheduleAppointment(appointment);
-        }
-        scheduledAppointments.remove(index-1); //remove from patient's appointments
-        scheduleAppointment();
+            System.out.println("Invalid input. Returning to main menu.");
+        }   
 
 
     }
     public void cancelAppointment()
     {
-        viewScheduledAppointments();
+        int check = viewScheduledAppointments();
+        if (check == -1)
+        {
+            return;
+        }
         Scanner sc = new Scanner(System.in);
         System.out.println("Please choose the appointment to cancel: (enter index)");
         int index = sc.nextInt();
@@ -258,6 +309,10 @@ public class Patient extends Role {
     public void viewScheduledAppointmentStatus()
     {
         int i = 1;
+        if (scheduledAppointments.isEmpty())
+        {
+            System.out.println("No scheduled appointments.");
+        }
         for (Appointment appointment : scheduledAppointments)
         {
             System.out.println("--- Appointment " + i + " ---");
@@ -281,7 +336,12 @@ public class Patient extends Role {
         }
     }
 
-    public void viewScheduledAppointments(){
+    public int viewScheduledAppointments(){
+        if (scheduledAppointments.isEmpty())
+        {
+            System.out.println("No scheduled appointments.");
+            return -1;
+        }
         System.out.println("Here are your scheduled appointments:");
         int i = 1;
         for (Appointment appointment : scheduledAppointments)
@@ -290,6 +350,7 @@ public class Patient extends Role {
             appointment.viewAppointment();
             i++;
         }
+        return 0;
         
     }
 
