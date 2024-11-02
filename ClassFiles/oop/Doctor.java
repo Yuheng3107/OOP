@@ -167,7 +167,7 @@ public class Doctor extends HospitalStaff{
             System.out.println("---Appointment " + i + "---");
             System.out.println("Date: " + appointment.date);
             System.out.println("Start time: " + appointment.timeSlot.start);
-            System.out.println("Start time: " + appointment.timeSlot.end);
+            System.out.println("End time: " + appointment.timeSlot.end);
             i++;
         }
    }

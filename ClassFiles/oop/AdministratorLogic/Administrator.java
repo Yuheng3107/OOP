@@ -126,11 +126,11 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("Date: " + appointment.date);
         System.out.println("Start time: " + appointment.timeSlot.start);
         System.out.println("End time: " + appointment.timeSlot.end);
-        // print appointment outcomes
-        for (AppointmentOutcome outcome : appointment.appointmentOutcome) {
-            System.out.println("Appointment outcome: ");
-            outcome.printAppointmentOutcomeRecord();
-        }
+        // print appointment outcomes (commented out as code was causing error)
+        // for (AppointmentOutcome outcome : appointment.appointmentOutcome) {
+        //     System.out.println("Appointment outcome: ");
+        //     outcome.printAppointmentOutcomeRecord();
+        // }
     }
 
 
