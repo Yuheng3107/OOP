@@ -439,7 +439,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         try {
             // initialise staff
             ArrayList<HospitalStaff> staff = importStaff(staffFilename);
-            Hospital.staffs = staff;
+            Hospital.st = staff;
             // initialise patients
             ArrayList<Patient> patients = importPatients(patientFilename);
             Hospital.patients = patients;
