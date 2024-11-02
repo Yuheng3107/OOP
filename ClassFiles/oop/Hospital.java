@@ -257,7 +257,7 @@ public class Hospital {
                                         System.out.println("Enter name of the medicine to approve: ");
                                         String name = sc.next();
                                         System.out.println("Enter quantity of the medicine in replenishment request: ");
-                                        int quantity = Integer.parseInt(sc.nextLine()());
+                                        int quantity = Integer.parseInt(sc.nextLine());
                                         administrator.approveReplenishmentRequest(name, quantity);
                                         break;
                                     case 5:
