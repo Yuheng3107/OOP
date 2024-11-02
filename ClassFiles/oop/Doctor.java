@@ -1,6 +1,5 @@
 package oop;
 
-import java.io.ObjectInputFilter.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -27,6 +26,7 @@ public class Doctor extends HospitalStaff{
         pendingAppointments = new ArrayList<>();
         Hospital.staffs.add(this);
     }
+
 
     public ArrayList<TimeSlot> generateDefaultTimeSlots() //generates hourly time slots for the next two months (starting from the next day)
     {
@@ -85,40 +85,34 @@ public class Doctor extends HospitalStaff{
         }
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
     }
-   public void acceptAppointmentRequest()
+   public void acceptAppointmentRequest(int appointmentNumber)
    {
-        viewPendingAppointments();
-        System.out.println("Choose the appointment to accept: (enter index)");
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-        if (choice > pendingAppointments.size())
+        if (pendingAppointments.isEmpty())
         {
-            System.out.println("Invalid appointment number. Please try again.");
+            System.out.println("No pending appointments.");
             return;
         }
-        Appointment appointment = pendingAppointments.get(choice-1);
+
+        Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Confirmed;
         schedule.add(appointment);
         pendingAppointments.remove(appointment);
-        System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");
+        System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");  
    }
-   public void declineAppointmentRequest()
+   public void declineAppointmentRequest(int appointmentNumber)
     {
-        viewPendingAppointments();
-        System.out.println("Choose the appointment to decline: (enter index)");
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-        if (choice > pendingAppointments.size())
+        if (pendingAppointments.isEmpty())
         {
-            System.out.println("Invalid appointment number. Please try again.");
-            return;
+            System.out.println("No pending appointments.");
         }
-        Appointment appointment = pendingAppointments.get(choice-1);
+
+        Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Canceled;
         //add timeslots back into doctor's available timeslots
         addTimeSlotToAvailableSlots(appointment);
         pendingAppointments.remove(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been declined.");
+                
    }
 
    public void deleteAvailableSlots(TimeSlot timeSlot)
@@ -162,6 +156,10 @@ public class Doctor extends HospitalStaff{
    public void viewPendingAppointments()
    {
         int i = 1;
+        if (pendingAppointments.isEmpty())
+        {
+            return;
+        }
         for (Appointment appointment : pendingAppointments)
         {
             System.out.println("---Appointment " + i + "---");
@@ -174,6 +172,10 @@ public class Doctor extends HospitalStaff{
     public void viewUpcomingAppointments() //prints confirmed appointments
    {
         int i = 1;  
+        if (schedule.isEmpty())
+        {
+            System.out.println("No scheduled appointments.");
+        }
         System.out.println("Here are your upcoming appointments for the next 2 months:");  
         for (Appointment appointment : schedule)
         {
@@ -187,38 +189,106 @@ public class Doctor extends HospitalStaff{
    }
     public void recordAppointmentOutcome()
     {
-        System.out.println("Please select the appointment to record the outcome (enter index)");
-        viewUpcomingAppointments();
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-        sc.nextLine();
-        Appointment appointment = schedule.get(choice-1); 
-        appointment.status = StatusOfAppointment.Completed;//set status to completed
-        System.out.println("What is the service given to the patient?");
-        String service = sc.nextLine();
-        // Collect prescribed medications
-        List<PrescribedMedication> medications = new ArrayList<>();
-        System.out.println("Please specify the medications to prescribe for the patient.");
-        while (true) {
-            System.out.print("Enter medication name (or 'done' to finish): ");
-            String medicationName = sc.nextLine();
-            if (medicationName.equalsIgnoreCase("done")) {
-                break;
+        try{
+            Scanner sc;
+            int choice;
+            while (true)
+            {
+                System.out.println("Please select the appointment to record the outcome (enter index)");
+                viewUpcomingAppointments();
+                sc = new Scanner(System.in);
+                choice = sc.nextInt();
+                sc.nextLine();
+                if (choice <= 0 || choice > schedule.size())
+                {
+                    System.out.println("Invalid appointment number. Please try again.");
+                }
+                else{
+                    break;
+                }
             }
-            
-            PrescribedMedication medication = new PrescribedMedication();
-            medication.name = medicationName;
-            medications.add(medication);
+            Appointment appointment = schedule.get(choice-1); 
+            appointment.status = StatusOfAppointment.Completed;//set status to completed
+            System.out.println("What is the service given to the patient?");
+            String service = sc.nextLine();
+            // Collect prescribed medications
+            List<PrescribedMedication> medications = new ArrayList<>();
+            System.out.println("Please specify the medications to prescribe for the patient.");
+            while (true) {
+                System.out.print("Enter medication name (or 'done' to finish): ");
+                String medicationName = sc.nextLine();
+                if (medicationName.equalsIgnoreCase("done")) {
+                    break;
+                }
+                
+                PrescribedMedication medication = new PrescribedMedication();
+                medication.name = medicationName;
+                medications.add(medication);
+            }
+
+            // Collect consultation notes
+            System.out.println("Enter any consultation notes:");
+            String consultationNotes = sc.nextLine();
+
+            // Create an array of prescribed medications for the AppointmentOutcome
+            PrescribedMedication[] prescribedMedications = medications.toArray(new PrescribedMedication[0]);
+            AppointmentOutcome appointmentOutcome = new AppointmentOutcome(appointment.date,service,prescribedMedications,consultationNotes);
+            appointment.setAppointmentOutcome(appointmentOutcome);
+            System.out.println("Appointment outcome recorded successfully.");
         }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input. Returning to main menu.");
+        }
+    }
 
-        // Collect consultation notes
-        System.out.println("Enter any consultation notes:");
-        String consultationNotes = sc.nextLine();
-
-        // Create an array of prescribed medications for the AppointmentOutcome
-        PrescribedMedication[] prescribedMedications = medications.toArray(new PrescribedMedication[0]);
-        AppointmentOutcome appointmentOutcome = new AppointmentOutcome(appointment.date,service,prescribedMedications,consultationNotes);
-        appointment.setAppointmentOutcome(appointmentOutcome);
-        System.out.println("Appointment outcome recorded successfully.");
+    public void acceptOrDeclineAppointmentRequest()
+    {
+        if (pendingAppointments.isEmpty())
+        {
+            System.out.println("No pending appointments.");
+            return;
+        }
+        try{
+            viewPendingAppointments();
+            Scanner sc = new Scanner(System.in);
+            int docChoice;
+            while (true)
+            {
+                System.out.println("Please choose the appointment to accept/decline. (enter index)");
+                docChoice = Integer.parseInt(sc.nextLine());
+                if (docChoice <= 0 || docChoice > pendingAppointments.size())
+                {
+                    System.out.println("Invalid appointment number. Please try again.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true)
+            {
+                System.out.println("Do you want to accept or decline this appointment? (enter '1' to accept or enter '2' to decline)");
+                int acceptOrDecline = Integer.parseInt(sc.nextLine());
+                if (acceptOrDecline == 1)
+                {
+                    acceptAppointmentRequest(docChoice);
+                    break;
+                }
+                else if (acceptOrDecline == 2)
+                {
+                    declineAppointmentRequest(docChoice);
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid input! Please try again.");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid input. Returning to main menu.");
+        }
     }
 }

@@ -124,7 +124,7 @@ public class Hospital {
                                 matchedPatient.viewScheduledAppointments();
                                 break;
                             case 8:
-                                System.out.println("View Past Appointment Outcome Records");
+                                matchedPatient.viewAppointmentOutcomeRecords();
                                 break;
                             case 9:
                                 matchedPatient.viewScheduledAppointmentStatus();
@@ -167,32 +167,8 @@ public class Hospital {
                                     case 4:
                                         System.out.println("Set Availability for Appointments");
                                         break;
-                                    case 5:
-                                        while (true)
-                                        {
-                                            System.out.println("Accept or Decline Appointment Request");
-                                            System.out.println("1. Accept\n2. Decline\nEnter your choice: ");
-                                            docChoice = Integer.parseInt(sc.nextLine());
-                                            
-                                            if (docChoice == 1)
-                                            {
-                                                doctor.acceptAppointmentRequest();
-                                                break;
-                                            }
-                                            else if (docChoice == 2)
-                                            {
-                                                doctor.declineAppointmentRequest();
-                                                break;
-                                            }
-                                            else if (docChoice == -1)
-                                            {
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                System.out.println("Invalid input! Enter -1 to return to previous menu...");
-                                            }
-                                        }
+                                    case 5:                                    
+                                        doctor.acceptOrDeclineAppointmentRequest();
                                         break;
                                     case 6:
                                         doctor.viewUpcomingAppointments();

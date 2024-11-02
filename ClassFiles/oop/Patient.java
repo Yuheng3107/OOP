@@ -214,6 +214,10 @@ public class Patient extends Role {
                 doctor.addPendingAppointment(appointment);
     
             }
+            else
+            {
+                System.out.println("TimeSlot is not available.");
+            }
         }
         catch (Exception e)
         {
@@ -359,6 +363,11 @@ public class Patient extends Role {
 
     public void viewAppointmentOutcomeRecords()
     {
+        if (appointmentOutcomes.isEmpty())
+        {
+            System.out.println("No appointment outcomes.");
+            return;
+        }
         for (AppointmentOutcome outcome : appointmentOutcomes)
         {
             outcome.printAppointmentOutcomeRecord();
