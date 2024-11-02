@@ -240,16 +240,25 @@ public class Hospital {
                                 switch (menuChoice)
                                 {
                                     case 1:
-                                        System.out.println("View and Manage Hospital Staff");
+                                        administrator.manageHospitalStaff();
+                                        //Some errors
                                         break;
                                     case 2:
                                         System.out.println("View Appointments Details");
+                                        //administrator.viewAppointmentDetails(null);
                                         break;
                                     case 3:
                                         System.out.println("View and Manage Medication Inventory");
+                                        administrator.manageInventory();
                                         break;
                                     case 4:
                                         System.out.println("Approve Replenishment Requests");
+                                        //@ Yu Heng this part I not very sure how you implemented this
+                                        System.out.println("Enter name of the medicine to approve: ");
+                                        String name = sc.next();
+                                        System.out.println("Enter quantity of the medicine in replenishment request: ");
+                                        int quantity = Integer.parseInt(sc.nextLine()());
+                                        administrator.approveReplenishmentRequest(name, quantity);
                                         break;
                                     case 5:
                                         System.out.println("Goodbye " + administrator.getName() + "!\n");
