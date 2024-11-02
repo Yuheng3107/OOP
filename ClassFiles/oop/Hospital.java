@@ -97,10 +97,10 @@ public class Hospital {
                         menuChoice = Integer.parseInt(sc.nextLine());
                         switch (menuChoice) {
                             case 1:
-                                System.out.println("View Medical Record");
+                                matchedPatient.getMedicalRecord();
                                 break;
                             case 2:
-                                System.out.println("Update Personal Information");
+                                matchedPatient.updatePersonalInformation(matchedPatient.getPatientID());
                                 break;
                             case 3:
                                 matchedPatient.viewAvailableAppointmentSlots();

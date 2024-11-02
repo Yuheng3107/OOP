@@ -3,9 +3,16 @@ package oop;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import oop.UserLogic.Role;
 
 public class Patient extends Role {
@@ -23,13 +30,12 @@ public class Patient extends Role {
         super(name, gender);
         this.name = name;
         this.patientID = patientID;
-        //this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, medicalHistory, email);
+        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, null, email);
         //this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
         Hospital.patients.add(this);
     }
-
 
     public String getName()
     {
@@ -39,6 +45,43 @@ public class Patient extends Role {
     public String getPatientID()
     {
         return patientID;
+    }
+
+    public void updatePersonalInformation(String userID) {
+        Scanner sc = new Scanner(System.in);
+        List<String> lines = new ArrayList<>();
+        String line, filePath = "Patient_List.csv";
+        boolean isUpdated = false;
+
+        System.out.print("Please enter your new email address for " + userID + ": ");
+        String newEmail = sc.nextLine();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                if (columns[0].equals(userID)) {
+                    columns[5] = newEmail;
+                    line = String.join(",", columns);
+                    isUpdated = true;
+                }
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (isUpdated) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+                for (String updatedLine : lines) {
+                    writer.println(updatedLine);
+                }
+                System.out.println("Details updated successfully for ID: " + userID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Error!");
+        }
     }
 
     public void viewAvailableAppointmentSlots() //timeslots will be printed per hour
@@ -214,7 +257,6 @@ public class Patient extends Role {
 
     public void viewScheduledAppointmentStatus()
     {
-        //System.out.println("Choose the appointment to view status: (enter index)");
         int i = 1;
         for (Appointment appointment : scheduledAppointments)
         {
@@ -230,7 +272,6 @@ public class Patient extends Role {
         int choice = sc.nextInt();
         System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
     }
-
 
     public void viewAppointmentOutcomeRecords()
     {
