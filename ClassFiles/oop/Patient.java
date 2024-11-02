@@ -245,7 +245,8 @@ public class Patient extends Role {
         }
         Scanner sc = new Scanner(System.in);
         
-        try {
+        try 
+        {
             int index;
             while (true)
             {
@@ -254,7 +255,10 @@ public class Patient extends Role {
                 if (index > scheduledAppointments.size())
                 {
                     System.out.println("Invalid appointment number. Please try again.");
-                    return;
+                }
+                else
+                {
+                    break;
                 }
             }
             Appointment appointment = scheduledAppointments.get(index-1);
