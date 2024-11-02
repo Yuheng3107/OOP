@@ -15,7 +15,8 @@ public class Menu {
         System.out.println("| 6. Cancel an Appointment                  |");
         System.out.println("| 7. View Scheduled Appointments            |");
         System.out.println("| 8. View Past Appointment Outcome Records  |");
-        System.out.println("| 9. Logout                                 |");
+        System.out.println("| 9. View Scheduled Appointment Status      |");
+        System.out.println("| 10. Logout                                |");
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }

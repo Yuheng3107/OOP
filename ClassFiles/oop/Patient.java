@@ -289,25 +289,32 @@ public class Patient extends Role {
             return;
         }
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please choose the appointment to cancel: (enter index)");
-        int index = sc.nextInt();
-        if (index > scheduledAppointments.size())
+        try
         {
-            System.out.println("Invalid appointment number. Please try again.");
-            return;
+            System.out.println("Please choose the appointment to cancel: (enter index)");
+            int index = sc.nextInt();
+            if (index > scheduledAppointments.size())
+            {
+                System.out.println("Invalid appointment number. Please try again.");
+                return;
+            }
+            Appointment appointment = scheduledAppointments.get(index-1);
+            Doctor doctor = Hospital.getDoctorObjectByStaffID(scheduledAppointments.get(index-1).doctorId);//remove from doctor's appointments
+            if (appointment.status == StatusOfAppointment.Pending)
+            {
+                doctor.deletePendingAppointment(appointment);
+            }
+            else
+            {
+                doctor.deleteScheduleAppointment(appointment);
+            }
+            scheduledAppointments.remove(index-1);
+            System.out.println("Appointment cancelled successfully.");
         }
-        Appointment appointment = scheduledAppointments.get(index-1);
-        Doctor doctor = Hospital.getDoctorObjectByStaffID(scheduledAppointments.get(index-1).doctorId);//remove from doctor's appointments
-        if (appointment.status == StatusOfAppointment.Pending)
+        catch (Exception e)
         {
-            doctor.deletePendingAppointment(appointment);
+            System.out.println("Invalid input. Returning to main menu.");
         }
-        else
-        {
-            doctor.deleteScheduleAppointment(appointment);
-        }
-        scheduledAppointments.remove(index-1);
-        System.out.println("Appointment cancelled successfully.");
     }
 
     public void viewScheduledAppointmentStatus()
@@ -316,20 +323,27 @@ public class Patient extends Role {
         if (scheduledAppointments.isEmpty())
         {
             System.out.println("No scheduled appointments.");
+            return;
         }
-        for (Appointment appointment : scheduledAppointments)
+        try{
+            for (Appointment appointment : scheduledAppointments)
+            {
+                System.out.println("--- Appointment " + i + " ---");
+                System.out.println("Doctor: " + Hospital.getDoctorNameByStaffID(appointment.doctorId));
+                System.out.println("Date: " + String.valueOf(appointment.date));
+                System.out.println("Start Time: " + String.valueOf(appointment.timeSlot.start));
+                System.out.println("End Time: " + String.valueOf(appointment.timeSlot.end));
+                i++;
+            }
+            System.out.println("Choose the appointment to view status: (enter index)");
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+            System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
+        }
+        catch (Exception e)
         {
-            System.out.println("--- Appointment " + i + " ---");
-            System.out.println("Doctor: " + Hospital.getDoctorNameByStaffID(appointment.doctorId));
-            System.out.println("Date: " + String.valueOf(appointment.date));
-            System.out.println("Start Time: " + String.valueOf(appointment.timeSlot.start));
-            System.out.println("End Time: " + String.valueOf(appointment.timeSlot.end));
-            i++;
+            System.out.println("Inavlid input. Returning to main menu.");
         }
-        System.out.println("Choose the appointment to view status: (enter index)");
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
-        System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
     }
 
     public void viewAppointmentOutcomeRecords()

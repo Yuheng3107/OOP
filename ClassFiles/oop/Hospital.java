@@ -1,6 +1,12 @@
 package oop;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.Inventory;
@@ -115,12 +121,15 @@ public class Hospital {
                                 matchedPatient.cancelAppointment();
                                 break;
                             case 7:
-                                matchedPatient.viewScheduledAppointmentStatus();
+                                matchedPatient.viewScheduledAppointments();
                                 break;
                             case 8:
                                 System.out.println("View Past Appointment Outcome Records");
                                 break;
                             case 9:
+                                matchedPatient.viewScheduledAppointmentStatus();
+                                break;
+                            case 10:
                                 System.out.println("Goodbye " + matchedPatient.getName() + "!\n");
                                 userLogout = true;
                                 loginSuccess = false;
