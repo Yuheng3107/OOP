@@ -16,13 +16,14 @@ public class Hospital {
     public static ArrayList<Appointment> appointments = new ArrayList<Appointment>();
     public static ArrayList<Patient> patients = new ArrayList<Patient>();
     public static ArrayList<HospitalStaff> staffs = new ArrayList<HospitalStaff>();
+    public static ArrayList<MedicineStock> medStocks = new ArrayList<MedicineStock>();
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
 
     private static final String patientFilePath = "Patient_List.csv";
     private static final String staffFilePath = "Staff_List.csv";
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
-    // private static final String medFilePath = "Medicine_List.csv";
+    private static final String medFilePath = "Medicine_List.csv";
 
     public Hospital()
     {
@@ -33,6 +34,7 @@ public class Hospital {
     {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);
+        medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
     }
 
     public static Patient findPatientById(String id) {
@@ -137,6 +139,14 @@ public class Hospital {
             }
         } else {
             System.out.println("ID not found: " + patientID);
+        }
+    }
+
+    public static void viewMedicineStock()
+    {
+        for (MedicineStock medStock : medStocks)
+        {
+            System.out.println(medStock.getName() + "'s stock: " + medStock.getStock());
         }
     }
 

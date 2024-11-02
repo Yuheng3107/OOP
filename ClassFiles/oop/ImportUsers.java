@@ -159,6 +159,32 @@ public class ImportUsers {
         return staff;
     }
 
+    public static ArrayList<MedicineStock> readMedicineFromCSV(String filePath) {
+        ArrayList<MedicineStock> medStocks = new ArrayList<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+        {
+            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
+
+            while ((line = br.readLine()) != null)
+            {
+                String[] values = line.split(",");
+                String name = values[0];
+                int iniStock = Integer.parseInt(values[1]);
+                int lowStockLevel = Integer.parseInt(values[2]);
+
+                MedicineStock medStock = new MedicineStock(name, iniStock, lowStockLevel);
+                medStocks.add(medStock);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return medStocks;
+    }
+
     /*
     public static List<Doctor> readDoctorFromCSV(String filePath)
     {
@@ -323,32 +349,6 @@ public class ImportUsers {
             System.out.println("Administrator Credentials file already exists.");
         }
         return administrators;
-    }
-
-    public static List<MedicineStock> readMedicineFromCSV(String filePath) {
-        List<MedicineStock> medStocks = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-        {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                String name = values[0];
-                int iniStock = Integer.parseInt(values[1]);
-                int lowStockLevel = Integer.parseInt(values[2]);
-
-                MedicineStock medStock = new MedicineStock(name, iniStock, lowStockLevel);
-                medStocks.add(medStock);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return medStocks;
     }
 
     public static void splitStaffList()

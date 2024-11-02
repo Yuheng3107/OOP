@@ -191,7 +191,7 @@ public class App {
                                         System.out.println("Update Prescription Status");
                                         break;
                                     case 3:
-                                        System.out.println("View Medication Inventory");
+                                        Hospital.viewMedicineStock();
                                         break;
                                     case 4:
                                         System.out.println("Submit Replenishment Request");
