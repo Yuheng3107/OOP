@@ -335,14 +335,25 @@ public class Patient extends Role {
                 System.out.println("End Time: " + String.valueOf(appointment.timeSlot.end));
                 i++;
             }
-            System.out.println("Choose the appointment to view status: (enter index)");
-            Scanner sc = new Scanner(System.in);
-            int choice = sc.nextInt();
-            System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
+            while (true)
+            {
+                System.out.println("Choose the appointment to view status: (enter index)");
+                Scanner sc = new Scanner(System.in);
+                int choice = sc.nextInt();
+                if (choice <= 0 || choice > scheduledAppointments.size())
+                {
+                    System.out.println("Invalid appointment number. Please try again.");
+                }
+                else{
+                    System.out.println("The status of this appointment is: "+scheduledAppointments.get(choice-1).status);
+                    break;
+                }
+                
+            }
         }
         catch (Exception e)
         {
-            System.out.println("Inavlid input. Returning to main menu.");
+            System.out.println("Invalid input. Returning to main menu.");
         }
     }
 
