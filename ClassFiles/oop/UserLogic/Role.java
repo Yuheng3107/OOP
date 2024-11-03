@@ -21,4 +21,12 @@ public abstract class Role {
     {
         System.out.println("Bye bye");
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }

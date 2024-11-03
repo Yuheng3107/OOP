@@ -30,6 +30,42 @@ public class Hospital {
         loadHospitalData();
     }
 
+    public static void updateStaffName(String staffName, String newStaffName) {
+        for (HospitalStaff staff : staffs) {
+            if (staff.getName().equals(staffName)) {
+                staff.setName(newStaffName);
+                System.out.println("Staff name updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
+    }
+
+    public static void updateStaffAge(String staffName, int newStaffAge) {
+
+        for (HospitalStaff staff : staffs) {
+            System.out.println(staff.getName());   
+            if (staff.getName().equals(staffName)) {
+                staff.setAge(newStaffAge);
+                System.out.println("Staff age updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
+    }
+    
+    public static void updateStaffGender(String staffName, Gender newStaffGender) {
+
+        for (HospitalStaff staff : staffs) {
+            if (staff.getName().equals(staffName)) {
+                staff.setGender(newStaffGender);
+                System.out.println("Staff gender updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
+    }
+
     private void loadHospitalData()
     {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);

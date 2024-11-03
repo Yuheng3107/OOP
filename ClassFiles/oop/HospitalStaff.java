@@ -35,5 +35,9 @@ public abstract class HospitalStaff extends Role {
         }
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }   
+
 
 }

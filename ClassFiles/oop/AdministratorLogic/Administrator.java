@@ -176,7 +176,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 break;
             case 2:
                 // update staff member
-                updateStaffMember(null);
+                sc.nextLine();
+        System.out.println("Enter name of staff member to update: ");
+        staffName = sc.nextLine();
+                updateStaffMember(staffName);
 
                 break;
             case 3:
@@ -208,7 +211,38 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     public void updateStaffMember(String staffName)
     {
-        // not sure what to update, gender???
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Choose an option: ");
+        System.out.println("1. Update staff name");
+        System.out.println("2. Update staff age");
+        System.out.println("3. Update staff gender 🤡");
+        int option = sc.nextInt();
+        
+
+        switch (option) {
+            case 1:
+                // update staff name
+                sc.nextLine();
+                System.out.println("Enter new staff name: ");
+                String newStaffName = sc.nextLine();
+                Hospital.updateStaffName(staffName, newStaffName);
+                break;
+            case 2:
+                // update staff age
+                System.out.println("Enter new staff age: ");
+                age = sc.nextInt();
+                Hospital.updateStaffAge(staffName, age);
+                break;
+            case 3:
+                // update staff gender
+                System.out.println("Enter new staff gender: ");
+                String gender = sc.next();
+                Hospital.updateStaffGender(staffName, Gender.valueOf(gender));
+                break;
+        }
+
         
     }
     public void removeStaffMember(String staffName)
