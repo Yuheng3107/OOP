@@ -219,7 +219,7 @@ public class App {
                                         break;
                                     case 2:
                                         System.out.println("View Appointments Details");
-                                        //administrator.viewAppointmentDetails(null);
+                                        administrator.viewAppointmentDetails();
                                         break;
                                     case 3:
                                         System.out.println("View and Manage Medication Inventory");

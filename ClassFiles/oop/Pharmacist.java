@@ -16,7 +16,6 @@ public class Pharmacist extends HospitalStaff {
         this.pharmacistID = staffID;
         Hospital.staffs.add(this);
     }
-    private Inventory inventory;
 
     public String getID()
     {

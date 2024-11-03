@@ -97,6 +97,7 @@ public class Doctor extends HospitalStaff{
         appointment.status = StatusOfAppointment.Confirmed;
         schedule.add(appointment);
         pendingAppointments.remove(appointment);
+        Hospital.appointments.add(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");  
    }
    public void declineAppointmentRequest(int appointmentNumber)

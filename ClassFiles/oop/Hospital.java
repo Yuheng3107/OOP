@@ -9,25 +9,60 @@ import java.util.List;
 import java.util.Scanner;
 
 import oop.AdministratorLogic.Administrator;
-import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.ReplenishmentRequest;
 public class Hospital {
-    public static Inventory inventory = new Inventory();
+    public static ArrayList<MedicineStock> inventory = new ArrayList<MedicineStock>();
     public static ArrayList<Appointment> appointments = new ArrayList<Appointment>();
     public static ArrayList<Patient> patients = new ArrayList<Patient>();
     public static ArrayList<HospitalStaff> staffs = new ArrayList<HospitalStaff>();
     public static ArrayList<MedicineStock> medStocks = new ArrayList<MedicineStock>();
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
 
-    private static final String patientFilePath = "Patient_List.csv";
-    private static final String staffFilePath = "Staff_List.csv";
+    private static final String patientFilePath = "../Patient_List.csv";
+    private static final String staffFilePath = "../Staff_List.csv";
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
-    private static final String medFilePath = "Medicine_List.csv";
+    private static final String medFilePath = "../Medicine_List.csv";
 
     public Hospital()
     {
         loadHospitalData();
+    }
+
+    public static void updateStaffName(String staffName, String newStaffName) {
+        for (HospitalStaff staff : staffs) {
+            if (staff.getName().equals(staffName)) {
+                staff.setName(newStaffName);
+                System.out.println("Staff name updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
+    }
+
+    public static void updateStaffAge(String staffName, int newStaffAge) {
+
+        for (HospitalStaff staff : staffs) {
+            System.out.println(staff.getName());   
+            if (staff.getName().equals(staffName)) {
+                staff.setAge(newStaffAge);
+                System.out.println("Staff age updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
+    }
+    
+    public static void updateStaffGender(String staffName, Gender newStaffGender) {
+
+        for (HospitalStaff staff : staffs) {
+            if (staff.getName().equals(staffName)) {
+                staff.setGender(newStaffGender);
+                System.out.println("Staff gender updated successfully.");
+                return;
+            }
+        }
+        System.out.println("No staff with name " + staffName + " found.");
     }
 
     private void loadHospitalData()
@@ -256,32 +291,36 @@ public class Hospital {
     public static void addStaffMember(String staffName, int age, String staffID, Gender gender, String role) {
         // check whether role is valid
         role = role.toLowerCase();
-        if (role != "doctor" || role != "pharmacist") {
+
+        if (!role.equals("doctor") && !role.equals("pharmacist")) {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
 
         // instantiate staff member
         HospitalStaff staffMember;
-        if (role == "doctor") {
+        if (role.equals("doctor")) {
             staffMember = new Doctor(staffName, staffID, age, gender);
 
-        } else if (role == "pharmacist") {
+        } else if (role.equals("pharmacist")) {
             staffMember = new Pharmacist(staffName, staffID, age, gender);
         } else {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
-        staffs.add(staffMember);
+
+
     }
     
     public static void removeStaffMember(String staffName) {
         for (int i = 0; i < staffs.size(); i++) {
             if (staffs.get(i).getName().equals(staffName)) {
                 staffs.remove(i);
-                break;
+                System.out.println("Staff member removed: " + staffName);   
+                return;
             }
         }
+        System.out.println("Staff member not found: " + staffName);
     }
 
     public static String getPatientNameFromPatientID(String patientID)

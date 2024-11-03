@@ -21,11 +21,9 @@ import java.util.StringTokenizer;
 
 import oop.Gender;
 import oop.AdministratorLogic.ReplenishmentRequest;
-public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
+public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     
     private String id;
-    private String name;
-    private Gender gender;
     private int age;
 
     public Administrator(String name, String id, Gender gender, int age)
@@ -73,7 +71,8 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 2:
                 // update inventory
                 System.out.println("Enter name of the medicine to update: ");
-                name = scanner.next();
+                scanner.nextLine();
+                name = scanner.nextLine();
                 System.out.println("Enter new quantity of the medicine: ");
                 quantity = scanner.nextInt();
                 updateMedicineStock(name, quantity);
@@ -109,28 +108,32 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 approveReplenishmentRequest(name, quantity);
                 break;
         }
-        scanner.close();
+
     }
 
-    @Override
-    public void viewAppointmentDetails(Appointment appointment)
+    public void viewAppointmentDetails()
     {
         // prints out appointment details of the appointment
         // prints patient ID, doctor ID, appointment status
         // date and time of appointment
         // appointment outcome record
-        System.out.println("Appointment details: ");
+
+        if (Hospital.appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+            return;
+        }
+        
+        for (Appointment appointment : Hospital.appointments) {
+            // print information of all appointments
+            System.out.println("Appointment details: ");
         System.out.println("Patient ID: " + appointment.patientId);
         System.out.println("Doctor ID: " + appointment.doctorId);
         System.out.println("Appointment status: " + appointment.status);
         System.out.println("Date: " + appointment.date);
         System.out.println("Start time: " + appointment.timeSlot.start);
         System.out.println("End time: " + appointment.timeSlot.end);
-        // print appointment outcomes (commented out as code was causing error)
-        // for (AppointmentOutcome outcome : appointment.appointmentOutcome) {
-        //     System.out.println("Appointment outcome: ");
-        //     outcome.printAppointmentOutcomeRecord();
-        // }
+        }
+        
     }
 
 
@@ -144,12 +147,14 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("4. Display staff members");
         Scanner sc = new Scanner(System.in);
         int opt = sc.nextInt();
+         
 
         switch (opt) {
             case 1:
                 // add staff member
+                sc.nextLine();
                 System.out.println("Enter staff name: ");
-                String staffName = sc.next();
+                String staffName = sc.nextLine();
 
                 System.out.println("Enter staff age: ");
                 int age = sc.nextInt();
@@ -163,24 +168,29 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.println("Enter staff gender: ");
                 try {
                     String genderString = sc.next();
+                    System.out.println(genderString);
                     Gender gender = Gender.valueOf(genderString);
                     addStaffMember(staffName, age, staffID, gender, role);
                 }
 
                 catch (IllegalArgumentException e) {
-                    System.out.println("Invalid gender. Please enter M or F.");
+                    System.out.println("Invalid gender. Please enter Male or Female.");
                 }   
 
                 break;
             case 2:
                 // update staff member
-                updateStaffMember(null);
+                sc.nextLine();
+        System.out.println("Enter name of staff member to update: ");
+        staffName = sc.nextLine();
+                updateStaffMember(staffName);
 
                 break;
             case 3:
                 // remove staff member
+                sc.nextLine();
                 System.out.println("Enter name of staff member to remove: ");
-                String name = sc.next();
+                String name = sc.nextLine();
                 removeStaffMember(name);            
                 break;
             case 4:
@@ -193,7 +203,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.println("Invalid option. Please try again.");
         }
 
-        sc.close();
+        return;
 
     }
     public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
@@ -205,7 +215,38 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     public void updateStaffMember(String staffName)
     {
-        // not sure what to update, gender???
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Choose an option: ");
+        System.out.println("1. Update staff name");
+        System.out.println("2. Update staff age");
+        System.out.println("3. Update staff gender 🤡");
+        int option = sc.nextInt();
+        
+
+        switch (option) {
+            case 1:
+                // update staff name
+                sc.nextLine();
+                System.out.println("Enter new staff name: ");
+                String newStaffName = sc.nextLine();
+                Hospital.updateStaffName(staffName, newStaffName);
+                break;
+            case 2:
+                // update staff age
+                System.out.println("Enter new staff age: ");
+                age = sc.nextInt();
+                Hospital.updateStaffAge(staffName, age);
+                break;
+            case 3:
+                // update staff gender
+                System.out.println("Enter new staff gender: ");
+                String gender = sc.next();
+                Hospital.updateStaffGender(staffName, Gender.valueOf(gender));
+                break;
+        }
+
         
     }
     public void removeStaffMember(String staffName)
@@ -246,9 +287,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
 
         // prints out inventory information
-        Inventory inventory = Hospital.inventory;
 
-        for (MedicineStock stock : inventory.medicine) {
+        if (Hospital.inventory.isEmpty()) {
+            System.out.println("No medicine in inventory.");
+        }
+
+        System.out.println("Inventory: ");
+
+
+        for (MedicineStock stock : Hospital.inventory) {
+            System.out.println();
             System.out.println("Name: " + stock.getName());
             System.out.println("Quantity: " + stock.getStock());
             System.out.println("Low stock level: " + stock.getLowStockLevel());
@@ -274,7 +322,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     public void addMedicineStock(MedicineStock stock)
     {
 
-        Hospital.inventory.medicine.add(stock);
+        Hospital.inventory.add(stock);
 
 
     }
@@ -282,22 +330,21 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
         // first we need to find the index of the medicine
         int lowStockLevel = 0;
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
 
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                count += Hospital.inventory.medicine.get(i).getStock();
-                lowStockLevel = Hospital.inventory.medicine.get(i).getLowStockLevel();
-                Hospital.inventory.medicine.remove(i);
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                lowStockLevel = Hospital.inventory.get(i).getLowStockLevel();
+                Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
-            addMedicineStock(new MedicineStock(name, count, lowStockLevel));
         }
+        addMedicineStock(new MedicineStock(name, count, lowStockLevel));
     }
     public void deleteMedicineStock(String name)
     {
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                Hospital.inventory.medicine.remove(i);
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
         }
@@ -305,9 +352,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     
     public void updateLowStockLevel(String name, int newLevel) {
         // first we need to find the index of the medicine
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                Hospital.inventory.medicine.get(i).setLowStockLevel(newLevel);
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                Hospital.inventory.get(i).setLowStockLevel(newLevel);
                 break; // Exit the loop after removing
             }
         }
@@ -315,145 +362,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     
 
-
-    public static final String SEPARATOR = ",";
-
-    // an example of reading
-	public  ArrayList<MedicineStock> importInventory(String filename) throws IOException {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<MedicineStock> alr = new ArrayList<MedicineStock>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Medicine Name,Initial Stock,Low Stock Level Alert
-			String medicineName = star.nextToken().trim(); // first token
-			String stock = star.nextToken().trim(); // second token
-			String lowStockLevel = star.nextToken().trim(); // third token
-			
-			MedicineStock medicine = new MedicineStock(medicineName, Integer.parseInt(stock), Integer.parseInt(lowStockLevel));
-
-			// add to Professors list
-			alr.add(medicine);
-		}
-		return alr;
-	}
 	
-	// an example of reading
-	public ArrayList<Patient> importPatients(String filename) throws IOException {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<Patient> alr = new ArrayList<Patient>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information
-			String patientID = star.nextToken().trim(); 
-			String name = star.nextToken().trim(); 
-			String dob = star.nextToken().trim(); 
-			String gender = star.nextToken().trim(); 
-			String bloodType = star.nextToken().trim(); 
-			String email = star.nextToken().trim();
-
-			LocalDate dateOfBirth = LocalDate.parse(dob);
-			
-			// need to process information into parsable format
-
-			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital Hospital
-			Patient patient = new Patient(name, patientID, dateOfBirth, Gender.valueOf(gender),
-					BloodType.valueOf(bloodType), email);
-
-			// add to patients list
-			alr.add(patient);
-		}
-		return alr;
-	}
 	
-	// an example of reading
-	public ArrayList<HospitalStaff> importStaff(String filename) throws IOException  {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<HospitalStaff> alr = new ArrayList<HospitalStaff>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Staff ID,Name,Role,Gender,Age
-			String staffID = star.nextToken().trim(); // first token
-			String name = star.nextToken().trim(); // second token
-			String role = star.nextToken().trim().toLowerCase(); // third token
-			String gender = star.nextToken().trim(); // fourth token
-			String age = star.nextToken().trim(); // fifth token
-			
-			HospitalStaff staff;
-			if (role == "doctor") {
-				staff = new Doctor(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
-			}
-			else if (role == "pharmacist") {
-				staff = new Pharmacist(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
-			}
-			else {
-				System.out.println("Invalid role: " + role);
-				return null;
-			}
 
 
-			// add to staff list
-			alr.add(staff);
-		}
-		return alr;
-	}
-
-
-  /** Read the contents of the given file. */
-  public static List read(String fileName) throws IOException {
-	List data = new ArrayList() ;
-    Scanner scanner;
-    try {
-        scanner = new Scanner(new FileInputStream(fileName));
-    }
-
-    catch (IOException e) {
-        e.printStackTrace();
-        throw e;
-    }
-    try {
-      while (scanner.hasNextLine()){
-        data.add(scanner.nextLine());
-      }
-    }
-    finally{
-      scanner.close();
-    }
-    return data;
-  }
-    public void initialise(String staffFilename, String patientFilename, String inventoryFilename)
-    {
-
-        
-        try {
-            // initialise staff
-            ArrayList<HospitalStaff> staff = importStaff(staffFilename);
-            Hospital.staffs = staff;
-            // initialise patients
-            ArrayList<Patient> patients = importPatients(patientFilename);
-            Hospital.patients = patients;
-            // initialise inventory
-            ArrayList<MedicineStock> medicineStock = importInventory(inventoryFilename);
-            Inventory inventory = new Inventory();
-            inventory.medicine = medicineStock;
-            Hospital.inventory = inventory;
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-            // handle error
-        }
-
-    }
+  
 }
