@@ -143,11 +143,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("4. Display staff members");
         Scanner sc = new Scanner(System.in);
         int opt = sc.nextInt();
-         sc.nextLine();
+         
 
         switch (opt) {
             case 1:
                 // add staff member
+                sc.nextLine();
                 System.out.println("Enter staff name: ");
                 String staffName = sc.nextLine();
 
@@ -180,8 +181,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 break;
             case 3:
                 // remove staff member
+                sc.nextLine();
                 System.out.println("Enter name of staff member to remove: ");
-                String name = sc.next();
+                String name = sc.nextLine();
                 removeStaffMember(name);            
                 break;
             case 4:

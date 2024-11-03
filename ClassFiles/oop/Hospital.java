@@ -271,9 +271,11 @@ public class Hospital {
         for (int i = 0; i < staffs.size(); i++) {
             if (staffs.get(i).getName().equals(staffName)) {
                 staffs.remove(i);
-                break;
+                System.out.println("Staff member removed: " + staffName);   
+                return;
             }
         }
+        System.out.println("Staff member not found: " + staffName);
     }
 
     public static String getPatientNameFromPatientID(String patientID)
