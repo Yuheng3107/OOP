@@ -55,6 +55,16 @@ public class Hospital {
         return null;
     }
 
+    //For testing
+    /*public static void displayReplenishmentRequest()
+    {
+        for (ReplenishmentRequest repl : replenishmentRequests) {
+            System.out.println("Name: " + repl.medicineName);
+            System.out.println("Quantity: " + repl.amount);
+            System.out.println("Status: " + repl.status);
+        }
+    }*/
+
     public static boolean processLoginPatient(BufferedReader reader, String id, String password, Patient matchedPatient, Scanner sc)
             throws IOException {
         String line;
