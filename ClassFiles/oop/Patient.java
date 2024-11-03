@@ -186,7 +186,7 @@ public class Patient extends Role {
             }
             System.out.println("Type the year to book appointment:");
             int year = sc.nextInt();
-            System.out.println("Type the month to book appointment:");
+            System.out.println("Type the month to book appointment (1-12):");
             int month = sc.nextInt();
             System.out.println("Type the day to book appointment:");
             int day = sc.nextInt();

@@ -112,24 +112,29 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         scanner.close();
     }
 
-    public void viewAppointmentDetails(Appointment appointment)
+    public void viewAppointmentDetails()
     {
         // prints out appointment details of the appointment
         // prints patient ID, doctor ID, appointment status
         // date and time of appointment
         // appointment outcome record
-        System.out.println("Appointment details: ");
+
+        if (Hospital.appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+            return;
+        }
+        
+        for (Appointment appointment : Hospital.appointments) {
+            // print information of all appointments
+            System.out.println("Appointment details: ");
         System.out.println("Patient ID: " + appointment.patientId);
         System.out.println("Doctor ID: " + appointment.doctorId);
         System.out.println("Appointment status: " + appointment.status);
         System.out.println("Date: " + appointment.date);
         System.out.println("Start time: " + appointment.timeSlot.start);
         System.out.println("End time: " + appointment.timeSlot.end);
-        // print appointment outcomes (commented out as code was causing error)
-        // for (AppointmentOutcome outcome : appointment.appointmentOutcome) {
-        //     System.out.println("Appointment outcome: ");
-        //     outcome.printAppointmentOutcomeRecord();
-        // }
+        }
+        
     }
 
 
