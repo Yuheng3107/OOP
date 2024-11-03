@@ -59,9 +59,55 @@ public class Pharmacist extends HospitalStaff {
         return null;
     }
 
-    public void updatePrescriptionStatus(String status, AppointmentOutcome appointmentOutcome)
+    public void updatePrescriptionStatus()
     {
-        
+        Scanner sc = new Scanner(System.in);
+        String patientID, response;
+        Patient patient = null;
+
+        while (patient == null)
+        {
+            System.out.print("Enter patient's ID: ");
+            patientID = sc.nextLine();
+            patient = findPatientById(patientID);
+            if (patient == null)
+            {
+                System.out.println("Invalid Patient ID, please enter again...");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (patient.appointmentOutcomes.isEmpty())
+        {
+            System.out.println("No appointment outcomes.");
+            return;
+        }
+        for (AppointmentOutcome outcome : patient.appointmentOutcomes)
+        {
+            for (PrescribedMedication medication : outcome.prescribedMedications) {
+                System.out.println("Medication Name: " + medication.name);
+                System.out.println("Medication Status: " + medication.status);
+            }
+        }
+        System.out.print("Ready to dispense medication? Enter y/n: ");
+        response = sc.nextLine();
+        if (response.equalsIgnoreCase("y"))
+        {
+            for (AppointmentOutcome outcome : patient.appointmentOutcomes)
+            {
+                for (PrescribedMedication medication : outcome.prescribedMedications) {
+                    medication.status = "Dispensed";
+                    System.out.println("Medication Name: " + medication.name);
+                    System.out.println("Medication Status: " + medication.status);
+                }
+            }
+        }
+        else
+        {
+            System.out.println("No changes made.");
+        }
     }
 
     public void submitReplenishRequest()

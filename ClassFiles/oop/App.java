@@ -187,7 +187,7 @@ public class App {
                                         pharmacist.viewAppointmentOutcomeRecord();
                                         break;
                                     case 2:
-                                        System.out.println("Update Prescription Status");
+                                        pharmacist.updatePrescriptionStatus();
                                         break;
                                     case 3:
                                         Hospital.viewMedicineStock();
