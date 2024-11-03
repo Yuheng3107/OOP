@@ -71,7 +71,8 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 2:
                 // update inventory
                 System.out.println("Enter name of the medicine to update: ");
-                name = scanner.next();
+                scanner.nextLine();
+                name = scanner.nextLine();
                 System.out.println("Enter new quantity of the medicine: ");
                 quantity = scanner.nextInt();
                 updateMedicineStock(name, quantity);
@@ -287,8 +288,15 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
         // prints out inventory information
 
+        if (Hospital.inventory.isEmpty()) {
+            System.out.println("No medicine in inventory.");
+        }
+
+        System.out.println("Inventory: ");
+
 
         for (MedicineStock stock : Hospital.inventory) {
+            System.out.println();
             System.out.println("Name: " + stock.getName());
             System.out.println("Quantity: " + stock.getStock());
             System.out.println("Low stock level: " + stock.getLowStockLevel());
@@ -325,13 +333,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         for (int i = 0; i < Hospital.inventory.size(); i++) {
 
             if (Hospital.inventory.get(i).getName().equals(name)) {
-                count += Hospital.inventory.get(i).getStock();
                 lowStockLevel = Hospital.inventory.get(i).getLowStockLevel();
                 Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
-            addMedicineStock(new MedicineStock(name, count, lowStockLevel));
         }
+        addMedicineStock(new MedicineStock(name, count, lowStockLevel));
     }
     public void deleteMedicineStock(String name)
     {
