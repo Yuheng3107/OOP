@@ -228,7 +228,6 @@ public class App {
                                         break;
                                     case 4:
                                         System.out.println("Approve Replenishment Requests");
-                                        //@ Yu Heng this part I not very sure how you implemented this
                                         System.out.println("Enter name of the medicine to approve: ");
                                         String name = sc.next();
                                         System.out.println("Enter quantity of the medicine in replenishment request: ");
