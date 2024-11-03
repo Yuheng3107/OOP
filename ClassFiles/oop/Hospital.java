@@ -15,7 +15,6 @@ public class Hospital {
     public static ArrayList<Appointment> appointments = new ArrayList<Appointment>();
     public static ArrayList<Patient> patients = new ArrayList<Patient>();
     public static ArrayList<HospitalStaff> staffs = new ArrayList<HospitalStaff>();
-    public static ArrayList<MedicineStock> medStocks = new ArrayList<MedicineStock>();
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
 
     private static final String patientFilePath = "../Patient_List.csv";
@@ -69,7 +68,7 @@ public class Hospital {
     {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);
-        medStocks = ImportUsers.readMedicineFromCSV(medFilePath);
+        inventory = ImportUsers.readMedicineFromCSV(medFilePath);
     }
 
     public static Patient findPatientById(String id) {
@@ -89,16 +88,6 @@ public class Hospital {
         }
         return null;
     }
-
-    //For testing
-    /*public static void displayReplenishmentRequest()
-    {
-        for (ReplenishmentRequest repl : replenishmentRequests) {
-            System.out.println("Name: " + repl.medicineName);
-            System.out.println("Quantity: " + repl.amount);
-            System.out.println("Status: " + repl.status);
-        }
-    }*/
 
     public static boolean processLoginPatient(BufferedReader reader, String id, String password, Patient matchedPatient, Scanner sc)
             throws IOException {
@@ -189,7 +178,9 @@ public class Hospital {
 
     public static void viewMedicineStock()
     {
-        for (MedicineStock medStock : medStocks)
+        System.out.println("Medicine Inventory Stock");
+        System.out.println("------------------------");
+        for (MedicineStock medStock : inventory)
         {
             System.out.println(medStock.getName() + "'s stock: " + medStock.getStock());
         }

@@ -32,11 +32,11 @@ public class ImportUsers {
                 String blood = values[4];
                 String email = values[5];
 
-                BloodType bloodType = BloodType.APLus; //Need to initialize with some value first, else VS not happy :(
+                BloodType bloodType = BloodType.APlus; //Need to initialize with some value first, else VS not happy :(
                 switch(blood)
                 {
                     case "A+":
-                        bloodType = BloodType.APLus;
+                        bloodType = BloodType.APlus;
                         break;
                     case "A-":
                         bloodType = BloodType.AMinus;

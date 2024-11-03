@@ -4,7 +4,7 @@ public enum BloodType{
     OMinus,
     OPlus,
     AMinus,
-    APLus,
+    APlus,
     BMinus,
     BPlus,
     ABMinus,

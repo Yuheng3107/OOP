@@ -1,5 +1,5 @@
-﻿Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information
-P1001,Yu Xuan,1980-05-14,Female,A+,test
-P1002,Yu Heng,1975-11-22,Male,B+,bob.stone@example.com
-P1003,Ryan Ching,1990-07-08,Male,O-,charlie.white@example.com
-P1004,Zhe Kai,1990-07-08,Male,O-,charlie.white@example.com
+﻿Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information,Phone Number
+P1001,Yu Xuan,1980-05-14,Female,A+,alice.brown@example.com,null
+P1002,Yu Heng,1975-11-22,Male,B+,bob.stone@example.com,null
+P1003,Ryan Ching,1990-07-08,Male,O-,charlie.white@example.com,null
+P1004,Zhe Kai,1990-07-08,Male,O-,charlie.white@example.com,null

@@ -178,14 +178,13 @@ public class App {
                                 }
                                 break;
                             case "Pharmacist":
-                                int pharChoice = 0;
                                 Menu.printPharmacistMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());
                                 switch (menuChoice)
                                 {
                                     case 1:
-                                        System.out.println("View Appointment Outcomes Records");
+                                        pharmacist.viewAppointmentOutcomeRecord();
                                         break;
                                     case 2:
                                         System.out.println("Update Prescription Status");
@@ -195,7 +194,6 @@ public class App {
                                         break;
                                     case 4:
                                         pharmacist.submitReplenishRequest();
-                                        //Hospital.displayReplenishmentRequest();
                                         break;
                                     case 5:
                                         System.out.println("Goodbye " + pharmacist.getName() + "!\n");
@@ -208,7 +206,6 @@ public class App {
                                 }
                                 break;
                             case "Staff Member":
-                                int adminChoice = 0;
                                 Menu.printAdminMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getStaffID());

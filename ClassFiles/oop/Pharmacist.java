@@ -18,13 +18,50 @@ public class Pharmacist extends HospitalStaff {
         return pharmacistID;
     }
 
-    public void viewAppointmentOutcomeRecord(AppointmentOutcome appointmentOutcome)
+    public void viewAppointmentOutcomeRecord()
     {
+        Scanner sc = new Scanner(System.in);
+        String patientID;
+        Patient patient = null;
+
+        while (patient == null)
+        {
+            System.out.print("Enter patient's ID: ");
+            patientID = sc.nextLine();
+            patient = findPatientById(patientID);
+            if (patient == null)
+            {
+                System.out.println("Invalid Patient ID, please enter again...");
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (patient.appointmentOutcomes.isEmpty())
+        {
+            System.out.println("No appointment outcomes.");
+            return;
+        }
+        for (AppointmentOutcome outcome : patient.appointmentOutcomes)
+        {
+            outcome.printAppointmentOutcomeRecord();
+        }
 
     }
+
+    public static Patient findPatientById(String id) {
+        for (Patient patient : Hospital.patients) {
+            if (patient.getPatientID().equalsIgnoreCase(id)) {
+                return patient;
+            }
+        }
+        return null;
+    }
+
     public void updatePrescriptionStatus(String status, AppointmentOutcome appointmentOutcome)
     {
-
+        
     }
 
     public void submitReplenishRequest()

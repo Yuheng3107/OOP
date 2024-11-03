@@ -55,12 +55,15 @@ public class Patient extends Role {
 
         System.out.print("Please enter your new email address for " + userID + ": ");
         String newEmail = sc.nextLine();
+        System.out.print("Please enter your new phone number for " + userID + ": ");
+        String newPhone = sc.nextLine();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
                 if (columns[0].equals(userID)) {
                     columns[5] = newEmail;
+                    columns[6] = newPhone;
                     line = String.join(",", columns);
                     isUpdated = true;
                 }
@@ -395,6 +398,7 @@ public class Patient extends Role {
     // Patient medical record management
     public void getMedicalRecord() {
         String blood = "";
+        System.out.println(medicalRecord.getBloodType().toString());
         switch(medicalRecord.getBloodType().toString())
         {
             case "ABMinus":
@@ -437,10 +441,13 @@ public class Patient extends Role {
 
         System.out.println("Past Diagnoses: ");
 
-        System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastDiagnoses()) + "\n");
-
-        System.out.println("Past Treatments: ");
-        System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastTreatments()) + "\n");
+        if (medicalRecord.getMedicalHistory() != null)
+        {
+            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastDiagnoses()) + "\n");
+            System.out.println("Past Treatments: ");
+            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastTreatments()) + "\n");
+        }
+        
     }
     
 }
