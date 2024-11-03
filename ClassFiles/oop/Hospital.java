@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import oop.AdministratorLogic.Administrator;
-import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.ReplenishmentRequest;
 public class Hospital {
-    public static Inventory inventory = new Inventory();
+    public static ArrayList<MedicineStock> inventory = new ArrayList<MedicineStock>();
     public static ArrayList<Appointment> appointments = new ArrayList<Appointment>();
     public static ArrayList<Patient> patients = new ArrayList<Patient>();
     public static ArrayList<HospitalStaff> staffs = new ArrayList<HospitalStaff>();

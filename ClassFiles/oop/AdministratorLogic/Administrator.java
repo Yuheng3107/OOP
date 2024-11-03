@@ -21,11 +21,9 @@ import java.util.StringTokenizer;
 
 import oop.Gender;
 import oop.AdministratorLogic.ReplenishmentRequest;
-public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface, SystemInitialisationInterface {
+public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     
     private String id;
-    private String name;
-    private Gender gender;
     private int age;
 
     public Administrator(String name, String id, Gender gender, int age)
@@ -109,7 +107,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 approveReplenishmentRequest(name, quantity);
                 break;
         }
-        scanner.close();
+
     }
 
     public void viewAppointmentDetails()
@@ -288,9 +286,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
 
         // prints out inventory information
-        Inventory inventory = Hospital.inventory;
 
-        for (MedicineStock stock : inventory.medicine) {
+
+        for (MedicineStock stock : Hospital.inventory) {
             System.out.println("Name: " + stock.getName());
             System.out.println("Quantity: " + stock.getStock());
             System.out.println("Low stock level: " + stock.getLowStockLevel());
@@ -316,7 +314,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     public void addMedicineStock(MedicineStock stock)
     {
 
-        Hospital.inventory.medicine.add(stock);
+        Hospital.inventory.add(stock);
 
 
     }
@@ -324,12 +322,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
         // first we need to find the index of the medicine
         int lowStockLevel = 0;
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
 
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                count += Hospital.inventory.medicine.get(i).getStock();
-                lowStockLevel = Hospital.inventory.medicine.get(i).getLowStockLevel();
-                Hospital.inventory.medicine.remove(i);
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                count += Hospital.inventory.get(i).getStock();
+                lowStockLevel = Hospital.inventory.get(i).getLowStockLevel();
+                Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
             addMedicineStock(new MedicineStock(name, count, lowStockLevel));
@@ -337,9 +335,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     public void deleteMedicineStock(String name)
     {
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                Hospital.inventory.medicine.remove(i);
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
         }
@@ -347,9 +345,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     
     public void updateLowStockLevel(String name, int newLevel) {
         // first we need to find the index of the medicine
-        for (int i = 0; i < Hospital.inventory.medicine.size(); i++) {
-            if (Hospital.inventory.medicine.get(i).getName().equals(name)) {
-                Hospital.inventory.medicine.get(i).setLowStockLevel(newLevel);
+        for (int i = 0; i < Hospital.inventory.size(); i++) {
+            if (Hospital.inventory.get(i).getName().equals(name)) {
+                Hospital.inventory.get(i).setLowStockLevel(newLevel);
                 break; // Exit the loop after removing
             }
         }
@@ -357,145 +355,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     
 
-
-    public static final String SEPARATOR = ",";
-
-    // an example of reading
-	public  ArrayList<MedicineStock> importInventory(String filename) throws IOException {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<MedicineStock> alr = new ArrayList<MedicineStock>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Medicine Name,Initial Stock,Low Stock Level Alert
-			String medicineName = star.nextToken().trim(); // first token
-			String stock = star.nextToken().trim(); // second token
-			String lowStockLevel = star.nextToken().trim(); // third token
-			
-			MedicineStock medicine = new MedicineStock(medicineName, Integer.parseInt(stock), Integer.parseInt(lowStockLevel));
-
-			// add to Professors list
-			alr.add(medicine);
-		}
-		return alr;
-	}
 	
-	// an example of reading
-	public ArrayList<Patient> importPatients(String filename) throws IOException {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<Patient> alr = new ArrayList<Patient>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information
-			String patientID = star.nextToken().trim(); 
-			String name = star.nextToken().trim(); 
-			String dob = star.nextToken().trim(); 
-			String gender = star.nextToken().trim(); 
-			String bloodType = star.nextToken().trim(); 
-			String email = star.nextToken().trim();
-
-			LocalDate dateOfBirth = LocalDate.parse(dob);
-			
-			// need to process information into parsable format
-
-			// String name, String patientID, LocalDate dateOfBirth, Gender gender, String address, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital Hospital
-			Patient patient = new Patient(name, patientID, dateOfBirth, Gender.valueOf(gender),
-					BloodType.valueOf(bloodType), email);
-
-			// add to patients list
-			alr.add(patient);
-		}
-		return alr;
-	}
 	
-	// an example of reading
-	public ArrayList<HospitalStaff> importStaff(String filename) throws IOException  {
-		// read String from text file
-		ArrayList stringArray = (ArrayList) read(filename);
-		ArrayList<HospitalStaff> alr = new ArrayList<HospitalStaff>();
-
-		for (int i = 0; i < stringArray.size(); i++) {
-			String st = (String) stringArray.get(i);
-			// get individual 'fields' of the string separated by SEPARATOR
-			StringTokenizer star = new StringTokenizer(st, SEPARATOR); // pass in the string to the string tokenizer using delimiter ","
-//Staff ID,Name,Role,Gender,Age
-			String staffID = star.nextToken().trim(); // first token
-			String name = star.nextToken().trim(); // second token
-			String role = star.nextToken().trim().toLowerCase(); // third token
-			String gender = star.nextToken().trim(); // fourth token
-			String age = star.nextToken().trim(); // fifth token
-			
-			HospitalStaff staff;
-			if (role == "doctor") {
-				staff = new Doctor(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
-			}
-			else if (role == "pharmacist") {
-				staff = new Pharmacist(name, staffID, Integer.parseInt(age), Gender.valueOf(gender));
-			}
-			else {
-				System.out.println("Invalid role: " + role);
-				return null;
-			}
 
 
-			// add to staff list
-			alr.add(staff);
-		}
-		return alr;
-	}
-
-
-  /** Read the contents of the given file. */
-  public static List read(String fileName) throws IOException {
-	List data = new ArrayList() ;
-    Scanner scanner;
-    try {
-        scanner = new Scanner(new FileInputStream(fileName));
-    }
-
-    catch (IOException e) {
-        e.printStackTrace();
-        throw e;
-    }
-    try {
-      while (scanner.hasNextLine()){
-        data.add(scanner.nextLine());
-      }
-    }
-    finally{
-      scanner.close();
-    }
-    return data;
-  }
-    public void initialise(String staffFilename, String patientFilename, String inventoryFilename)
-    {
-
-        
-        try {
-            // initialise staff
-            ArrayList<HospitalStaff> staff = importStaff(staffFilename);
-            Hospital.staffs = staff;
-            // initialise patients
-            ArrayList<Patient> patients = importPatients(patientFilename);
-            Hospital.patients = patients;
-            // initialise inventory
-            ArrayList<MedicineStock> medicineStock = importInventory(inventoryFilename);
-            Inventory inventory = new Inventory();
-            inventory.medicine = medicineStock;
-            Hospital.inventory = inventory;
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-            // handle error
-        }
-
-    }
+  
 }

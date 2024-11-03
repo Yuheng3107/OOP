@@ -1,6 +1,5 @@
 package oop;
 
-import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.Administrator;
 import oop.UserLogic.Role;
 import oop.MedicineStock;
@@ -14,7 +13,6 @@ public class Pharmacist extends HospitalStaff {
         this.pharmacistID = staffID;
         Hospital.staffs.add(this);
     }
-    private Inventory inventory;
 
     public String getID()
     {
