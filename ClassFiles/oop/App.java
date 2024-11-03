@@ -236,7 +236,7 @@ public class App {
                                         }
                                         System.out.println("Choose the index of the request to approve: ");
                                         int index = Integer.parseInt(sc.nextLine());
-                                        administrator.approveReplenishmentRequest(index);
+                                        administrator.approveReplenishmentRequest(index-1);
                                         break;
                                     case 5:
                                         System.out.println("Goodbye " + administrator.getName() + "!\n");

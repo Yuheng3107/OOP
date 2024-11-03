@@ -12,6 +12,10 @@ public class ReplenishmentRequest {
     }
 
     public void setApproved() {
+        if (status.equals("Approved")) {
+            System.out.println("Replenishment request already approved.");
+            return;
+        }
         status = "Approved";
     }
 
