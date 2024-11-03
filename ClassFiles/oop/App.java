@@ -190,7 +190,7 @@ public class App {
                                         System.out.println("Update Prescription Status");
                                         break;
                                     case 3:
-                                        pharmacist.viewMedicationInventory();
+                                        Hospital.viewMedicineStock();
                                         break;
                                     case 4:
                                         pharmacist.submitReplenishRequest();

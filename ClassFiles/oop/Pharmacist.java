@@ -1,6 +1,5 @@
 package oop;
 
-import oop.AdministratorLogic.Inventory;
 import oop.AdministratorLogic.ReplenishmentRequest;
 import oop.AdministratorLogic.Administrator;
 import oop.UserLogic.Role;
@@ -30,20 +29,13 @@ public class Pharmacist extends HospitalStaff {
     {
 
     }
-    public void viewMedicationInventory()
-    {
-        for (MedicineStock medStock : Hospital.medStocks)
-        {
-            System.out.println(medStock.getName() + "'s stock: " + medStock.getStock());
-        }
-    }
 
     public void submitReplenishRequest()
     {
         Scanner sc = new Scanner(System.in);
         String medName;
         int medNewStock;
-        viewMedicationInventory();
+        Hospital.viewMedicineStock();
         System.out.print("\nEnter the name of the medicine to submit: ");
         medName = sc.nextLine();
         System.out.print("Enter quantity of the medicine in replenishment request: ");
