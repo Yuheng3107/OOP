@@ -4,28 +4,26 @@ import oop.Appointment;
 import oop.Hospital;
 import oop.HospitalStaff;
 import oop.MedicineStock;
-import oop.Patient;
-import oop.Pharmacist;
-import oop.AppointmentOutcome;
-import oop.BloodType;
-import oop.Doctor;
-import oop.UserLogic.Role;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.StringTokenizer;
+
 
 import oop.Gender;
-import oop.AdministratorLogic.ReplenishmentRequest;
+
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     
     private String id;
     private int age;
 
+    
+    /** 
+     * @param name
+     * @param id
+     * @param gender
+     * @param age
+     * @return 
+     */
+    
     public Administrator(String name, String id, Gender gender, int age)
     {
         super(name, id, age, gender);
@@ -341,11 +339,4 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
     }
-    
-
-	
-	
-
-
-  
 }

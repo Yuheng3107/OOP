@@ -9,6 +9,14 @@ public class Appointment {
     public StatusOfAppointment status = StatusOfAppointment.Pending;
     public AppointmentOutcome appointmentOutcome;
 
+    
+    /** 
+     * @param date
+     * @param timeSlot
+     * @param doctorID
+     * @param patientID
+     * @return 
+     */
     public Appointment(LocalDate date, TimeSlot timeSlot, String doctorID, String patientID)
     {
         this.date = date;
