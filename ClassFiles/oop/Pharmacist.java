@@ -1,9 +1,6 @@
 package oop;
 
 import oop.AdministratorLogic.ReplenishmentRequest;
-import oop.AdministratorLogic.Administrator;
-import oop.UserLogic.Role;
-import oop.MedicineStock;
 import java.util.Scanner;
 
 public class Pharmacist extends HospitalStaff {

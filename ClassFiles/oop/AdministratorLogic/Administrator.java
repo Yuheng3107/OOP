@@ -48,7 +48,6 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("3. Remove medicine from inventory");
         System.out.println("4. View Inventory");
         System.out.println("5. Update low stock level alert line of medicine");
-        System.out.println("6. Approve replenishment request:");
         System.out.println("Enter your choice: ");
 
         Scanner scanner = new Scanner(System.in);
@@ -98,15 +97,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 lowStockLevel = scanner.nextInt();
                 updateLowStockLevel(name, lowStockLevel);
                 break;
-            case 6:
-
-                // approve replenishment request
-                System.out.println("Enter name of the medicine to approve: ");
-                name = scanner.next();
-                System.out.println("Enter quantity of the medicine in replenishment request: ");
-                quantity = scanner.nextInt();
-                approveReplenishmentRequest(name, quantity);
-                break;
+           
         }
 
     }
@@ -303,20 +294,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
     }
-    public void approveReplenishmentRequest(String medicineName, int amount)
+    public void approveReplenishmentRequest(int index)
     {
-        // search for for replenishmnet request
-
-        for (int i = 0; i < Hospital.replenishmentRequests.size(); i++) {
-            if (Hospital.replenishmentRequests.get(i).medicineName.equals(medicineName)
-                    && Hospital.replenishmentRequests.get(i).amount == amount) {
-                Hospital.removeReplenishmentRequest(Hospital.replenishmentRequests.get(i));
-                // add amount to stock for medicine
-                updateMedicineStock(medicineName, amount);
-                return;
-            }
-        }
-        System.out.println("No matching replenishment request found.");
+        // updates the replenishment request of hospital
+        Hospital.replenishmentRequests.get(index).setApproved();
 
     }
     public void addMedicineStock(MedicineStock stock)
