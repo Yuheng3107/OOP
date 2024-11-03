@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.Scanner;
 
 import oop.AdministratorLogic.Administrator;
+import oop.AdministratorLogic.ReplenishmentRequest;
 
 public class App {
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
@@ -226,12 +227,16 @@ public class App {
                                         administrator.manageInventory();
                                         break;
                                     case 4:
-                                        System.out.println("Approve Replenishment Requests");
-                                        System.out.println("Enter name of the medicine to approve: ");
-                                        String name = sc.next();
-                                        System.out.println("Enter quantity of the medicine in replenishment request: ");
-                                        int quantity = Integer.parseInt(sc.nextLine());
-                                        administrator.approveReplenishmentRequest(name, quantity);
+                                        System.out.println("Approve Replenishment Requests:");
+                                        System.out.println("Printing all the replenishment requests: ");
+                                        for (int i = 0; i < Hospital.replenishmentRequests.size(); i++) {
+                                            ReplenishmentRequest request = Hospital.replenishmentRequests.get(i);
+                                            System.out.println("Request " + (i + 1) + ": ");
+                                            request.printInfo();
+                                        }
+                                        System.out.println("Choose the index of the request to approve: ");
+                                        int index = Integer.parseInt(sc.nextLine());
+                                        administrator.approveReplenishmentRequest(index);
                                         break;
                                     case 5:
                                         System.out.println("Goodbye " + administrator.getName() + "!\n");
