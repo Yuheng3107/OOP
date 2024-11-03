@@ -178,6 +178,7 @@ public class App {
                                 }
                                 break;
                             case "Pharmacist":
+                                Pharmacist.checkStockAlert();
                                 Menu.printPharmacistMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());

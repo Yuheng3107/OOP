@@ -59,6 +59,17 @@ public class Pharmacist extends HospitalStaff {
         return null;
     }
 
+    public static void checkStockAlert()
+    {
+        for (MedicineStock med : Hospital.inventory)
+        {
+            if (med.getStock() <= med.getLowStockLevel())
+            {
+                System.out.println("System alert: " + med.getName() + " has reached the low stock level of " + med.getStock());
+            }
+        }
+    }
+
     public void updatePrescriptionStatus()
     {
         Scanner sc = new Scanner(System.in);
