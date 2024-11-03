@@ -29,7 +29,7 @@ public class ReplenishmentRequest {
         status = "Approved";
 
         for (MedicineStock stock : Hospital.inventory) {
-            if (stock.getName().equals(medicineName)) {
+            if (stock.getName().equalsIgnoreCase(medicineName.toLowerCase())) {
                 stock.setStock(stock.getStock() + amount);
             }
         }
