@@ -19,11 +19,11 @@ public class Hospital {
     public static ArrayList<MedicineStock> medStocks = new ArrayList<MedicineStock>();
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
 
-    private static final String patientFilePath = "Patient_List.csv";
-    private static final String staffFilePath = "Staff_List.csv";
+    private static final String patientFilePath = "../Patient_List.csv";
+    private static final String staffFilePath = "../Staff_List.csv";
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
-    private static final String medFilePath = "Medicine_List.csv";
+    private static final String medFilePath = "../Medicine_List.csv";
 
     public Hospital()
     {
@@ -246,23 +246,25 @@ public class Hospital {
     public static void addStaffMember(String staffName, int age, String staffID, Gender gender, String role) {
         // check whether role is valid
         role = role.toLowerCase();
-        if (role != "doctor" || role != "pharmacist") {
+
+        if (!role.equals("doctor") && !role.equals("pharmacist")) {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
 
         // instantiate staff member
         HospitalStaff staffMember;
-        if (role == "doctor") {
+        if (role.equals("doctor")) {
             staffMember = new Doctor(staffName, staffID, age, gender);
 
-        } else if (role == "pharmacist") {
+        } else if (role.equals("pharmacist")) {
             staffMember = new Pharmacist(staffName, staffID, age, gender);
         } else {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
-        staffs.add(staffMember);
+
+
     }
     
     public static void removeStaffMember(String staffName) {

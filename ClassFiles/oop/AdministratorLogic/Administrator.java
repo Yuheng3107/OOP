@@ -112,7 +112,6 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         scanner.close();
     }
 
-    @Override
     public void viewAppointmentDetails(Appointment appointment)
     {
         // prints out appointment details of the appointment
@@ -144,12 +143,13 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("4. Display staff members");
         Scanner sc = new Scanner(System.in);
         int opt = sc.nextInt();
+         sc.nextLine();
 
         switch (opt) {
             case 1:
                 // add staff member
                 System.out.println("Enter staff name: ");
-                String staffName = sc.next();
+                String staffName = sc.nextLine();
 
                 System.out.println("Enter staff age: ");
                 int age = sc.nextInt();
@@ -163,12 +163,13 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.println("Enter staff gender: ");
                 try {
                     String genderString = sc.next();
+                    System.out.println(genderString);
                     Gender gender = Gender.valueOf(genderString);
                     addStaffMember(staffName, age, staffID, gender, role);
                 }
 
                 catch (IllegalArgumentException e) {
-                    System.out.println("Invalid gender. Please enter M or F.");
+                    System.out.println("Invalid gender. Please enter Male or Female.");
                 }   
 
                 break;
@@ -193,7 +194,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.println("Invalid option. Please try again.");
         }
 
-        sc.close();
+        return;
 
     }
     public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
