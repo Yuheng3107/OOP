@@ -153,10 +153,10 @@ public class App {
                                         System.out.println("Update Patient Medical Records");
                                         break;
                                     case 3:
-                                        System.out.println("View Personal Schedule");
+                                        doctor.viewPersonalSchedule();
                                         break;
                                     case 4:
-                                        System.out.println("Set Availability for Appointments");
+                                        doctor.setAvailability();
                                         break;
                                     case 5:                                    
                                         doctor.acceptOrDeclineAppointmentRequest();

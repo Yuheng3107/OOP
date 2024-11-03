@@ -1,7 +1,9 @@
 package oop;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,10 +18,13 @@ public class Doctor extends HospitalStaff{
     private ArrayList<Appointment> pendingAppointments; //for pending appointments
     private String doctorID;
 
+    // call this "formatter" to display dates in the format "dd-MM-yyyy"
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     public Doctor(String name, String doctorID, int age, Gender gender)
     {
         super(name, doctorID, age, gender);
-        this.availableSlots = generateDefaultTimeSlots();
+        this.availableSlots = new ArrayList<TimeSlot>();
         this.doctorID = doctorID;
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
@@ -67,15 +72,177 @@ public class Doctor extends HospitalStaff{
     {
 
     }
+    */
     public void viewPersonalSchedule()
     {
-
+        viewAvailibility();
     }
-    public void setAvailability(TimeSlot timesSlot)
-    {
+    
+    public void setAvailability()
+    {   
+        // add timeslot in the format (date, start, end)    
+        // check if timeslot exists 
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select an option:");
+        System.out.println("[1] Add available timeslot(s)");
+        System.out.println("[2] Remove available timeslot(s)");
+        System.out.println("[3] Cancel");
 
+        int choice = sc.nextInt();
+        
+        if (choice == 1) {
+            addAvailableSlots();
+        }
+         
+        else if (choice == 2) {
+            return;
+        }
+        else if (choice == 3) {
+            return;
+        }
+        else {
+            System.out.println("Invalid option. Returning to main menu.");
+            return;
+        }
+    }
+
+    // option 1 of setAvailability() - add available slots
+    public void addAvailableSlots() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Adding available timeslot(s)...");
+        int inputYear;
+        while (true) {
+            System.out.print("Enter the year (e.g. 2024): ");
+            inputYear = sc.nextInt();
+            if (inputYear >= 2024) {
+                break;
+            }
+            System.out.println("Invalid year. Please enter a year from 2024 onwards.");
+        }
+
+        int inputMonth;
+        while (true) {
+            System.out.print("Enter the month (1 to 12): ");
+            inputMonth = sc.nextInt();
+            if (inputMonth >= 1 && inputMonth <= 12) {
+                break;
+            }
+            System.out.println("Invalid month. Please enter a number between 1 to 12.");
+        }
+
+        int inputDay;
+        LocalDate date;
+        while (true) {
+            System.out.print("Enter the day (1 to 31): ");
+            inputDay = sc.nextInt();
+            try {
+                date = LocalDate.of(inputYear, inputMonth, inputDay);
+                if (date.isAfter(LocalDate.now())) {    // check if the date is after today
+                    break;
+                } else {
+                    System.out.println("Invalid date. The date must be after today.");
+                    return;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid day. Please enter a valid day.");
+            }
+        }
+
+        int inputStartTime, startHour, startMinutes;
+        LocalTime startTime;
+        while(true) {
+            System.out.print("Enter the start time in 24hr format (e.g. 0900): ");
+            inputStartTime = sc.nextInt();
+            startHour = inputStartTime/100;
+            startMinutes = inputStartTime%100;
+            if (startHour >= 9 && startHour < 17 && startMinutes >= 0 && startMinutes < 60) {
+                startTime = LocalTime.of(startHour,startMinutes);
+                break;
+            }
+            System.out.println("Invalid start time. The start time must be between 0900 and 1700.");
+        }
+
+        int inputEndTime, endHour, endMinutes;
+        LocalTime endTime;
+        while (true) {
+            System.out.print("Enter the end time in 24hr format (e.g. 1700): ");
+            inputEndTime = sc.nextInt();
+            endHour = inputEndTime/100;
+            endMinutes = inputEndTime%100;
+
+            try {
+                endTime = LocalTime.of(endHour,endMinutes);
+
+                if (endMinutes != 0) {
+                    System.out.println("Invalid end time. The end time must be on the hour (e.g. 1300, 1400).");
+                } else if (endHour <= startHour) {
+                    System.out.println("Invalid end time. The end time must be after the start time.");
+                } else if (endHour < 9 || endHour > 17) {
+                    System.out.println("Invalid end time. The end time must be between 0900 and 1700.");
+                } else if (Duration.between(startTime, endTime).toHours() < 1) {
+                    System.out.println("Invalid end time. The end time must be at least one hour after the start time.");
+                } else {
+                    break; // All checks passed, exit the loop
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid end time. Please enter a valid time in 24-hour format (e.g., 1300, 1400).");
+            }
+        }
+
+        // add each hourly interval to availableSlots
+        LocalTime slotStart = startTime;
+        while (slotStart.isBefore(endTime)) {
+            LocalTime slotEnd = slotStart.plusHours(1);
+            TimeSlot timeSlot = new TimeSlot(date, slotStart, slotEnd);
+
+            if (!availableSlots.contains(timeSlot)) {
+                availableSlots.add(timeSlot);
+            } else {
+                System.out.println(String.format("Timeslot on %s %s to %s exists.", timeSlot.getDate().format(formatter), timeSlot.start, timeSlot.end));
+            }
+            slotStart = slotEnd; // move to the next hour
+        }
+
+        System.out.println("Added new available timeslot(s) successfully.");
+
+        viewAvailibility();
+    }
+
+    // option 2 of setAvailability - remove available slots
+    /*
+    public void removeAvailableSlots() {
+        
+        // remove timeslot (check if availableSlots is empty)
+        // cannot remove timeslot if appointment is booked
     }
     */
+
+    public void viewAvailibility() {
+
+        // sort the timeslots by date and time
+        Collections.sort(availableSlots, new Comparator<TimeSlot>() {
+            @Override
+            public int compare(TimeSlot slot1, TimeSlot slot2) {
+                int dateComparison = slot1.getDate().compareTo(slot2.getDate());
+                if (dateComparison != 0) {
+                    return dateComparison; // if dates are different, sort by date
+                }
+                return slot1.start.compareTo(slot2.start); // if dates are the same, sort by time
+            }
+        });
+
+        // display the updated list of available timeslots
+        if (availableSlots.isEmpty()) {
+            System.out.println("No available slots.");
+            return;
+        }
+        System.out.println("\n" + getName() + " Available Timeslots");
+        for (TimeSlot slot : availableSlots) {
+            System.out.println("Date: " + slot.getDate().format(formatter) + ", Start: " + slot.start + ", End: " + slot.end);
+        }
+    }
+    
     public TimeSlot[] getAvailability(LocalDate date) {
         List<TimeSlot> slotsForDay = new ArrayList<>();
         for (TimeSlot slot : availableSlots) {
