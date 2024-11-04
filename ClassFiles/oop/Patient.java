@@ -31,7 +31,7 @@ public class Patient extends Role {
         super(name, gender);
         this.name = name;
         this.patientID = patientID;
-        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, new MedicalHistory(null, null, null, null), email);
+        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, new MedicalHistory(), email);
         //this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
@@ -420,26 +420,26 @@ public class Patient extends Role {
         System.out.println("\n------ Past Diagnoses ------");
 
         MedicalHistory medicalHistory = medicalRecord.getMedicalHistory();
-        String[] pastDiagnoses = medicalHistory.getPastDiagnoses();
-        String[] pastTreatments = medicalHistory.getPastTreatments();
+        ArrayList<String> pastDiagnoses = medicalHistory.getPastDiagnoses();
+        ArrayList<String> pastTreatments = medicalHistory.getPastTreatments();
         
-        if (pastDiagnoses == null) {
+        if (pastDiagnoses.isEmpty()) {
             System.out.println("No past diagnoses found.");
         }
         else {
             for (String diagnosis : pastDiagnoses) {
-                System.out.println(diagnosis);
+                System.out.println("- " + diagnosis);
             }
         }
 
         System.out.println("\n----- Past Treatments ------");
 
-        if (pastTreatments == null) {
+        if (pastTreatments.isEmpty()) {
             System.out.println("No past treatments found.");
         }
         else {
             for (String treatment : pastTreatments) {
-                System.out.println(treatment);
+                System.out.println("- " + treatment);
             }
         }
     }

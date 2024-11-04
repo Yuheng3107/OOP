@@ -150,7 +150,7 @@ public class App {
                                         doctor.viewPatientMedicalRecord();
                                         break;
                                     case 2:
-                                        System.out.println("Update Patient Medical Records");
+                                        doctor.updateMedicalRecord();
                                         break;
                                     case 3:
                                         doctor.viewPersonalSchedule();

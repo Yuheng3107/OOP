@@ -86,7 +86,7 @@ public class Doctor extends HospitalStaff{
         int choice = sc.nextInt();
 
         if (choice < 1 || choice > patients.size()) {
-            System.out.println("Invalid selection. Please try again.");
+            System.out.println("Invalid selection. Returning to main menu.");
             return;
         }
 
@@ -94,12 +94,71 @@ public class Doctor extends HospitalStaff{
         System.out.println("< " + selectedPatient.getName() + "'s Medical Record >\n");
         selectedPatient.viewMedicalRecord();
     }
-    /* 
-    public void updateMedicalRecord(String diagnosis, String prescription, String treatmentPlan)
+    
+    public void updateMedicalRecord()
     {
-        // update selected patients medical record
+        // method to update the patient list
+        getPatients();
+
+        if (patients.isEmpty()) {
+            System.out.println("No patients to update medical record.");
+            return;
+        }
+
+        // display list of patients to select from
+        int i = 1;
+        System.out.println("Select a patient to update their medical record: ");
+        for (Patient patient : patients) {
+            System.out.println(String.format("[%d] %s", i, patient.getName()));
+            i++;
+        }
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+
+        if (choice < 1 || choice > patients.size()) {
+            System.out.println("Invalid selection. Returning to main menu.");
+            return;
+        }
+
+        Patient selectedPatient = patients.get(choice-1);
+        System.out.println("Would you like to add new [1] diagnosis or [2] treatment plan?");
+        
+        choice = sc.nextInt();
+        sc.nextLine(); // consume the leftover newline 
+
+        if (choice < 1 || choice > 2) {
+            System.out.println("Invalid selection. Returning to main menu.");
+            return;
+        }
+        else if (choice == 1) {
+            System.out.println("Enter new diagnosis: ");
+            String inputDiagnosis = sc.nextLine();
+
+            if (inputDiagnosis == null || inputDiagnosis.isEmpty()) {
+                System.out.println("Invalid input. Returning to main menu.");
+                return;
+            }
+            else {
+                ArrayList<String> patientDiagnoses = selectedPatient.getMedicalRecord().getMedicalHistory().getPastDiagnoses();
+                patientDiagnoses.add(inputDiagnosis);
+                System.out.println("Updated patient's past diagnoses.");
+            }
+        }
+        else if (choice == 2) {
+            System.out.println("Enter new treatment plan: ");
+            String inputTreatment = sc.nextLine();
+
+            if (inputTreatment == null || inputTreatment.isEmpty()) {
+                System.out.println("Invalid input. Returning to main menu.");
+                return;
+            } else {
+                ArrayList<String> patientTreatments = selectedPatient.getMedicalRecord().getMedicalHistory().getPastTreatments();
+                patientTreatments.add(inputTreatment);
+                System.out.println("Updated patient's past treatment plans");
+            }
+        }
     }
-    */
+    
     public void viewPersonalSchedule()
     {
         // request doctor to input date, outputs the schedule for the day
@@ -213,7 +272,7 @@ public class Doctor extends HospitalStaff{
 
         System.out.println("Added new available timeslot(s) successfully.");
 
-        viewAvailibility();
+        viewAvailibility(date);
     }
 
     // option 2 of setAvailability - remove available slots
@@ -400,7 +459,7 @@ public class Doctor extends HospitalStaff{
         return date;
     }
 
-    public void viewAvailibility() {
+    public void viewAvailibility(LocalDate date) {
 
         // sort the timeslots by date and time
         Collections.sort(availableSlots, new Comparator<TimeSlot>() {
@@ -419,9 +478,9 @@ public class Doctor extends HospitalStaff{
             System.out.println("No available slots.");
             return;
         }
-        System.out.println("\n" + getName() + " Available Timeslots");
+        System.out.println("\n" + getName() + "'s Available slots on " + date.format(formatter));
         for (TimeSlot slot : availableSlots) {
-            System.out.println("Date: " + slot.getDate().format(formatter) + ", Start: " + slot.start + ", End: " + slot.end);
+            System.out.println(slot.start + " to " + slot.end);
         }
     }
     
