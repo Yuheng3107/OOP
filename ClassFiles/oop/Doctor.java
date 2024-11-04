@@ -1,5 +1,6 @@
 package oop;
 
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -75,6 +76,7 @@ public class Doctor extends HospitalStaff{
     */
     public void viewPersonalSchedule()
     {
+        viewPendingAppointments();
         viewAvailibility();
     }
     
@@ -95,7 +97,7 @@ public class Doctor extends HospitalStaff{
         }
          
         else if (choice == 2) {
-            return;
+            removeAvailableSlots();
         }
         else if (choice == 3) {
             return;
@@ -111,6 +113,110 @@ public class Doctor extends HospitalStaff{
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Adding available timeslot(s)...");
+
+        TimeSlot timeSlotInput = getTimeSlotInput();
+        LocalDate date = timeSlotInput.getDate();
+        LocalTime startTime = timeSlotInput.getStart();
+        LocalTime endTime = timeSlotInput.getEnd();
+
+        if (date == null || startTime == null || endTime == null) {
+            return;
+        }
+
+        // add each hourly interval to availableSlots
+        LocalTime slotStart = startTime;
+        while (slotStart.isBefore(endTime)) {
+            LocalTime slotEnd = slotStart.plusHours(1);
+            TimeSlot timeSlot = new TimeSlot(date, slotStart, slotEnd);
+
+            // check if the timeslot exists in the schedule/pendingAppointments (booked appointment)
+            boolean isBooked = schedule.stream().anyMatch(appointment ->
+                appointment.getAppointmentDate().equals(date) && 
+                appointment.getAppointmentTimeSlot().equals(timeSlot)
+            );
+
+            boolean isPending = pendingAppointments.stream().anyMatch(appointment ->
+            appointment.getAppointmentDate().equals(date) && 
+            appointment.getAppointmentTimeSlot().equals(timeSlot)
+            );
+
+            if (isBooked || isPending) {
+                System.out.println(String.format("Cannot add timeslot on %s %s to %s as it is already booked.", date.format(formatter), slotStart, slotEnd));
+            }
+            // if timeslot is not booked, check if in availableSlots, else add it
+            else if (!availableSlots.contains(timeSlot)) {
+                availableSlots.add(timeSlot);
+            } 
+            else {
+                System.out.println(String.format("Timeslot on %s %s to %s exists.", date.format(formatter), slotStart, slotEnd));
+            }
+            slotStart = slotEnd; // move to the next hour
+        }
+
+        System.out.println("Added new available timeslot(s) successfully.");
+
+        viewAvailibility();
+    }
+
+    // option 2 of setAvailability - remove available slots
+    
+    public void removeAvailableSlots() {
+        
+        // remove timeslot (check if availableSlots is empty)
+        // cannot remove timeslot if appointment is booked for that timeslot
+
+        if (availableSlots.isEmpty()) {
+            System.out.println("No available slots to remove.");
+            return;
+        }
+
+        TimeSlot timeSlotInput = getTimeSlotInput();
+        LocalDate date = timeSlotInput.getDate();
+        LocalTime startTime = timeSlotInput.getStart();
+        LocalTime endTime = timeSlotInput.getEnd();
+
+        if (date == null || startTime == null || endTime == null) {
+            return;
+        }
+
+        LocalTime currentStart = startTime;
+        while (currentStart.isBefore(endTime)) {
+            LocalTime nextHour = currentStart.plusHours(1);
+            TimeSlot slotToRemove = new TimeSlot(date, currentStart, nextHour);
+
+            // if slot is in availableSlots, remove
+            if (availableSlots.contains(slotToRemove)) {
+                availableSlots.remove(slotToRemove);
+                System.out.println("Removed available timeslot " + currentStart + " to " + nextHour + 
+                String.format(" on %s.", date.format(formatter)));
+            }
+            // if not, check if it is booked or else if does not exist in availableSlots
+            else {
+                boolean isBooked = schedule.stream().anyMatch(appointment ->
+                    appointment.getAppointmentDate().equals(date) && 
+                    appointment.getAppointmentTimeSlot().equals(slotToRemove)
+                );
+
+                boolean isPending = pendingAppointments.stream().anyMatch(appointment->
+                    appointment.getAppointmentDate().equals(date) && 
+                    appointment.getAppointmentTimeSlot().equals(slotToRemove)
+                );
+
+                if (isBooked || isPending) {
+                    System.out.println("Cannot remove timeslot " + currentStart + " to " + nextHour + String.format("on %s as it is booked.", date.format(formatter)));
+                }
+                else {
+                    System.out.println("Cannot remove timeslot " + currentStart + " to " + nextHour + String.format(" on %s as it does not exist.", date.format(formatter)));
+                }
+            }
+            currentStart = nextHour; // move to next hour
+        }
+    }
+
+    public TimeSlot getTimeSlotInput() {
+
+        Scanner sc = new Scanner(System.in);
+
         int inputYear;
         while (true) {
             System.out.print("Enter the year (e.g. 2024): ");
@@ -142,7 +248,7 @@ public class Doctor extends HospitalStaff{
                     break;
                 } else {
                     System.out.println("Invalid date. The date must be after today.");
-                    return;
+                    return new TimeSlot(null,null,null);
                 }
             } catch (Exception e) {
                 System.out.println("Invalid day. Please enter a valid day.");
@@ -189,34 +295,9 @@ public class Doctor extends HospitalStaff{
                 System.out.println("Invalid end time. Please enter a valid time in 24-hour format (e.g., 1300, 1400).");
             }
         }
-
-        // add each hourly interval to availableSlots
-        LocalTime slotStart = startTime;
-        while (slotStart.isBefore(endTime)) {
-            LocalTime slotEnd = slotStart.plusHours(1);
-            TimeSlot timeSlot = new TimeSlot(date, slotStart, slotEnd);
-
-            if (!availableSlots.contains(timeSlot)) {
-                availableSlots.add(timeSlot);
-            } else {
-                System.out.println(String.format("Timeslot on %s %s to %s exists.", timeSlot.getDate().format(formatter), timeSlot.start, timeSlot.end));
-            }
-            slotStart = slotEnd; // move to the next hour
-        }
-
-        System.out.println("Added new available timeslot(s) successfully.");
-
-        viewAvailibility();
-    }
-
-    // option 2 of setAvailability - remove available slots
-    /*
-    public void removeAvailableSlots() {
         
-        // remove timeslot (check if availableSlots is empty)
-        // cannot remove timeslot if appointment is booked
+        return new TimeSlot(date, startTime, endTime);
     }
-    */
 
     public void viewAvailibility() {
 

@@ -19,6 +19,12 @@ public class TimeSlot {
     {
         return date;
     }
+    public LocalTime getStart() {
+        return start;
+    }
+    public LocalTime getEnd() {
+        return end;
+    }
         @Override
     public boolean equals(Object o) {
         if (this == o) return true;
