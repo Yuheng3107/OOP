@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Patient extends Role {
         super(name, gender);
         this.name = name;
         this.patientID = patientID;
-        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, null, email);
+        this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, new MedicalHistory(null, null, null, null), email);
         //this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
@@ -45,6 +46,10 @@ public class Patient extends Role {
     public String getPatientID()
     {
         return patientID;
+    }
+
+    public MedicalRecord getMedicalRecord() {
+        return this.medicalRecord;
     }
 
     public void updatePersonalInformation(String userID) {
@@ -396,9 +401,51 @@ public class Patient extends Role {
     }
 
     // Patient medical record management
-    public void getMedicalRecord() {
+    public void viewMedicalRecord() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String blood = getBloodTypeString(medicalRecord.getBloodType());
+
+        System.out.println("--- Personal Information ---");
+        System.out.println("Patient ID: \t" + medicalRecord.getPatientID());
+        System.out.println("Name: \t\t" + medicalRecord.getName());
+        System.out.println("Date of Birth: \t" + medicalRecord.getDateOfBirth().format(formatter));
+        System.out.println("Gender: \t" + medicalRecord.getGender());
+        System.out.println("Blood Type: \t" + blood + "\n");
+
+        System.out.println("--- Contact Information ----");
+        System.out.println("Phone number: \t" + medicalRecord.getPhoneNumber());
+        System.out.println("Email Address: \t" + medicalRecord.getEmail());
+
+        System.out.println("\n------ Past Diagnoses ------");
+
+        MedicalHistory medicalHistory = medicalRecord.getMedicalHistory();
+        String[] pastDiagnoses = medicalHistory.getPastDiagnoses();
+        String[] pastTreatments = medicalHistory.getPastTreatments();
+        
+        if (pastDiagnoses == null) {
+            System.out.println("No past diagnoses found.");
+        }
+        else {
+            for (String diagnosis : pastDiagnoses) {
+                System.out.println(diagnosis);
+            }
+        }
+
+        System.out.println("\n----- Past Treatments ------");
+
+        if (pastTreatments == null) {
+            System.out.println("No past treatments found.");
+        }
+        else {
+            for (String treatment : pastTreatments) {
+                System.out.println(treatment);
+            }
+        }
+    }
+
+    public String getBloodTypeString(BloodType bloodType) {
         String blood = "";
-        System.out.println(medicalRecord.getBloodType().toString());
         switch(medicalRecord.getBloodType().toString())
         {
             case "ABMinus":
@@ -426,28 +473,6 @@ public class Patient extends Role {
                 blood = "O-";
                 break;
         }
-
-
-        System.out.println("Personal Information:");
-        System.out.println("Patient ID: \t" + medicalRecord.getPatientID());
-        System.out.println("Name: \t\t" + medicalRecord.getName());
-        System.out.println("Date of Birth: \t" + medicalRecord.getDateOfBirth());
-        System.out.println("Gender: \t" + medicalRecord.getGender());
-        System.out.println("Blood Type: \t" + blood + "\n");
-
-        System.out.println("Contact Information:");
-        System.out.println("Phone number: \t" + medicalRecord.getPhoneNumber());
-        System.out.println("Email Address: \t" + medicalRecord.getEmail() + "\n");
-
-        System.out.println("Past Diagnoses: ");
-
-        if (medicalRecord.getMedicalHistory() != null)
-        {
-            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastDiagnoses()) + "\n");
-            System.out.println("Past Treatments: ");
-            System.out.println(Arrays.toString(medicalRecord.getMedicalHistory().getPastTreatments()) + "\n");
-        }
-        
+        return blood;
     }
-    
 }

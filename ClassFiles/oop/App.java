@@ -94,7 +94,7 @@ public class App {
                         menuChoice = Integer.parseInt(sc.nextLine());
                         switch (menuChoice) {
                             case 1:
-                                matchedPatient.getMedicalRecord();
+                                matchedPatient.viewMedicalRecord();
                                 break;
                             case 2:
                                 matchedPatient.updatePersonalInformation(matchedPatient.getPatientID());
@@ -147,7 +147,7 @@ public class App {
                                 switch (menuChoice)
                                 {
                                     case 1:
-                                        System.out.println("View Patient Medical Records");
+                                        doctor.viewPatientMedicalRecord();
                                         break;
                                     case 2:
                                         System.out.println("Update Patient Medical Records");

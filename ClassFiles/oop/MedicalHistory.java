@@ -8,7 +8,7 @@ public class MedicalHistory {
     public MedicalHistory(String[] pastMedications, String[] allergies, String[] pastDiagnoses, String[] pastTreatments)
     {
         this.pastMedications = pastMedications;
-        this.allergies = allergies;
+        this.allergies = allergies; // do we need pastMedications & allergies?
         this.pastDiagnoses = pastDiagnoses;
         this.pastTreatments = pastTreatments;
     }

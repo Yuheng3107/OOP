@@ -36,7 +36,7 @@ public class Appointment {
     {
         return doctorId;
     }
-    public String patientId()
+    public String getPatientId()
     {
         return patientId;
     }

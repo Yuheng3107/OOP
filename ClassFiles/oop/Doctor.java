@@ -64,14 +64,40 @@ public class Doctor extends HospitalStaff{
         return doctorID;
     }
     
-    public void viewMedicalRecord(Patient patient)
+    public void viewPatientMedicalRecord()
     {
-        patient.getMedicalRecord();
+        // system outputs list of patients under their care
+        // doctor selects patient to view their medical record
+        getPatients();
+        
+        if (patients.isEmpty()) {
+            System.out.println("No patients to view medical record.");
+            return;
+        }
+
+        // display list of patients to select from
+        int i = 1;
+        System.out.println("Select a patient to view their medical record: ");
+        for (Patient patient : patients) {
+            System.out.println(String.format("[%d] %s", i, patient.getName()));
+            i++;
+        }
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+
+        if (choice < 1 || choice > patients.size()) {
+            System.out.println("Invalid selection. Please try again.");
+            return;
+        }
+
+        Patient selectedPatient = patients.get(choice-1);
+        System.out.println("< " + selectedPatient.getName() + "'s Medical Record >\n");
+        selectedPatient.viewMedicalRecord();
     }
-    /*
+    /* 
     public void updateMedicalRecord(String diagnosis, String prescription, String treatmentPlan)
     {
-
+        // update selected patients medical record
     }
     */
     public void viewPersonalSchedule()
@@ -614,5 +640,27 @@ public class Doctor extends HospitalStaff{
         {
             System.out.println("Invalid input. Returning to main menu.");
         }
+    }
+
+    public void getPatients() {
+        
+        // clear the patient's list to avoid duplicated patient data
+        patients.clear();
+        
+        for (Appointment appointment : schedule) {
+            Patient patient = Hospital.getPatientFromPatientID(appointment.getPatientId());
+            if (patient != null && !patients.contains(patient)) {
+                patients.add(patient);
+            }
+        }
+
+        for (Appointment appointment : pendingAppointments) {
+            Patient patient = Hospital.getPatientFromPatientID(appointment.getPatientId());
+            if (patient != null && !patients.contains(patient)) {
+                patients.add(patient);
+            }
+        }
+        // sort the patients list array by patientID
+        Collections.sort(patients, Comparator.comparing(Patient::getPatientID));
     }
 }
