@@ -25,7 +25,7 @@ public class Doctor extends HospitalStaff{
     public Doctor(String name, String doctorID, int age, Gender gender)
     {
         super(name, doctorID, age, gender);
-        this.availableSlots = new ArrayList<TimeSlot>();
+        this.availableSlots = new ArrayList<>();
         this.doctorID = doctorID;
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
@@ -76,8 +76,40 @@ public class Doctor extends HospitalStaff{
     */
     public void viewPersonalSchedule()
     {
-        viewPendingAppointments();
-        viewAvailibility();
+        // request doctor to input date, outputs the schedule for the day
+        LocalDate date = getDateInput();
+
+        // header
+        System.out.println(String.format("\n<--- %s's schedule on %s --->", getName(), date.format(formatter)));
+        
+        System.out.println("\n<--- Upcoming Appointments --->");
+        boolean hasAppointments = false;
+        int i = 1;
+        for (Appointment appointment : schedule) {
+            if (appointment.getAppointmentDate().equals(date)) {
+                hasAppointments = true;
+                System.out.println("--- Appointment " + i + " ---");
+                System.out.println("Start Time: " + appointment.timeSlot.start);
+                System.out.println("End Time: " + appointment.timeSlot.end);
+                System.out.println("Patient Name: " + Hospital.getPatientNameFromPatientID(appointment.patientId));
+                i++;            
+            }
+        }
+        if (!hasAppointments) {
+            System.out.println("No appointments scheduled for this date.");
+        }
+
+        System.out.println("\n<--- Available Timeslots: --->");
+        boolean hasAvailableSlots = false;
+        for (TimeSlot slot : availableSlots) {
+            if (slot.getDate().equals(date)) {
+                hasAvailableSlots = true;
+                System.out.println(slot.getStart() + " to " + slot.getEnd());
+            }
+        }
+        if (!hasAvailableSlots) {
+            System.out.println("No available timeslots for this date.");
+        }
     }
     
     public void setAvailability()
@@ -297,6 +329,49 @@ public class Doctor extends HospitalStaff{
         }
         
         return new TimeSlot(date, startTime, endTime);
+    }
+
+    public LocalDate getDateInput() {
+        Scanner sc = new Scanner(System.in);
+        LocalDate date;
+
+        int inputYear;
+        while (true) {
+            System.out.print("Enter the year (e.g. 2024): ");
+            inputYear = sc.nextInt();
+            if (inputYear >= 2024) {
+                break;
+            }
+            System.out.println("Invalid year. Please enter a year from 2024 onwards.");
+        }
+
+        int inputMonth;
+        while (true) {
+            System.out.print("Enter the month (1 to 12): ");
+            inputMonth = sc.nextInt();
+            if (inputMonth >= 1 && inputMonth <= 12) {
+                break;
+            }
+            System.out.println("Invalid month. Please enter a number between 1 to 12.");
+        }
+
+        int inputDay;
+        while (true) {
+            System.out.print("Enter the day (1 to 31): ");
+            inputDay = sc.nextInt();
+            try {
+                date = LocalDate.of(inputYear, inputMonth, inputDay);
+                if (date.isAfter(LocalDate.now())) {    // check if the date is after today
+                    break;
+                } else {
+                    System.out.println("Invalid date. The date must be after today.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid day. Please enter a valid day.");
+            }
+        }
+
+        return date;
     }
 
     public void viewAvailibility() {
