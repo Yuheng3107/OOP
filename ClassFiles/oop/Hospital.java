@@ -143,6 +143,30 @@ public class Hospital {
         System.out.println("Your new password has been set.");
     }
 
+    public static void updatePassword(String id, String role) {
+        Scanner sc = new Scanner(System.in);
+        String newPassword1, newPassword2;
+        do {
+            System.out.print("Enter new password: ");
+            newPassword1 = sc.nextLine();
+            System.out.print("Enter new password again: ");
+            newPassword2 = sc.nextLine();
+            if (!newPassword1.equals(newPassword2)) {
+                System.out.println("Passwords do not match, please try again!");
+            }
+        } while (!newPassword1.equals(newPassword2));
+        if (role == "Patient")
+        {
+            updatePasswordInCSV(patientCredentialsDatabase, id.toUpperCase(), newPassword1);
+        }
+        else
+        {
+            updatePasswordInCSV(staffCredentialsDatabase, id.toUpperCase(), newPassword1);
+        }
+        
+        System.out.println("Your new password has been set.");
+    }
+
     public static void updatePasswordInCSV(String filePath, String patientID, String newPassword) {
         List<String> lines = new ArrayList<>();
         String line;

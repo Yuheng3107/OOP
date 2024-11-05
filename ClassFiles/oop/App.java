@@ -113,6 +113,9 @@ public class App {
                                 matchedPatient.viewScheduledAppointmentStatus();
                                 break;
                             case 10:
+                                Hospital.updatePassword(matchedPatient.getID(), "Patient");
+                                break;
+                            case 11:
                                 Patient.goodbyeMessage(matchedPatient);
                                 userLogout = true;
                                 loginSuccess = false;
@@ -159,6 +162,9 @@ public class App {
                                         doctor.recordAppointmentOutcome();
                                         break;
                                     case 8:
+                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Doctor");
+                                        break;
+                                    case 9:
                                         HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
@@ -188,6 +194,9 @@ public class App {
                                         pharmacist.submitReplenishRequest();
                                         break;
                                     case 5:
+                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Pharmacist");
+                                        break;
+                                    case 6:
                                         HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
@@ -228,6 +237,9 @@ public class App {
                                         administrator.approveReplenishmentRequest(index-1);
                                         break;
                                     case 5:
+                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Staff Member");
+                                        break;
+                                    case 6:
                                         HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;

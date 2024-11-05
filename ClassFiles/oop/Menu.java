@@ -16,7 +16,8 @@ public class Menu {
         System.out.println("| 7. View Scheduled Appointments            |");
         System.out.println("| 8. View Past Appointment Outcome Records  |");
         System.out.println("| 9. View Scheduled Appointment Status      |");
-        System.out.println("| 10. Logout                                |");
+        System.out.println("| 10. Change Password                       |");
+        System.out.println("| 11. Logout                                |");
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
@@ -34,7 +35,8 @@ public class Menu {
         System.out.println("| 5. Accept or Decline Appointment Request  |");
         System.out.println("| 6. View Upcoming Appointments             |");
         System.out.println("| 7. Record Outcome Records                 |");
-        System.out.println("| 8. Logout                                 |");
+        System.out.println("| 8. Change Password                        |");
+        System.out.println("| 9. Logout                                 |");
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
@@ -49,7 +51,8 @@ public class Menu {
         System.out.println("| 2. Update Prescription Status             |");
         System.out.println("| 3. View Medication Inventory              |");
         System.out.println("| 4. Submit Replenishment Request           |");
-        System.out.println("| 5. Logout                                 |");
+        System.out.println("| 5. Change Password                        |");
+        System.out.println("| 6. Logout                                 |");
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
@@ -64,7 +67,8 @@ public class Menu {
         System.out.println("| 2. View Appointments Details              |");
         System.out.println("| 3. View and Manage Medication Inventory   |");
         System.out.println("| 4. Approve Replenishment Requests         |");
-        System.out.println("| 5. Logout                                 |");
+        System.out.println("| 5. Change Password                        |");
+        System.out.println("| 6. Logout                                 |");
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
