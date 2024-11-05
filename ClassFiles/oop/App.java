@@ -125,7 +125,6 @@ public class App {
                 }
                 else if (matchedHospitalStaff != null)
                 {
-                    //System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
                     HospitalStaff.welcomeMessage(matchedHospitalStaff);
                     loginSuccess = true;
                     while (userLogout == false)
@@ -133,7 +132,6 @@ public class App {
                         switch (matchedHospitalStaff.getRole())
                         {
                             case "Doctor":
-                                int docChoice = 0;
                                 Menu.printDoctorMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getID());

@@ -3,19 +3,16 @@ package oop;
 import oop.AdministratorLogic.ReplenishmentRequest;
 import java.util.Scanner;
 
-public class Pharmacist extends HospitalStaff {
-
-    private String pharmacistID;
-    
+public class Pharmacist extends HospitalStaff
+{
     public Pharmacist(String name, String staffID, int age, Gender gender) {
         super(name, staffID, age, gender);
-        this.pharmacistID = staffID;
         Hospital.staffs.add(this);
     }
 
     public String getID()
     {
-        return pharmacistID;
+        return super.getID();
     }
 
     public void viewAppointmentOutcomeRecord()
@@ -50,9 +47,12 @@ public class Pharmacist extends HospitalStaff {
 
     }
 
-    public static Patient findPatientById(String id) {
-        for (Patient patient : Hospital.patients) {
-            if (patient.getID().equalsIgnoreCase(id)) {
+    public static Patient findPatientById(String id)
+    {
+        for (Patient patient : Hospital.patients)
+        {
+            if (patient.getID().equalsIgnoreCase(id))
+            {
                 return patient;
             }
         }
