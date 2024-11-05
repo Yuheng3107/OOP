@@ -79,7 +79,7 @@ public class ImportUsers {
                 // Write patient data
                 for (Patient patient : patients)
                 {
-                    String patientID = patient.getPatientID();
+                    String patientID = patient.getID();
                     String defaultPassword = "password";
                     writer.println(patientID + "," + defaultPassword);
                 }
@@ -123,7 +123,7 @@ public class ImportUsers {
                         hospitalStaff = new Pharmacist(name, staffId, age, gender);
                         break;
                     case "Administrator":
-                        hospitalStaff = new Administrator(name, staffId, gender, age);
+                        hospitalStaff = new Administrator(name, staffId, age, gender);
                         break;
                     default:
                         System.out.println("Unknown role: " + role);
@@ -145,7 +145,7 @@ public class ImportUsers {
 
                 // Write staff credentials
                 for (HospitalStaff hospitalStaff : staff) {
-                    String staffID = hospitalStaff.getStaffID();
+                    String staffID = hospitalStaff.getID();
                     String defaultPassword = "password";
                     writer.println(staffID + "," + defaultPassword);
                 }
@@ -185,216 +185,4 @@ public class ImportUsers {
         return medStocks;
     }
 
-    /*
-    public static List<Doctor> readDoctorFromCSV(String filePath)
-    {
-        List<Doctor> doctors = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-        {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            // Read each line in the CSV
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                String docId = values[0];
-                String name = values[1];
-                Gender gender = values[3].equalsIgnoreCase("Male") ? Gender.Male : Gender.Female;
-                int age = Integer.parseInt(values[4]);
-
-                Doctor doctor = new Doctor(name, docId, age, gender);
-                doctors.add(doctor);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        File databaseFile = new File("DoctorCredentialsDatabase.csv");
-        if (!databaseFile.exists())
-        {
-            //Write to database the ID and the default password
-            try (PrintWriter writer = new PrintWriter(new FileWriter("DoctorCredentialsDatabase.csv")))
-            {
-                writer.println("ID,Password");
-                // Write patient data
-                for (Doctor doctor : doctors)
-                {
-                    String docID = doctor.getID();
-                    String defaultPassword = "password";
-                    writer.println(docID + "," + defaultPassword);
-                }
-                System.out.println("Doctor Credentials file created successfully.");
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Doctor Credentials file already exists.");
-        }
-        return doctors;
-    }
-
-    /*public static List<Pharmacist> readPharmacistFromCSV(String filePath)
-    {
-        List<Pharmacist> pharmacists = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-        {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            // Read each line in the CSV
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                String docId = values[0];
-                String name = values[1];
-                Gender gender = values[3].equalsIgnoreCase("Male") ? Gender.Male : Gender.Female;
-                int age = Integer.parseInt(values[4]);
-
-                Pharmacist pharmacist = new Pharmacist(name, docId, age, gender);
-                pharmacists.add(pharmacist);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        File databaseFile = new File("PharmacistCredentialsDatabase.csv");
-        if (!databaseFile.exists())
-        {
-            //Write to database the ID and the default password
-            try (PrintWriter writer = new PrintWriter(new FileWriter("PharmacistCredentialsDatabase.csv")))
-            {
-                writer.println("ID,Password");
-                // Write patient data
-                for (Pharmacist pharmacist : pharmacists)
-                {
-                    String docID = pharmacist.getID();
-                    String defaultPassword = "password";
-                    writer.println(docID + "," + defaultPassword);
-                }
-                System.out.println("Pharmacist Credentials file created successfully.");
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Pharmacist Credentials file already exists.");
-        }
-        return pharmacists;
-    }
-
-    public static List<Administrator> readAdministratorFromCSV(String filePath)
-    {
-        List<Administrator> administrators = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-        {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            // Read each line in the CSV
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                String adminId = values[0];
-                String name = values[1];
-                Gender gender = values[3].equalsIgnoreCase("Male") ? Gender.Male : Gender.Female;
-                int age = Integer.parseInt(values[4]);
-
-                Administrator administrator = new Administrator(name, adminId, gender, age);
-                administrators.add(administrator);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        File databaseFile = new File("AdministratorCredentialsDatabase.csv");
-        if (!databaseFile.exists())
-        {
-            //Write to database the ID and the default password
-            try (PrintWriter writer = new PrintWriter(new FileWriter("AdministratorCredentialsDatabase.csv")))
-            {
-                writer.println("ID,Password");
-                // Write patient data
-                for (Administrator administrator : administrators)
-                {
-                    String adminID = administrator.getAdminID();
-                    String defaultPassword = "password";
-                    writer.println(adminID + "," + defaultPassword);
-                }
-                System.out.println("Administrator Credentials file created successfully.");
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Administrator Credentials file already exists.");
-        }
-        return administrators;
-    }
-
-    public static void splitStaffList()
-    {
-        String inputFile = "Staff_List.csv";
-        String doctorFile = "Doctors.csv";
-        String pharmacistFile = "Pharmacists.csv";
-        String administratorFile = "Administrators.csv";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-            FileWriter doctorWriter = new FileWriter(doctorFile);
-            FileWriter pharmacistWriter = new FileWriter(pharmacistFile);
-            FileWriter administratorWriter = new FileWriter(administratorFile);
-
-            // Write headers to each output file
-            String header = br.readLine();
-            doctorWriter.write(header + "\n");
-            pharmacistWriter.write(header + "\n");
-            administratorWriter.write(header + "\n");
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] columns = line.split(",");
-                String role = columns[2];
-                switch (role) {
-                    case "Doctor":
-                        doctorWriter.write(line + "\n");
-                        break;
-                    case "Pharmacist":
-                        pharmacistWriter.write(line + "\n");
-                        break;
-                    case "Administrator":
-                        administratorWriter.write(line + "\n");
-                        break;
-                    default:
-                        System.out.println("Unknown role: " + role);
-                }
-            }
-            doctorWriter.close();
-            pharmacistWriter.close();
-            administratorWriter.close();
-
-            System.out.println("Staff_List splitted and created successfully!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }

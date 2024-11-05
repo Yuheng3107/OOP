@@ -2,8 +2,6 @@ package oop;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 import oop.AdministratorLogic.Administrator;
@@ -13,15 +11,7 @@ public class App {
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     public static void main(String[] args)
-    {
-        TimeSlot[] timeSlots = new TimeSlot[] {
-            new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(10, 0), LocalTime.of(11, 0)),
-            new TimeSlot(LocalDate.of(2024, 10, 20), LocalTime.of(11, 0), LocalTime.of(12, 0)),
-            new TimeSlot(LocalDate.of(2024, 10, 21), LocalTime.of(9, 0), LocalTime.of(10, 0))
-        };
-        String[] s = new String[1]; //placeholder to create medicalHistory
-        s[0] = "a";
-        
+    {        
         Hospital hospital = new Hospital();
         App.program();
     }
@@ -38,7 +28,9 @@ public class App {
             userLogout = false;
             while ((loginSuccess == false) && (userLogout == false))
             {
-                System.out.print("--------------\nEnter -1 to quit\nEnter your id: ");
+                System.out.println("--------------");
+                System.out.println("Enter [-1] to quit");
+                System.out.print("Enter your id: ");
                 id = sc.nextLine();
                 if (id.equals("-1"))
                 {
@@ -86,7 +78,7 @@ public class App {
                 }
                 else if (matchedPatient != null)
                 {
-                    System.out.println("\nWelcome " + matchedPatient.getName() + "!");
+                    Patient.welcomeMessage(matchedPatient);
                     loginSuccess = true;
                     while (userLogout == false)
                     {
@@ -97,7 +89,7 @@ public class App {
                                 matchedPatient.viewMedicalRecord();
                                 break;
                             case 2:
-                                matchedPatient.updatePersonalInformation(matchedPatient.getPatientID());
+                                matchedPatient.updatePersonalInformation(matchedPatient.getID());
                                 break;
                             case 3:
                                 matchedPatient.viewAvailableAppointmentSlots();
@@ -121,7 +113,7 @@ public class App {
                                 matchedPatient.viewScheduledAppointmentStatus();
                                 break;
                             case 10:
-                                System.out.println("Goodbye " + matchedPatient.getName() + "!\n");
+                                Patient.goodbyeMessage(matchedPatient);
                                 userLogout = true;
                                 loginSuccess = false;
                                 break;
@@ -133,17 +125,16 @@ public class App {
                 }
                 else if (matchedHospitalStaff != null)
                 {
-                    System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
+                    HospitalStaff.welcomeMessage(matchedHospitalStaff);
                     loginSuccess = true;
                     while (userLogout == false)
                     {
                         switch (matchedHospitalStaff.getRole())
                         {
                             case "Doctor":
-                                int docChoice = 0;
                                 Menu.printDoctorMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -168,7 +159,7 @@ public class App {
                                         doctor.recordAppointmentOutcome();
                                         break;
                                     case 8:
-                                        System.out.println("Goodbye " + doctor.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;
@@ -181,7 +172,7 @@ public class App {
                                 Pharmacist.checkStockAlert();
                                 Menu.printPharmacistMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -197,7 +188,7 @@ public class App {
                                         pharmacist.submitReplenishRequest();
                                         break;
                                     case 5:
-                                        System.out.println("Goodbye " + pharmacist.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;
@@ -209,7 +200,7 @@ public class App {
                             case "Staff Member":
                                 Menu.printAdminMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -237,7 +228,7 @@ public class App {
                                         administrator.approveReplenishmentRequest(index-1);
                                         break;
                                     case 5:
-                                        System.out.println("Goodbye " + administrator.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;

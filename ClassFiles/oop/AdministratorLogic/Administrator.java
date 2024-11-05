@@ -6,13 +6,9 @@ import oop.HospitalStaff;
 import oop.MedicineStock;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-
 import oop.Gender;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
-    
-    private String id;
     private int age;
 
     
@@ -24,18 +20,17 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
      * @return 
      */
     
-    public Administrator(String name, String id, Gender gender, int age)
+    public Administrator(String name, String id, int age, Gender gender)
     {
         super(name, id, age, gender);
-        this.id = id;
         this.name = name;
         this.gender = gender;
         this.age = age;
     }
 
-    public String getAdminID()
+    public String getID()
     {
-        return id;
+        return super.getID();
     }
 
     public void manageInventory() {
@@ -267,7 +262,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             // print out staff information
             System.out.println("Name of Staff: " + member.getName());
             System.out.println("Age: " + member.getAge());
-            System.out.println("ID: " + member.getStaffID());
+            System.out.println("ID: " + member.getID());
             System.out.println("Role: " + member.getRole());
             System.out.println("Gender: " + member.getGender());
         }
