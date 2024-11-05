@@ -39,7 +39,7 @@ public class Patient extends Role {
         return name;
     }
 
-    public String getPatientID()
+    public String getID()
     {
         return patientID;
     }
@@ -205,7 +205,7 @@ public class Patient extends Role {
             if (checkForValidTimeSlot(doctor, timeSlot) == true)
             {
                 //schedule appointment
-                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getStaffID(), patientID);
+                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getID(), patientID);
                 addAppointmentToScheduledAppointments(appointment);
                 //remove timeslots from doctor's array of available timeslots
                 LocalTime tempStart = timeSlot.start;
@@ -469,5 +469,13 @@ public class Patient extends Role {
                 break;
         }
         return blood;
+    }
+    public static void welcomeMessage(Patient patient)
+    {
+        System.out.println("\nWelcome " + patient.getName() + "!");
+    }
+    public static void goodbyeMessage(Patient patient)
+    {
+        System.out.println("Goodbye " + patient.getName() + "!\n");
     }
 }

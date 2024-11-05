@@ -79,7 +79,7 @@ public class ImportUsers {
                 // Write patient data
                 for (Patient patient : patients)
                 {
-                    String patientID = patient.getPatientID();
+                    String patientID = patient.getID();
                     String defaultPassword = "password";
                     writer.println(patientID + "," + defaultPassword);
                 }
@@ -145,7 +145,7 @@ public class ImportUsers {
 
                 // Write staff credentials
                 for (HospitalStaff hospitalStaff : staff) {
-                    String staffID = hospitalStaff.getStaffID();
+                    String staffID = hospitalStaff.getID();
                     String defaultPassword = "password";
                     writer.println(staffID + "," + defaultPassword);
                 }

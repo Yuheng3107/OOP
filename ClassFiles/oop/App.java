@@ -29,7 +29,7 @@ public class App {
             while ((loginSuccess == false) && (userLogout == false))
             {
                 System.out.println("--------------");
-                System.out.println("Enter -1 to quit");
+                System.out.println("Enter [-1] to quit");
                 System.out.print("Enter your id: ");
                 id = sc.nextLine();
                 if (id.equals("-1"))
@@ -78,7 +78,7 @@ public class App {
                 }
                 else if (matchedPatient != null)
                 {
-                    System.out.println("\nWelcome " + matchedPatient.getName() + "!");
+                    Patient.welcomeMessage(matchedPatient);
                     loginSuccess = true;
                     while (userLogout == false)
                     {
@@ -89,7 +89,7 @@ public class App {
                                 matchedPatient.viewMedicalRecord();
                                 break;
                             case 2:
-                                matchedPatient.updatePersonalInformation(matchedPatient.getPatientID());
+                                matchedPatient.updatePersonalInformation(matchedPatient.getID());
                                 break;
                             case 3:
                                 matchedPatient.viewAvailableAppointmentSlots();
@@ -113,7 +113,7 @@ public class App {
                                 matchedPatient.viewScheduledAppointmentStatus();
                                 break;
                             case 10:
-                                System.out.println("Goodbye " + matchedPatient.getName() + "!\n");
+                                Patient.goodbyeMessage(matchedPatient);
                                 userLogout = true;
                                 loginSuccess = false;
                                 break;
@@ -125,7 +125,8 @@ public class App {
                 }
                 else if (matchedHospitalStaff != null)
                 {
-                    System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
+                    //System.out.println("\nWelcome " + matchedHospitalStaff.getName() + "!");
+                    HospitalStaff.welcomeMessage(matchedHospitalStaff);
                     loginSuccess = true;
                     while (userLogout == false)
                     {
@@ -135,7 +136,7 @@ public class App {
                                 int docChoice = 0;
                                 Menu.printDoctorMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -160,7 +161,7 @@ public class App {
                                         doctor.recordAppointmentOutcome();
                                         break;
                                     case 8:
-                                        System.out.println("Goodbye " + doctor.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;
@@ -173,7 +174,7 @@ public class App {
                                 Pharmacist.checkStockAlert();
                                 Menu.printPharmacistMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -189,7 +190,7 @@ public class App {
                                         pharmacist.submitReplenishRequest();
                                         break;
                                     case 5:
-                                        System.out.println("Goodbye " + pharmacist.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;
@@ -201,7 +202,7 @@ public class App {
                             case "Staff Member":
                                 Menu.printAdminMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
-                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getStaffID());
+                                Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getID());
                                 switch (menuChoice)
                                 {
                                     case 1:
@@ -229,7 +230,7 @@ public class App {
                                         administrator.approveReplenishmentRequest(index-1);
                                         break;
                                     case 5:
-                                        System.out.println("Goodbye " + administrator.getName() + "!\n");
+                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
                                         userLogout = true;
                                         loginSuccess = false;
                                         break;

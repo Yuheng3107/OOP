@@ -73,7 +73,7 @@ public class Hospital {
 
     public static Patient findPatientById(String id) {
         for (Patient patient : patients) {
-            if (patient.getPatientID().equalsIgnoreCase(id)) {
+            if (patient.getID().equalsIgnoreCase(id)) {
                 return patient;
             }
         }
@@ -82,7 +82,7 @@ public class Hospital {
 
     public static HospitalStaff findStaffById(String id) {
         for (HospitalStaff staff : staffs) {
-            if (staff.getStaffID().equalsIgnoreCase(id)) {
+            if (staff.getID().equalsIgnoreCase(id)) {
                 return staff;
             }
         }
@@ -225,7 +225,8 @@ public class Hospital {
 
     public static Doctor getDoctorByIndex(int index) {
         int doctorCount = 0; // To keep track of the current doctor count
-        for (HospitalStaff member : staffs) {
+        for (HospitalStaff member : staffs)
+        {
             if (member instanceof Doctor) {
                 if (doctorCount == index) {
                     return (Doctor) member; // Cast to Doctor and return when the index matches
@@ -242,70 +243,84 @@ public class Hospital {
     {
         for (HospitalStaff member : staffs)
         {
-            if (member instanceof Doctor && member.getStaffID().equals(staffID))
+            if (member instanceof Doctor && member.getID().equals(staffID))
             {
-
                 return member.getName();
-
             }
         }
         return null;
     }
 
     public static Doctor getDoctorObjectByStaffID(String staffID) {
-        for (HospitalStaff member : staffs) {
-            if (member instanceof Doctor && member.getStaffID().equals(staffID)) {
+        for (HospitalStaff member : staffs)
+        {
+            if (member instanceof Doctor && member.getID().equals(staffID))
+            {
                 return (Doctor) member; // Cast to Doctor
             }
         }
         return null; // Return null if no matching doctor is found
     }
 
-    public static Pharmacist getPharmacistObjectByStaffID(String staffID) {
-        for (HospitalStaff member : staffs) {
-            if (member instanceof Pharmacist && member.getStaffID().equals(staffID)) {
+    public static Pharmacist getPharmacistObjectByStaffID(String staffID)
+    {
+        for (HospitalStaff member : staffs)
+        {
+            if (member instanceof Pharmacist && member.getID().equals(staffID))
+            {
                 return (Pharmacist) member; // Cast to Pharmacist
             }
         }
         return null; // Return null if no matching doctor is found
     }
 
-    public static Administrator getAdministratorObjectByStaffID(String staffID) {
-        for (HospitalStaff member : staffs) {
-            if (member instanceof Administrator && member.getStaffID().equals(staffID)) {
+    public static Administrator getAdministratorObjectByStaffID(String staffID)
+    {
+        for (HospitalStaff member : staffs)
+        {
+            if (member instanceof Administrator && member.getID().equals(staffID))
+            {
                 return (Administrator) member; // Cast to Administrator
             }
         }
         return null; // Return null if no matching doctor is found
     }
     
-    public static void addStaffMember(String staffName, int age, String staffID, Gender gender, String role) {
+    public static void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
+    {
         // check whether role is valid
         role = role.toLowerCase();
 
-        if (!role.equals("doctor") && !role.equals("pharmacist")) {
+        if (!role.equals("doctor") && !role.equals("pharmacist"))
+        {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
 
         // instantiate staff member
         HospitalStaff staffMember;
-        if (role.equals("doctor")) {
+        if (role.equals("doctor"))
+        {
             staffMember = new Doctor(staffName, staffID, age, gender);
 
-        } else if (role.equals("pharmacist")) {
+        }
+        else if (role.equals("pharmacist"))
+        {
             staffMember = new Pharmacist(staffName, staffID, age, gender);
-        } else {
+        }
+        else
+        {
             System.out.println("Invalid role. Please choose a valid role, either doctor or pharmacist.");
             return;
         }
-
-
     }
     
-    public static void removeStaffMember(String staffName) {
-        for (int i = 0; i < staffs.size(); i++) {
-            if (staffs.get(i).getName().equals(staffName)) {
+    public static void removeStaffMember(String staffName)
+    {
+        for (int i = 0; i < staffs.size(); i++)
+        {
+            if (staffs.get(i).getName().equals(staffName))
+            {
                 staffs.remove(i);
                 System.out.println("Staff member removed: " + staffName);   
                 return;
@@ -318,11 +333,9 @@ public class Hospital {
     {
         for (Patient patient : patients)
         {
-            if (patient.getPatientID().equals(patientID))
+            if (patient.getID().equals(patientID))
             {
-
                 return patient.getName();
-
             }
         }
         return null;
@@ -332,11 +345,9 @@ public class Hospital {
     {
         for (Patient patient : patients)
         {
-            if (patient.getPatientID().equals(patientID))
+            if (patient.getID().equals(patientID))
             {
-
                 return patient;
-
             }
         }
         return null;

@@ -720,6 +720,6 @@ public class Doctor extends HospitalStaff{
             }
         }
         // sort the patients list array by patientID
-        Collections.sort(patients, Comparator.comparing(Patient::getPatientID));
+        Collections.sort(patients, Comparator.comparing(Patient::getID));
     }
 }

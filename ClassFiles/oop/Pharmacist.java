@@ -26,7 +26,7 @@ public class Pharmacist extends HospitalStaff {
 
         while (patient == null)
         {
-            System.out.print("Enter patient's ID: ");
+            System.out.print("Enter Patient's ID: ");
             patientID = sc.nextLine();
             patient = findPatientById(patientID);
             if (patient == null)
@@ -52,7 +52,7 @@ public class Pharmacist extends HospitalStaff {
 
     public static Patient findPatientById(String id) {
         for (Patient patient : Hospital.patients) {
-            if (patient.getPatientID().equalsIgnoreCase(id)) {
+            if (patient.getID().equalsIgnoreCase(id)) {
                 return patient;
             }
         }
@@ -78,7 +78,7 @@ public class Pharmacist extends HospitalStaff {
 
         while (patient == null)
         {
-            System.out.print("Enter patient's ID: ");
+            System.out.print("Enter Patient's ID: ");
             patientID = sc.nextLine();
             patient = findPatientById(patientID);
             if (patient == null)
