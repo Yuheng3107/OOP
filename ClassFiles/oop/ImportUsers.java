@@ -123,7 +123,7 @@ public class ImportUsers {
                         hospitalStaff = new Pharmacist(name, staffId, age, gender);
                         break;
                     case "Administrator":
-                        hospitalStaff = new Administrator(name, staffId, gender, age);
+                        hospitalStaff = new Administrator(name, staffId, age, gender);
                         break;
                     default:
                         System.out.println("Unknown role: " + role);
