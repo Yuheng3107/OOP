@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,7 +31,6 @@ public class Patient extends Role {
         this.name = name;
         this.patientID = patientID;
         this.medicalRecord = new MedicalRecord(patientID, name, dateOfBirth, gender, bloodType, new MedicalHistory(), email);
-        //this.hospital = hospital;
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
         Hospital.patients.add(this);
