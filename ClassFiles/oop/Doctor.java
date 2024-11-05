@@ -25,7 +25,7 @@ public class Doctor extends HospitalStaff{
     public Doctor(String name, String doctorID, int age, Gender gender)
     {
         super(name, doctorID, age, gender);
-        this.availableSlots = new ArrayList<>();
+        this.availableSlots = generateDefaultTimeSlots();
         this.doctorID = doctorID;
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
@@ -184,9 +184,19 @@ public class Doctor extends HospitalStaff{
             System.out.println("No appointments scheduled for this date.");
         }
 
-        System.out.println("\n<--- Available Timeslots: --->");
+        System.out.println("\n<--- Available Timeslots --->");
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
+        List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
+
+        Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
+            @Override
+            public int compare(TimeSlot slot1, TimeSlot slot2) {
+                return slot1.start.compareTo(slot2.start); // sort by time
+            }
+        });
+
         boolean hasAvailableSlots = false;
-        for (TimeSlot slot : availableSlots) {
+        for (TimeSlot slot : sortedSlots) {
             if (slot.getDate().equals(date)) {
                 hasAvailableSlots = true;
                 System.out.println(slot.getStart() + " to " + slot.getEnd());
@@ -235,6 +245,7 @@ public class Doctor extends HospitalStaff{
         LocalDate date = timeSlotInput.getDate();
         LocalTime startTime = timeSlotInput.getStart();
         LocalTime endTime = timeSlotInput.getEnd();
+        List<TimeSlot> slotsToAdd = new ArrayList<>();
 
         if (date == null || startTime == null || endTime == null) {
             return;
@@ -253,26 +264,34 @@ public class Doctor extends HospitalStaff{
             );
 
             boolean isPending = pendingAppointments.stream().anyMatch(appointment ->
-            appointment.getAppointmentDate().equals(date) && 
-            appointment.getAppointmentTimeSlot().equals(timeSlot)
+                appointment.getAppointmentDate().equals(date) && 
+                appointment.getAppointmentTimeSlot().equals(timeSlot)
             );
 
             if (isBooked || isPending) {
                 System.out.println(String.format("Cannot add timeslot on %s %s to %s as it is already booked.", date.format(formatter), slotStart, slotEnd));
             }
             // if timeslot is not booked, check if in availableSlots, else add it
-            else if (!availableSlots.contains(timeSlot)) {
-                availableSlots.add(timeSlot);
+            else if (availableSlots.contains(timeSlot)) {
+                System.out.println(String.format("Timeslot on %s %s to %s exists.", date.format(formatter), slotStart, slotEnd));
             } 
             else {
-                System.out.println(String.format("Timeslot on %s %s to %s exists.", date.format(formatter), slotStart, slotEnd));
+                slotsToAdd.add(timeSlot);
             }
             slotStart = slotEnd; // move to the next hour
         }
 
-        System.out.println("Added new available timeslot(s) successfully.");
+        if (slotsToAdd.isEmpty()) {
+            System.out.println("No timeslots to add.");
+        }
+        else {
+            for (TimeSlot timeSlot : slotsToAdd) {
+                availableSlots.add(timeSlot);
+            }
+            System.out.println("Added new available timeslot(s) successfully.");
+        }
 
-        viewAvailibility(date);
+        viewAvailability(date);
     }
 
     // option 2 of setAvailability - remove available slots
@@ -459,27 +478,25 @@ public class Doctor extends HospitalStaff{
         return date;
     }
 
-    public void viewAvailibility(LocalDate date) {
+    public void viewAvailability(LocalDate date) {
 
-        // sort the timeslots by date and time
-        Collections.sort(availableSlots, new Comparator<TimeSlot>() {
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
+        List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
+
+        Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
             @Override
             public int compare(TimeSlot slot1, TimeSlot slot2) {
-                int dateComparison = slot1.getDate().compareTo(slot2.getDate());
-                if (dateComparison != 0) {
-                    return dateComparison; // if dates are different, sort by date
-                }
-                return slot1.start.compareTo(slot2.start); // if dates are the same, sort by time
+                return slot1.start.compareTo(slot2.start); // sort by time
             }
         });
 
         // display the updated list of available timeslots
-        if (availableSlots.isEmpty()) {
-            System.out.println("No available slots.");
+        if (sortedSlots.isEmpty()) {
+            System.out.println("No available slots on " + date.format(formatter) + ".");
             return;
         }
         System.out.println("\n" + getName() + "'s Available slots on " + date.format(formatter));
-        for (TimeSlot slot : availableSlots) {
+        for (TimeSlot slot : sortedSlots) {
             System.out.println(slot.start + " to " + slot.end);
         }
     }
