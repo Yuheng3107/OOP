@@ -82,25 +82,31 @@ public class Doctor extends HospitalStaff{
             System.out.println(String.format("[%d] %s", i, patient.getName()));
             i++;
         }
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
 
-        if (choice < 1 || choice > patients.size()) {
-            System.out.println("Invalid selection. Returning to main menu.");
-            return;
+        try {
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+    
+            if (choice < 1 || choice > patients.size()) {
+                System.out.println("Invalid selection. Returning to main menu.");
+                return;
+            }
+    
+            Patient selectedPatient = patients.get(choice-1);
+            System.out.println("< " + selectedPatient.getName() + "'s Medical Record >\n");
+            selectedPatient.viewMedicalRecord();
         }
-
-        Patient selectedPatient = patients.get(choice-1);
-        System.out.println("< " + selectedPatient.getName() + "'s Medical Record >\n");
-        selectedPatient.viewMedicalRecord();
+        catch (Exception e) {
+            System.out.println("Invalid input. Returning to main menu.");
+        }
     }
     
     public void updateMedicalRecord()
     {
         // method to update the patient list
-        getPatients();
+        List<Patient> allPatients = getAllPatients();
 
-        if (patients.isEmpty()) {
+        if (allPatients.isEmpty()) {
             System.out.println("No patients to update medical record.");
             return;
         }
@@ -108,54 +114,59 @@ public class Doctor extends HospitalStaff{
         // display list of patients to select from
         int i = 1;
         System.out.println("Select a patient to update their medical record: ");
-        for (Patient patient : patients) {
+        for (Patient patient : allPatients) {
             System.out.println(String.format("[%d] %s", i, patient.getName()));
             i++;
         }
-        Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
 
-        if (choice < 1 || choice > patients.size()) {
-            System.out.println("Invalid selection. Returning to main menu.");
-            return;
-        }
+        try {
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
 
-        Patient selectedPatient = patients.get(choice-1);
-        System.out.println("Would you like to add new [1] diagnosis or [2] treatment plan?");
-        
-        choice = sc.nextInt();
-        sc.nextLine(); // consume the leftover newline 
-
-        if (choice < 1 || choice > 2) {
-            System.out.println("Invalid selection. Returning to main menu.");
-            return;
-        }
-        else if (choice == 1) {
-            System.out.println("Enter new diagnosis: ");
-            String inputDiagnosis = sc.nextLine();
-
-            if (inputDiagnosis == null || inputDiagnosis.isEmpty()) {
-                System.out.println("Invalid input. Returning to main menu.");
+            if (choice < 1 || choice > allPatients.size()) {
+                System.out.println("Invalid selection. Returning to main menu.");
                 return;
             }
-            else {
-                ArrayList<String> patientDiagnoses = selectedPatient.getMedicalRecord().getMedicalHistory().getPastDiagnoses();
-                patientDiagnoses.add(inputDiagnosis);
-                System.out.println("Updated patient's past diagnoses.");
-            }
-        }
-        else if (choice == 2) {
-            System.out.println("Enter new treatment plan: ");
-            String inputTreatment = sc.nextLine();
 
-            if (inputTreatment == null || inputTreatment.isEmpty()) {
-                System.out.println("Invalid input. Returning to main menu.");
+            Patient selectedPatient = allPatients.get(choice-1);
+            System.out.println("Would you like to add new [1] diagnosis or [2] treatment plan?");
+            
+            choice = sc.nextInt();
+            sc.nextLine(); // consume the leftover newline 
+
+            if (choice < 1 || choice > 2) {
+                System.out.println("Invalid selection. Returning to main menu.");
                 return;
-            } else {
-                ArrayList<String> patientTreatments = selectedPatient.getMedicalRecord().getMedicalHistory().getPastTreatments();
-                patientTreatments.add(inputTreatment);
-                System.out.println("Updated patient's past treatment plans");
             }
+            else if (choice == 1) {
+                System.out.println("Enter new diagnosis: ");
+                String inputDiagnosis = sc.nextLine();
+
+                if (inputDiagnosis == null || inputDiagnosis.isEmpty()) {
+                    System.out.println("Invalid input. Returning to main menu.");
+                    return;
+                }
+                else {
+                    ArrayList<String> patientDiagnoses = selectedPatient.getMedicalRecord().getMedicalHistory().getPastDiagnoses();
+                    patientDiagnoses.add(inputDiagnosis);
+                    System.out.println("Updated patient's past diagnoses.");
+                }
+            }
+            else if (choice == 2) {
+                System.out.println("Enter new treatment plan: ");
+                String inputTreatment = sc.nextLine();
+
+                if (inputTreatment == null || inputTreatment.isEmpty()) {
+                    System.out.println("Invalid input. Returning to main menu.");
+                    return;
+                } else {
+                    ArrayList<String> patientTreatments = selectedPatient.getMedicalRecord().getMedicalHistory().getPastTreatments();
+                    patientTreatments.add(inputTreatment);
+                    System.out.println("Updated patient's past treatment plans");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input. Returning to main menu.");
         }
     }
     
@@ -211,27 +222,32 @@ public class Doctor extends HospitalStaff{
     {   
         // add timeslot in the format (date, start, end)    
         // check if timeslot exists 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Select an option:");
-        System.out.println("[1] Add available timeslot(s)");
-        System.out.println("[2] Remove available timeslot(s)");
-        System.out.println("[3] Cancel");
 
-        int choice = sc.nextInt();
-        
-        if (choice == 1) {
-            addAvailableSlots();
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Select an option:");
+            System.out.println("[1] Add available timeslot(s)");
+            System.out.println("[2] Remove available timeslot(s)");
+            System.out.println("[3] Cancel");
+            int choice = sc.nextInt();
+            if (choice == 1) {
+                addAvailableSlots();
+            }
+            
+            else if (choice == 2) {
+                removeAvailableSlots();
+            }
+            else if (choice == 3) {
+                return;
+            }
+            else {
+                System.out.println("Invalid option. Returning to main menu.");
+                return;
+            }
         }
-         
-        else if (choice == 2) {
-            removeAvailableSlots();
-        }
-        else if (choice == 3) {
-            return;
-        }
-        else {
-            System.out.println("Invalid option. Returning to main menu.");
-            return;
+        catch (Exception e)
+        {
+            System.out.println("Invalid input. Returning to main menu.");
         }
     }
 
@@ -442,40 +458,58 @@ public class Doctor extends HospitalStaff{
         int inputYear;
         while (true) {
             System.out.print("Enter the year (e.g. 2024): ");
-            inputYear = sc.nextInt();
-            if (inputYear >= 2024) {
-                break;
+            if (sc.hasNextInt()) {
+                inputYear = sc.nextInt();
+                if (inputYear >= 2024) {
+                    break;
+                }
+                System.out.println("Invalid year. Please enter a year from 2024 onwards.");
             }
-            System.out.println("Invalid year. Please enter a year from 2024 onwards.");
+            else {
+                System.out.println("Invalid input. Please enter a valid year.");
+                sc.next();
+            }
+
         }
 
         int inputMonth;
         while (true) {
             System.out.print("Enter the month (1 to 12): ");
-            inputMonth = sc.nextInt();
-            if (inputMonth >= 1 && inputMonth <= 12) {
-                break;
+            if (sc.hasNextInt()) {
+                inputMonth = sc.nextInt();
+                if (inputMonth >= 1 && inputMonth <= 12) {
+                    break;
+                }
+                System.out.println("Invalid month. Please enter a number between 1 to 12.");
             }
-            System.out.println("Invalid month. Please enter a number between 1 to 12.");
+            else {
+                System.out.println("Invalid input. Please enter a valid month.");
+                sc.next();
+            }
+
         }
 
         int inputDay;
         while (true) {
             System.out.print("Enter the day (1 to 31): ");
-            inputDay = sc.nextInt();
-            try {
-                date = LocalDate.of(inputYear, inputMonth, inputDay);
-                if (date.isAfter(LocalDate.now())) {    // check if the date is after today
-                    break;
-                } else {
-                    System.out.println("Invalid date. The date must be after today.");
+            if (sc.hasNextInt()) {
+                inputDay = sc.nextInt();
+                try {
+                    date = LocalDate.of(inputYear, inputMonth, inputDay);
+                    if (date.isAfter(LocalDate.now())) {    // check if the date is after today
+                        return date;
+                    } else {
+                        System.out.println("Invalid date. The date must be after today.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid day. Please enter a valid day.");
                 }
-            } catch (Exception e) {
-                System.out.println("Invalid day. Please enter a valid day.");
+            }
+            else {
+                System.out.println("Invalid input. Please enter a valid day.");
+                sc.next();            
             }
         }
-
-        return date;
     }
 
     public void viewAvailability(LocalDate date) {
@@ -738,5 +772,9 @@ public class Doctor extends HospitalStaff{
         }
         // sort the patients list array by patientID
         Collections.sort(patients, Comparator.comparing(Patient::getID));
+    }
+
+    public ArrayList<Patient> getAllPatients() {
+        return new ArrayList<>(Hospital.patients);
     }
 }
