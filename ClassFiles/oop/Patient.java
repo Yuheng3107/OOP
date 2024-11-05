@@ -54,9 +54,9 @@ public class Patient extends Role {
         String line, filePath = "Patient_List.csv";
         boolean isUpdated = false;
 
-        System.out.print("Please enter your new email address for " + patientID + ": ");
+        System.out.print("Please enter your new email address: ");
         String newEmail = sc.nextLine();
-        System.out.print("Please enter your new phone number for " + patientID + ": ");
+        System.out.print("Please enter your new phone number: ");
         String newPhone = sc.nextLine();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
