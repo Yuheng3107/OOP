@@ -16,14 +16,12 @@ import java.util.Scanner;
 import oop.UserLogic.Role;
 
 public class Patient extends Role {
-    private Hospital hospital; //patient needs to be under a certain hospital
     private MedicalRecord medicalRecord;
     private ArrayList<Appointment> scheduledAppointments; //includes all appointments of patient with status Pending or Accepted
     public ArrayList<AppointmentOutcome> appointmentOutcomes;
     public String name;
     public String patientID;
 
-    //Temporarily remove MedHistory and Hospital to test code
     //public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
     public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, String email)
     {
@@ -50,21 +48,21 @@ public class Patient extends Role {
         return this.medicalRecord;
     }
 
-    public void updatePersonalInformation(String userID) {
+    public void updatePersonalInformation(String patientID) {
         Scanner sc = new Scanner(System.in);
         List<String> lines = new ArrayList<>();
         String line, filePath = "Patient_List.csv";
         boolean isUpdated = false;
 
-        System.out.print("Please enter your new email address for " + userID + ": ");
+        System.out.print("Please enter your new email address for " + patientID + ": ");
         String newEmail = sc.nextLine();
-        System.out.print("Please enter your new phone number for " + userID + ": ");
+        System.out.print("Please enter your new phone number for " + patientID + ": ");
         String newPhone = sc.nextLine();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (columns[0].equals(userID)) {
+                if (columns[0].equals(patientID)) {
                     columns[5] = newEmail;
                     columns[6] = newPhone;
                     line = String.join(",", columns);
@@ -81,7 +79,7 @@ public class Patient extends Role {
                 for (String updatedLine : lines) {
                     writer.println(updatedLine);
                 }
-                System.out.println("Details updated successfully for ID: " + userID);
+                System.out.println("Details updated successfully for ID: " + patientID);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,7 +102,6 @@ public class Patient extends Role {
             System.out.println("Type the day to view available appointment slots:");
             day = sc.nextInt();
             LocalDate date = LocalDate.of(year, month, day);
-            
     
             // ensure the choice is valid
             while (true)
