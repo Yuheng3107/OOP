@@ -173,8 +173,9 @@ public class ImportUsers {
                 String name = values[0];
                 int iniStock = Integer.parseInt(values[1]);
                 int lowStockLevel = Integer.parseInt(values[2]);
+                int price = Integer.parseInt(values[3]);
 
-                MedicineStock medStock = new MedicineStock(name, iniStock, lowStockLevel);
+                MedicineStock medStock = new MedicineStock(name, iniStock, lowStockLevel, price);
                 medStocks.add(medStock);
             }
         }

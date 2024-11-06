@@ -112,7 +112,7 @@ public class Pharmacist extends HospitalStaff
             for (AppointmentOutcome outcome : patient.appointmentOutcomes)
             {
                 for (PrescribedMedication medication : outcome.prescribedMedications) {
-                    medication.status = "Dispensed";
+                    medication.status = StatusOfPrescribedMedication.Dispensed;
                     System.out.println("Medication Name: " + medication.name);
                     System.out.println("Medication Status: " + medication.status);
                 //add code to decrease stock here?
