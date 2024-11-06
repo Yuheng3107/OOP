@@ -490,7 +490,7 @@ public class Patient extends Role {
             System.out.println("No Bills Available");
             return;
         }
-        System.out.println("-------- Bill Payments --------");
+        System.out.println("------------- Bill Payments -------------");
         for (AppointmentOutcome appointmentOutcome : appointmentOutcomes)
         {
             medicationAmt = 0;
@@ -508,15 +508,16 @@ public class Patient extends Role {
                             medicationAmt = medicineStock.getPrice();
                         }
                     }
-                    System.out.println("Medication Fee (" + prescribedMedication.name + "): " + medicationAmt * prescribedMedication.getNumberOfUnits());
-                    totalPerMedication += medicationAmt;
+                    System.out.println("Medication Fee (" + prescribedMedication.name + "): $" + medicationAmt * prescribedMedication.getNumberOfUnits());
+                    totalPerMedication += medicationAmt * prescribedMedication.getNumberOfUnits();
                 }
             }
-            System.out.println("Total amount for Appointment " + i + ": " + totalPerMedication);
+            System.out.println("Total amount for Appointment " + i + ": $" + totalPerMedication + "\n");
             total += totalPerMedication;
+            i++;
         }
-        System.out.println("-------------------------------------");
-        System.out.println("Total amount for all appointments" + i + ": " + total);
+        System.out.println("-----------------------------------------");
+        System.out.println("Total amount for all appointments: $" + total);
         
     }
 }

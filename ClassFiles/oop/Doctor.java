@@ -634,6 +634,7 @@ public class Doctor extends HospitalStaff{
         if (schedule.isEmpty())
         {
             System.out.println("No scheduled appointments.");
+            return;
         }
         System.out.println("Here are your upcoming appointments for the next 2 months:");  
         for (Appointment appointment : schedule)
