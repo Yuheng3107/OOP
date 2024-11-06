@@ -679,15 +679,26 @@ public class Doctor extends HospitalStaff{
                 if (medicationName.equalsIgnoreCase("done")) {
                     break;
                 }
-                System.out.println("Enter the number of units of " + medicationName + " to give to the patient:");
-                int numberOfUnits = sc.nextInt();
-                
+                System.out.print("Enter the number of units of " + medicationName + " to give to the patient: ");
+                int numberOfUnits;
+                while (true)
+                {
+                    numberOfUnits = Integer.parseInt(sc.nextLine());
+                    if (numberOfUnits > 0)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Invalid input! Please try again!");
+                    }
+                }
                 PrescribedMedication medication = new PrescribedMedication(medicationName, numberOfUnits);
                 medications.add(medication);
             }
 
             // Collect consultation notes
-            System.out.println("Enter any consultation notes:");
+            System.out.print("Enter any consultation notes: ");
             String consultationNotes = sc.nextLine();
 
             // Create an array of prescribed medications for the AppointmentOutcome
