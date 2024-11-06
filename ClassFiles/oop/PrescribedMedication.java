@@ -1,7 +1,7 @@
 package oop;
 public class PrescribedMedication {
     public String name;
-    public int numberOfUnits;
+    private int numberOfUnits;
     public StatusOfPrescribedMedication status;
 
     public PrescribedMedication(String name, int numberOfUnits)
@@ -9,5 +9,15 @@ public class PrescribedMedication {
         this.name = name;
         this.numberOfUnits = numberOfUnits;
         this.status = StatusOfPrescribedMedication.Pending;
+    }
+
+    public int getNumberOfUnits()
+    {
+        return numberOfUnits;
+    }
+
+    public void setNumberOfUnits(int numberOfUnits)
+    {
+        this.numberOfUnits = numberOfUnits;
     }
 }
