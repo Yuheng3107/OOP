@@ -101,7 +101,7 @@ public class Pharmacist extends HospitalStaff
         {
             for (PrescribedMedication medication : outcome.prescribedMedications) {
                 System.out.println("Medication Name: " + medication.name);
-                System.out.println("Medication Quantity: " + medication.numberOfUnits);
+                System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
                 System.out.println("Medication Status: " + medication.status);
             }
         }

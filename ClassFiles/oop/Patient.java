@@ -478,4 +478,40 @@ public class Patient extends Role {
     {
         System.out.println("Goodbye " + patient.getName() + "!\n");
     }
+
+    public void checkBills()
+    {
+        int i = 1;
+        int medicationAmt;
+        int totalPerMedication;
+        int total = 0;
+        System.out.println("-------- Bill Payments --------");
+        for (AppointmentOutcome appointmentOutcome : appointmentOutcomes)
+        {
+            medicationAmt = 0;
+            totalPerMedication = 20;
+            System.out.println("Appointment " + i + ":");
+            System.out.println("Consultation Fee: $20");
+            for (PrescribedMedication prescribedMedication : appointmentOutcome.prescribedMedications)
+            {
+                if (prescribedMedication.status == StatusOfPrescribedMedication.Dispensed)
+                {
+                    for (MedicineStock medicineStock : Hospital.inventory)
+                    {
+                        if (medicineStock.getName().equalsIgnoreCase(prescribedMedication.name))
+                        {
+                            medicationAmt = medicineStock.getPrice();
+                        }
+                    }
+                    System.out.println("Medication Fee (" + prescribedMedication.name + "): " + medicationAmt * prescribedMedication.getNumberOfUnits());
+                    totalPerMedication += medicationAmt;
+                }
+            }
+            System.out.println("Total amount for Appointment " + i + ": " + totalPerMedication);
+            total += totalPerMedication;
+        }
+        System.out.println("-------------------------------------");
+        System.out.println("Total amount for all appointments" + i + ": " + total);
+        
+    }
 }

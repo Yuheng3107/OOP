@@ -1,12 +1,13 @@
 package oop.AdministratorLogic;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import oop.Appointment;
+import oop.Gender;
 import oop.Hospital;
 import oop.HospitalStaff;
 import oop.MedicineStock;
-import java.util.ArrayList;
-import java.util.Scanner;
-import oop.Gender;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     private int age;
@@ -57,7 +58,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 quantity = scanner.nextInt();
                 System.out.println("Enter low stock level of the medicine: ");
                 int lowStockLevel = scanner.nextInt();
-                MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel);
+                System.out.println("Enter price of the medicine: ");
+                int price= scanner.nextInt();
+                MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel, price);
                 addMedicineStock(stock);
                 break;
             case 2:
