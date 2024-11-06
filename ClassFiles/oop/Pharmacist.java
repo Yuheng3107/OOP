@@ -117,6 +117,7 @@ public class Pharmacist extends HospitalStaff
                     System.out.println("Medication Name: " + medication.name);
                     System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
                     System.out.println("Medication Status: " + medication.status);
+                    System.out.println();
                     for (MedicineStock med : Hospital.inventory)
                     {
                         if (med.getName().equalsIgnoreCase(medication.name))
