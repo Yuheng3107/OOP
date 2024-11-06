@@ -312,7 +312,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 break; // Exit the loop after removing
             }
         }
-        addMedicineStock(new MedicineStock(name, count, lowStockLevel));
+        addMedicineStock(new MedicineStock(name, count, lowStockLevel, price));
     }
     public void deleteMedicineStock(String name)
     {
