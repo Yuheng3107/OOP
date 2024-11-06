@@ -111,11 +111,19 @@ public class Pharmacist extends HospitalStaff
         {
             for (AppointmentOutcome outcome : patient.appointmentOutcomes)
             {
-                for (PrescribedMedication medication : outcome.prescribedMedications) {
+                for (PrescribedMedication medication : outcome.prescribedMedications)
+                {
                     medication.status = StatusOfPrescribedMedication.Dispensed;
                     System.out.println("Medication Name: " + medication.name);
+                    System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
                     System.out.println("Medication Status: " + medication.status);
-                //add code to decrease stock here?
+                    for (MedicineStock med : Hospital.inventory)
+                    {
+                        if (med.getName().equalsIgnoreCase(medication.name))
+                        {
+                            med.setStock(med.getStock()-medication.getNumberOfUnits());
+                        }
+                    }
                 }
             }
         }
