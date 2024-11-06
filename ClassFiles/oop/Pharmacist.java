@@ -67,7 +67,7 @@ public class Pharmacist extends HospitalStaff
         {
             if (med.getStock() <= med.getLowStockLevel())
             {
-                System.out.println("System alert: " + med.getName() + " has reached the low stock level of " + med.getStock());
+                System.out.println("System alert: " + med.getName() + " is currently low on stock with " + med.getStock() + " units");
             }
         }
     }
@@ -97,42 +97,62 @@ public class Pharmacist extends HospitalStaff
             System.out.println("No appointment outcomes.");
             return;
         }
+        boolean toBeDispensed = false;
         for (AppointmentOutcome outcome : patient.appointmentOutcomes)
         {
             for (PrescribedMedication medication : outcome.prescribedMedications)
             {
-                System.out.println("Medication Name: " + medication.name);
-                System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
-                System.out.println("Medication Status: " + medication.status);
-                System.out.println();
-            }
-        }
-        System.out.print("Ready to dispense medication? Enter y/n: ");
-        response = sc.nextLine();
-        if (response.equalsIgnoreCase("y"))
-        {
-            for (AppointmentOutcome outcome : patient.appointmentOutcomes)
-            {
-                for (PrescribedMedication medication : outcome.prescribedMedications)
+                if (medication.status != StatusOfPrescribedMedication.Dispensed)
                 {
-                    medication.status = StatusOfPrescribedMedication.Dispensed;
                     System.out.println("Medication Name: " + medication.name);
                     System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
                     System.out.println("Medication Status: " + medication.status);
                     System.out.println();
-                    for (MedicineStock med : Hospital.inventory)
+                    toBeDispensed = true;
+                }
+            }
+        }
+        if (toBeDispensed == true)
+        {
+            System.out.print("Ready to dispense medication? Enter y/n: ");
+            response = sc.nextLine();
+            if (response.equalsIgnoreCase("y"))
+            {
+                for (AppointmentOutcome outcome : patient.appointmentOutcomes)
+                {
+                    for (PrescribedMedication medication : outcome.prescribedMedications)
                     {
-                        if (med.getName().equalsIgnoreCase(medication.name))
+                        if (medication.status != StatusOfPrescribedMedication.Dispensed)
                         {
-                            med.setStock(med.getStock()-medication.getNumberOfUnits());
+                            medication.status = StatusOfPrescribedMedication.Dispensed;
+                            System.out.println("Medication Name: " + medication.name);
+                            System.out.println("Medication Quantity: " + medication.getNumberOfUnits());
+                            System.out.println("Medication Status: " + medication.status);
+                            System.out.println();
+                            for (MedicineStock med : Hospital.inventory)
+                            {
+                                if (med.getName().equalsIgnoreCase(medication.name))
+                                {
+                                    //System.out.println("Current before stock level is " + med.getStock());
+                                    //System.out.println("Current after rolling stock level is " + med.getRollingStock());
+                                    med.setStock(med.getStock() - medication.getNumberOfUnits());
+                                    med.setRollingStock(med.getRollingStock() - medication.getNumberOfUnits());
+                                    //System.out.println("Current after stock level is " + med.getStock());
+                                    //System.out.println("Current after rolling stock level is " + med.getRollingStock());
+                                }
+                            }
                         }
                     }
                 }
             }
+            else
+            {
+                System.out.println("No changes made.");
+            }
         }
         else
         {
-            System.out.println("No changes made.");
+            System.out.println("No pending medications to be dispensed for patient");
         }
     }
 

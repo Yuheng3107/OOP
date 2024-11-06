@@ -4,6 +4,7 @@ public class MedicineStock {
     private int stock;
     public int lowStockLevel;
     private int price;
+    private int rollingStock = 0;
 
     public MedicineStock(String name, int stock, int lowStockLevel, int price) {
         this.name = name;
@@ -32,12 +33,18 @@ public class MedicineStock {
     {
         return price;
     }
-
     public int getLowStockLevel() {
         return this.lowStockLevel;
     }
-
     public void setLowStockLevel(int lowStockLevel) {
         this.lowStockLevel = lowStockLevel;
+    }
+    public int getRollingStock()
+    {
+        return rollingStock;
+    }
+    public void setRollingStock(int newRollingStock)
+    {
+        rollingStock = newRollingStock;
     }
 }

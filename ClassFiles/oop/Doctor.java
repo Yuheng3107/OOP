@@ -654,7 +654,7 @@ public class Doctor extends HospitalStaff{
             int choice;
             while (true)
             {
-                System.out.println("Please select the appointment to record the outcome (enter index)");
+                System.out.println("Please select the appointment to record the outcome (enter index):");
                 viewUpcomingAppointments();
                 sc = new Scanner(System.in);
                 choice = sc.nextInt();
@@ -674,28 +674,53 @@ public class Doctor extends HospitalStaff{
             // Collect prescribed medications
             List<PrescribedMedication> medications = new ArrayList<>();
             System.out.println("Please specify the medications to prescribe for the patient.");
-            while (true) {
+            while (true)
+            {
                 System.out.print("Enter medication name (or 'done' to finish): ");
                 String medicationName = sc.nextLine();
-                if (medicationName.equalsIgnoreCase("done")) {
+                if (medicationName.equalsIgnoreCase("done"))
+                {
                     break;
                 }
-                System.out.print("Enter the number of units of " + medicationName + " to give to the patient: ");
                 int numberOfUnits;
-                while (true)
+                boolean validUnits = false;
+                while (!validUnits)
                 {
+                    System.out.print("Enter the number of units of " + medicationName + " to give to the patient (or -1 to return): ");
                     numberOfUnits = Integer.parseInt(sc.nextLine());
-                    if (numberOfUnits > 0)
+                    if (numberOfUnits == -1)
                     {
                         break;
+                    }
+                    if (numberOfUnits > 0)
+                    {
+                        boolean inStock = false;
+                        for (MedicineStock med : Hospital.inventory)
+                        {
+                            if ((med.getName().equalsIgnoreCase(medicationName)) &&(numberOfUnits <= (med.getStock()-med.getRollingStock())))
+                            {
+                                inStock = true;
+                                med.setRollingStock(med.getRollingStock() + numberOfUnits);
+                                break;
+                            }
+                        }
+                        if (inStock)
+                        {
+                            validUnits = true;
+                            // Create and add the prescribed medication after successful validation
+                            PrescribedMedication medication = new PrescribedMedication(medicationName, numberOfUnits);
+                            medications.add(medication);
+                        }
+                        else
+                        {
+                            System.out.println("Error! Current inventory does not sufficient amount to dispense for the new patient. Please inform the pharmacist to submit a replenishment request or enter a lower value!");
+                        }
                     }
                     else
                     {
                         System.out.println("Invalid input! Please try again!");
                     }
                 }
-                PrescribedMedication medication = new PrescribedMedication(medicationName, numberOfUnits);
-                medications.add(medication);
             }
 
             // Collect consultation notes
@@ -727,7 +752,7 @@ public class Doctor extends HospitalStaff{
             int docChoice;
             while (true)
             {
-                System.out.println("Please choose the appointment to accept/decline. (enter index)");
+                System.out.print("Please choose the appointment to accept/decline. (enter index): ");
                 docChoice = Integer.parseInt(sc.nextLine());
                 if (docChoice <= 0 || docChoice > pendingAppointments.size())
                 {
@@ -740,7 +765,7 @@ public class Doctor extends HospitalStaff{
             }
             while (true)
             {
-                System.out.println("Do you want to accept or decline this appointment? (enter '1' to accept or enter '2' to decline)");
+                System.out.print("Do you want to accept or decline this appointment? (enter '1' to accept or enter '2' to decline): ");
                 int acceptOrDecline = Integer.parseInt(sc.nextLine());
                 if (acceptOrDecline == 1)
                 {
