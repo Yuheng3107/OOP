@@ -376,4 +376,15 @@ public class Hospital {
         }
         return null;
     }
+
+    public static void checkStockAlert()
+    {
+        for (MedicineStock med : Hospital.inventory)
+        {
+            if (med.getStock() <= med.getLowStockLevel())
+            {
+                System.out.println("System alert: " + med.getName() + " is currently low on stock with " + med.getStock() + " units");
+            }
+        }
+    }
 }

@@ -47,36 +47,36 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         Scanner scanner = new Scanner(System.in);
         String name;
         int quantity;
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
         switch (choice) {
             case 1:
 
                 // add inventory
-                System.out.println("Enter name of the medicine: ");
-                name = scanner.next();
-                System.out.println("Enter quantity of the medicine: ");
-                quantity = scanner.nextInt();
-                System.out.println("Enter low stock level of the medicine: ");
-                int lowStockLevel = scanner.nextInt();
-                System.out.println("Enter price of the medicine: ");
-                int price = scanner.nextInt();
+                System.out.print("Enter name of the medicine: ");
+                name = scanner.nextLine();
+                System.out.print("Enter quantity of the medicine: ");
+                quantity = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter low stock level of the medicine: ");
+                int lowStockLevel = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter price of the medicine: ");
+                int price = Integer.parseInt(scanner.nextLine());
                 MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel, price);
                 addMedicineStock(stock);
                 break;
             case 2:
                 // update inventory
-                System.out.println("Enter name of the medicine to update: ");
-                scanner.nextLine();
+                System.out.print("Enter name of the medicine to update: ");
+                //scanner.nextLine();
                 name = scanner.nextLine();
-                System.out.println("Enter new quantity of the medicine: ");
-                quantity = scanner.nextInt();
+                System.out.print("Enter new quantity of the medicine: ");
+                quantity = Integer.parseInt(scanner.nextLine());
                 updateMedicineStock(name, quantity);
                 break;
             case 3:
 
                 // remove inventory
-                System.out.println("Enter name of the medicine to remove: ");
-                name = scanner.next();
+                System.out.print("Enter name of the medicine to remove: ");
+                name = scanner.nextLine();
                 deleteMedicineStock(name);
                 break;
             case 4:
@@ -87,10 +87,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 5:
 
                 // update low stock level alert line of medicine
-                System.out.println("Enter name of the medicine to update: ");
-                name = scanner.next();
-                System.out.println("Enter new low stock level of the medicine: ");
-                lowStockLevel = scanner.nextInt();
+                System.out.print("Enter name of the medicine to update: ");
+                name = scanner.nextLine();
+                System.out.print("Enter new low stock level of the medicine: ");
+                lowStockLevel = Integer.parseInt(scanner.nextLine());
                 updateLowStockLevel(name, lowStockLevel);
                 break;
            
@@ -140,17 +140,17 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 1:
                 // add staff member
                 sc.nextLine();
-                System.out.println("Enter staff name: ");
+                System.out.print("Enter staff name: ");
                 String staffName = sc.nextLine();
 
-                System.out.println("Enter staff age: ");
-                int age = sc.nextInt();
+                System.out.print("Enter staff age: ");
+                int age = Integer.parseInt(sc.nextLine());
 
-                System.out.println("Enter staff ID: ");
-                String staffID = sc.next();
+                System.out.print("Enter staff ID: ");
+                String staffID = sc.nextLine();
 
-                System.out.println("Enter staff role: ");
-                String role = sc.next();
+                System.out.print("Enter staff role: ");
+                String role = sc.nextLine();
 
                 System.out.println("Enter staff gender: ");
                 try {
@@ -168,22 +168,22 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 2:
                 // update staff member
                 sc.nextLine();
-        System.out.println("Enter name of staff member to update: ");
-        staffName = sc.nextLine();
+                System.out.print("Enter name of staff member to update: ");
+                staffName = sc.nextLine();
                 updateStaffMember(staffName);
 
                 break;
             case 3:
                 // remove staff member
                 sc.nextLine();
-                System.out.println("Enter name of staff member to remove: ");
+                System.out.print("Enter name of staff member to remove: ");
                 String name = sc.nextLine();
                 removeStaffMember(name);            
                 break;
             case 4:
                 // display staff members, choose filter
-                System.out.println("Enter filter: ");
-                String filter = sc.next();
+                System.out.print("Enter filter: ");
+                String filter = sc.nextLine();
                 displayStaff(filter);
                 break;
             default:
@@ -216,20 +216,20 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 1:
                 // update staff name
                 sc.nextLine();
-                System.out.println("Enter new staff name: ");
+                System.out.print("Enter new staff name: ");
                 String newStaffName = sc.nextLine();
                 Hospital.updateStaffName(staffName, newStaffName);
                 break;
             case 2:
                 // update staff age
-                System.out.println("Enter new staff age: ");
-                age = sc.nextInt();
+                System.out.print("Enter new staff age: ");
+                age = Integer.parseInt(sc.nextLine());
                 Hospital.updateStaffAge(staffName, age);
                 break;
             case 3:
                 // update staff gender
-                System.out.println("Enter new staff gender: ");
-                String gender = sc.next();
+                System.out.print("Enter new staff gender: ");
+                String gender = sc.nextLine();
                 Hospital.updateStaffGender(staffName, Gender.valueOf(gender));
                 break;
         }

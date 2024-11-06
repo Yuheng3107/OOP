@@ -178,7 +178,7 @@ public class App {
                                 }
                                 break;
                             case "Pharmacist":
-                                Pharmacist.checkStockAlert();
+                                Hospital.checkStockAlert();
                                 Menu.printPharmacistMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Pharmacist pharmacist = Hospital.getPharmacistObjectByStaffID(matchedHospitalStaff.getID());
@@ -210,6 +210,7 @@ public class App {
                                 }
                                 break;
                             case "Staff Member":
+                                Hospital.checkStockAlert();
                                 Menu.printAdminMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getID());
