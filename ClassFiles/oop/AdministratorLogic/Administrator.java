@@ -59,7 +59,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.println("Enter low stock level of the medicine: ");
                 int lowStockLevel = scanner.nextInt();
                 System.out.println("Enter price of the medicine: ");
-                int price= scanner.nextInt();
+                int price = scanner.nextInt();
                 MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel, price);
                 addMedicineStock(stock);
                 break;
@@ -315,7 +315,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 break; // Exit the loop after removing
             }
         }
-        addMedicineStock(new MedicineStock(name, count, lowStockLevel, price));
+        addMedicineStock(new MedicineStock(name, count, lowStockLevel, 0)); //change the price afterwards pls
     }
     public void deleteMedicineStock(String name)
     {

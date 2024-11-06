@@ -485,6 +485,11 @@ public class Patient extends Role {
         int medicationAmt;
         int totalPerMedication;
         int total = 0;
+        if (appointmentOutcomes.isEmpty())
+        {
+            System.out.println("No Bills Available");
+            return;
+        }
         System.out.println("-------- Bill Payments --------");
         for (AppointmentOutcome appointmentOutcome : appointmentOutcomes)
         {

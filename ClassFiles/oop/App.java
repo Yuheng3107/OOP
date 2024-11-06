@@ -116,6 +116,9 @@ public class App {
                                 Hospital.updatePassword(matchedPatient.getID(), "Patient");
                                 break;
                             case 11:
+                                matchedPatient.checkBills();
+                                break;
+                            case 12:
                                 Patient.goodbyeMessage(matchedPatient);
                                 userLogout = true;
                                 loginSuccess = false;
