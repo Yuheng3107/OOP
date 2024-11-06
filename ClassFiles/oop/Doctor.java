@@ -1,6 +1,5 @@
 package oop;
 
-import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -680,9 +679,10 @@ public class Doctor extends HospitalStaff{
                 if (medicationName.equalsIgnoreCase("done")) {
                     break;
                 }
+                System.out.println("Enter the number of units of " + medicationName + " to give to the patient:");
+                int numberOfUnits = sc.nextInt();
                 
-                PrescribedMedication medication = new PrescribedMedication();
-                medication.name = medicationName;
+                PrescribedMedication medication = new PrescribedMedication(medicationName, numberOfUnits);
                 medications.add(medication);
             }
 

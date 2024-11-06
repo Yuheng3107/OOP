@@ -20,6 +20,7 @@ public class AppointmentOutcome {
         System.out.println("Service: " + service);
         for (PrescribedMedication medication : prescribedMedications) {
             System.out.println("Medication Name: " + medication.name);
+            System.out.println("Medication Quantity: " + medication.numberOfUnits);
             System.out.println("Medication Status: " + medication.status);
         }
         System.out.println("Consultation Notes: " + consultationNotes);
