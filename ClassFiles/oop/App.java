@@ -30,9 +30,10 @@ public class App {
             userLogout = false;
             while ((loginSuccess == false) && (userLogout == false))
             {
-                System.out.println("--------------");
-                System.out.println("Enter [-1] to quit");
-                System.out.print("Enter your id: ");
+                System.out.println("=========================================");
+                System.out.println("| Welcome to Hospital Management System |");
+                System.out.println("=========================================");
+                System.out.print("Enter your id (or -1 to quit): ");
                 id = sc.nextLine();
                 if (id.equals("-1"))
                 {

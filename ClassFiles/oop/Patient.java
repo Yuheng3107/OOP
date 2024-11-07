@@ -53,18 +53,60 @@ public class Patient extends Role {
         List<String> lines = new ArrayList<>();
         String line, filePath = "Patient_List.csv";
         boolean isUpdated = false;
+        String newEmail = "", newPhone = "", emailChoice, phoneChoice;
 
-        System.out.print("Please enter your new email address: ");
-        String newEmail = sc.nextLine();
-        System.out.print("Please enter your new phone number: ");
-        String newPhone = sc.nextLine();
+        while (true)
+        {
+            System.out.print("Update email address? Enter y/n: ");
+            emailChoice = sc.nextLine();
+            if (emailChoice.equalsIgnoreCase("y"))
+            {
+                System.out.print("Please enter your new email address: ");
+                newEmail = sc.nextLine();
+                break;
+            }
+            else if (emailChoice.equalsIgnoreCase("n"))
+            {
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid input! Please try again!");
+            }
+        }
+        while (true)
+        {
+            System.out.print("Update phone number? Enter y/n: ");
+            phoneChoice = sc.nextLine();
+            if (phoneChoice.equalsIgnoreCase("y"))
+            {
+                System.out.print("Please enter your new phone number: ");
+                newPhone = sc.nextLine();
+                break;
+            }
+            else if (phoneChoice.equalsIgnoreCase("n"))
+            {
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid input! Please try again!");
+            }
+        }
         
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (columns[0].equals(patientID)) {
-                    columns[5] = newEmail;
-                    columns[6] = newPhone;
+                if (columns[0].equals(patientID))
+                {
+                    if (emailChoice.equalsIgnoreCase("y"))
+                    {
+                        columns[5] = newEmail;
+                    }                    
+                    if (phoneChoice.equalsIgnoreCase("y"))
+                    {
+                        columns[6] = newPhone;
+                    }
                     line = String.join(",", columns);
                     isUpdated = true;
                 }
@@ -79,7 +121,14 @@ public class Patient extends Role {
                 for (String updatedLine : lines) {
                     writer.println(updatedLine);
                 }
-                System.out.println("Details updated successfully for ID: " + patientID);
+                if (emailChoice.equalsIgnoreCase("y") || phoneChoice.equalsIgnoreCase("y"))
+                {
+                    System.out.println("Details updated successfully for ID: " + patientID);
+                }
+                else
+                {
+                    System.out.println("No changes made for ID: " + patientID);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
