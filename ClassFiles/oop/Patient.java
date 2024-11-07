@@ -48,7 +48,8 @@ public class Patient extends Role {
         return this.medicalRecord;
     }
 
-    public void updatePersonalInformation(String patientID) {
+    public void updatePersonalInformation(String patientID)
+    {
         Scanner sc = new Scanner(System.in);
         List<String> lines = new ArrayList<>();
         String line, filePath = "Patient_List.csv";
@@ -63,6 +64,7 @@ public class Patient extends Role {
             {
                 System.out.print("Please enter your new email address: ");
                 newEmail = sc.nextLine();
+                medicalRecord.setEmail(newEmail);
                 break;
             }
             else if (emailChoice.equalsIgnoreCase("n"))
@@ -82,6 +84,7 @@ public class Patient extends Role {
             {
                 System.out.print("Please enter your new phone number: ");
                 newPhone = sc.nextLine();
+                medicalRecord.setPhone(newPhone);
                 break;
             }
             else if (phoneChoice.equalsIgnoreCase("n"))
@@ -115,7 +118,6 @@ public class Patient extends Role {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         if (isUpdated) {
             try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
                 for (String updatedLine : lines) {
