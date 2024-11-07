@@ -1,5 +1,12 @@
 package oop;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import oop.AdministratorLogic.ReplenishmentRequest;
@@ -7,6 +14,7 @@ import oop.AdministratorLogic.ReplenishmentRequest;
 
 public class Pharmacist extends HospitalStaff
 {
+    private String medFilePath = "Medicine_List.csv";
     public Pharmacist(String name, String staffID, int age, Gender gender) {
         super(name, staffID, age, gender);
         Hospital.staffs.add(this);
@@ -133,12 +141,9 @@ public class Pharmacist extends HospitalStaff
                             {
                                 if (med.getName().equalsIgnoreCase(medication.name))
                                 {
-                                    //System.out.println("Current before stock level is " + med.getStock());
-                                    //System.out.println("Current after rolling stock level is " + med.getRollingStock());
                                     med.setStock(med.getStock() - medication.getNumberOfUnits());
+                                    updateMedStockCSV(med.getName(), med.getStock());
                                     med.setRollingStock(med.getRollingStock() - medication.getNumberOfUnits());
-                                    //System.out.println("Current after stock level is " + med.getStock());
-                                    //System.out.println("Current after rolling stock level is " + med.getRollingStock());
                                 }
                             }
                         }
@@ -168,5 +173,42 @@ public class Pharmacist extends HospitalStaff
         medNewStock = Integer.parseInt(sc.nextLine());
         ReplenishmentRequest request = new ReplenishmentRequest(medName, medNewStock);
         Hospital.replenishmentRequests.add(request);
+    }
+
+    public void updateMedStockCSV(String name, int newStock)
+    {
+        List<String[]> data = new ArrayList<>();
+        boolean found = false;
+
+        // Read the CSV file
+        try (BufferedReader br = new BufferedReader(new FileReader(medFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields[0].equals(name)) {
+                    fields[1] = String.valueOf(newStock); // Update the stock
+                    found = true;
+                }
+                data.add(fields);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("Medicine name not found in the CSV file.");
+            return;
+        }
+
+        // Write the updated data back to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(medFilePath))) {
+            for (String[] fields : data) {
+                bw.write(String.join(",", fields));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
     }
 }

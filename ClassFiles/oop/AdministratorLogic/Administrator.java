@@ -1,6 +1,13 @@
 package oop.AdministratorLogic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import oop.Appointment;
@@ -11,7 +18,7 @@ import oop.MedicineStock;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     private int age;
-
+    private String filePath = "Medicine_List.csv";
     
     /** 
      * @param name
@@ -61,6 +68,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.print("Enter price of the medicine: ");
                 int price = Integer.parseInt(scanner.nextLine());
                 MedicineStock stock = new MedicineStock(name, quantity, lowStockLevel, price);
+                updateMedNewCSV(name, quantity, lowStockLevel, price);
                 addMedicineStock(stock);
                 break;
             case 2:
@@ -298,10 +306,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
     public void addMedicineStock(MedicineStock stock)
     {
-
         Hospital.inventory.add(stock);
-
-
     }
     public void updateMedicineStock(String name, int count) 
     {
@@ -311,6 +316,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
             if (Hospital.inventory.get(i).getName().equals(name)) {
                 lowStockLevel = Hospital.inventory.get(i).getLowStockLevel();
+                updateMedStockCSV(name, count);
                 Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
@@ -322,19 +328,165 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         for (int i = 0; i < Hospital.inventory.size(); i++) {
             if (Hospital.inventory.get(i).getName().equals(name)) {
                 Hospital.inventory.remove(i);
+                updateMedDeleteStockCSV(name);
                 break; // Exit the loop after removing
             }
         }
     }
-    
     public void updateLowStockLevel(String name, int newLevel) {
         // first we need to find the index of the medicine
         for (int i = 0; i < Hospital.inventory.size(); i++) {
             if (Hospital.inventory.get(i).getName().equals(name)) {
                 Hospital.inventory.get(i).setLowStockLevel(newLevel);
+                updateMedLowStockCSV(name, newLevel);
                 break; // Exit the loop after removing
             }
         }
 
+    }
+    public void updateMedStockCSV(String name, int newStock)
+    {
+        List<String[]> data = new ArrayList<>();
+        boolean found = false;
+
+        // Read the CSV file
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields[0].equals(name)) {
+                    fields[1] = String.valueOf(newStock); // Update the stock
+                    found = true;
+                }
+                data.add(fields);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("Medicine name not found in the CSV file.");
+            return;
+        }
+
+        // Write the updated data back to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            for (String[] fields : data) {
+                bw.write(String.join(",", fields));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
+    }
+
+    public void updateMedLowStockCSV(String name, int newStock)
+    {
+        List<String[]> data = new ArrayList<>();
+        boolean found = false;
+
+        // Read the CSV file
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields[0].equals(name)) {
+                    fields[2] = String.valueOf(newStock); // Update the Low stock level
+                    found = true;
+                }
+                data.add(fields);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("Medicine name not found in the CSV file.");
+            return;
+        }
+
+        // Write the updated data back to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            for (String[] fields : data) {
+                bw.write(String.join(",", fields));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
+    }
+
+    public void updateMedDeleteStockCSV(String name)
+    {
+        List<String[]> data = new ArrayList<>();
+        boolean found = false;
+        // Read the CSV file and store lines except the one to delete
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                // Only add the line to `data` if the medicine name does not match
+                if (!fields[0].equals(name)) {
+                    data.add(fields);
+                } else {
+                    found = true;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("Medicine name not found in the CSV file.");
+            return;
+        }
+
+        // Write the updated data (without the deleted line) back to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            for (String[] fields : data) {
+                bw.write(String.join(",", fields));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
+    }
+
+    public void updateMedNewCSV(String name, int iniStock, int lowStockLevel, int price)
+    {
+        boolean exists = false;
+        // Check if the medicine already exists in the file
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields[0].equals(name)) {
+                    exists = true;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (exists) {
+            System.out.println("Medicine entry already exists in the CSV file.");
+            return;
+        }
+
+        // Append the new entry to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            String newEntry = name + "," + iniStock + "," + lowStockLevel + "," + price;
+            bw.write(newEntry);
+            bw.newLine();
+            System.out.println("New medicine entry added successfully.");
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
     }
 }
