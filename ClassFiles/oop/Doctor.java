@@ -62,6 +62,10 @@ public class Doctor extends HospitalStaff{
     {
         return doctorID;
     }
+
+    public ArrayList<Appointment> getPendingAppointments() {
+        return pendingAppointments;
+    }
     
     public void viewPatientMedicalRecord()
     {
@@ -813,5 +817,19 @@ public class Doctor extends HospitalStaff{
 
     public ArrayList<Patient> getAllPatients() {
         return new ArrayList<>(Hospital.patients);
+    }
+
+    public void checkPendingAppointmentsAlert() {
+        if (!getPendingAppointments().isEmpty()) {
+
+            int countPendingAppointments = getPendingAppointments().size();
+
+            if (countPendingAppointments == 1) {
+                System.out.println("System alert: You have 1 appointment request pending.");
+            }
+            else {
+                System.out.println(String.format("System alert: You have %d appointment requests pending.", countPendingAppointments));
+            }
+        }
     }
 }

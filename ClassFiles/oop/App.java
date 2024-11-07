@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.print.Doc;
+
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
 
@@ -138,43 +140,48 @@ public class App {
                         switch (matchedHospitalStaff.getRole())
                         {
                             case "Doctor":
-                                Menu.printDoctorMenu();
-                                menuChoice = Integer.parseInt(sc.nextLine());
                                 Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getID());
-                                switch (menuChoice)
-                                {
-                                    case 1:
-                                        doctor.viewPatientMedicalRecord();
-                                        break;
-                                    case 2:
-                                        doctor.updateMedicalRecord();
-                                        break;
-                                    case 3:
-                                        doctor.viewPersonalSchedule();
-                                        break;
-                                    case 4:
-                                        doctor.setAvailability();
-                                        break;
-                                    case 5:                                    
-                                        doctor.acceptOrDeclineAppointmentRequest();
-                                        break;
-                                    case 6:
-                                        doctor.viewUpcomingAppointments();
-                                        break;
-                                    case 7:
-                                        doctor.recordAppointmentOutcome();
-                                        break;
-                                    case 8:
-                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Doctor");
-                                        break;
-                                    case 9:
-                                        HospitalStaff.goodbyeMessage(matchedHospitalStaff);
-                                        userLogout = true;
-                                        loginSuccess = false;
-                                        break;
-                                    default:
-                                        System.out.println("Invalid input! Please try again!");
-                                        break;
+
+                                if (doctor != null) {
+                                    doctor.checkPendingAppointmentsAlert();
+                                    Menu.printDoctorMenu();
+                                    menuChoice = Integer.parseInt(sc.nextLine());
+                                
+                                    switch (menuChoice)
+                                    {
+                                        case 1:
+                                            doctor.viewPatientMedicalRecord();
+                                            break;
+                                        case 2:
+                                            doctor.updateMedicalRecord();
+                                            break;
+                                        case 3:
+                                            doctor.viewPersonalSchedule();
+                                            break;
+                                        case 4:
+                                            doctor.setAvailability();
+                                            break;
+                                        case 5:                                    
+                                            doctor.acceptOrDeclineAppointmentRequest();
+                                            break;
+                                        case 6:
+                                            doctor.viewUpcomingAppointments();
+                                            break;
+                                        case 7:
+                                            doctor.recordAppointmentOutcome();
+                                            break;
+                                        case 8:
+                                            Hospital.updatePassword(matchedHospitalStaff.getID(), "Doctor");
+                                            break;
+                                        case 9:
+                                            HospitalStaff.goodbyeMessage(matchedHospitalStaff);
+                                            userLogout = true;
+                                            loginSuccess = false;
+                                            break;
+                                        default:
+                                            System.out.println("Invalid input! Please try again!");
+                                            break;
+                                    }
                                 }
                                 break;
                             case "Pharmacist":
