@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Doctor extends HospitalStaff{
     public ArrayList<Patient> patients;
@@ -33,11 +34,13 @@ public class Doctor extends HospitalStaff{
     }
 
 
-    public ArrayList<TimeSlot> generateDefaultTimeSlots() //generates hourly time slots for the next two months (starting from the next day)
+
+
+    public static ArrayList<TimeSlot> generateDefaultTimeSlots() //generates hourly time slots for the next two months (starting from the next day)
     {
         ArrayList<TimeSlot> slots = new ArrayList<>();
         LocalDate today = LocalDate.now();
-        LocalDate endDate = today.plus(2, ChronoUnit.MONTHS);  // Generate slots for 2 months ahead
+        LocalDate endDate = today.plus(1, ChronoUnit.MONTHS);  // Generate slots for 2 months ahead
         // Iterate over each date from today to the end date
         for (LocalDate date = today.plusDays(1); date.isBefore(endDate); date = date.plusDays(1)) {
             // Only generate slots for weekdays
@@ -199,7 +202,7 @@ public class Doctor extends HospitalStaff{
         }
 
         System.out.println("\n<--- Available Timeslots --->");
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date, doctorID);
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -517,7 +520,7 @@ public class Doctor extends HospitalStaff{
 
     public void viewAvailability(LocalDate date) {
 
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date, doctorID);
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -538,11 +541,12 @@ public class Doctor extends HospitalStaff{
         }
     }
     
-    public TimeSlot[] getAvailability(LocalDate date) {
+    public TimeSlot[] getAvailability(LocalDate date, String doctorID) {
         List<TimeSlot> slotsForDay = new ArrayList<>();
-        for (TimeSlot slot : availableSlots) {
+        List<AvailableTimeSlot> availableTimeSlots = getAvailableTimeSlotsByDoctor(doctorID);
+        for (AvailableTimeSlot slot : availableTimeSlots) {
             if (slot.getDate().equals(date)) {
-                slotsForDay.add(slot);
+                slotsForDay.add(slot.getTimeSlot());
             }
         }
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
@@ -831,5 +835,14 @@ public class Doctor extends HospitalStaff{
                 System.out.println(String.format("System alert: You have %d appointment requests pending.", countPendingAppointments));
             }
         }
+    }
+
+    public List<AvailableTimeSlot> getAvailableTimeSlotsByDoctor(String docID) {
+
+        ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
+        
+        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID)).collect(Collectors.toList());
+
+        return filteredAvailableTimeSlots;
     }
 }
