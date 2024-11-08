@@ -14,6 +14,7 @@ import oop.Gender;
 import oop.Hospital;
 import oop.HospitalStaff;
 import oop.MedicineStock;
+import oop.StatusOfAppointment;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     private int age;
@@ -126,6 +127,11 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("Date: " + appointment.date);
         System.out.println("Start time: " + appointment.timeSlot.start);
         System.out.println("End time: " + appointment.timeSlot.end);
+        // print appointment detail outcome for completed appointments
+        if (appointment.status.equals(StatusOfAppointment.Confirmed)) {
+            appointment.appointmentOutcome.printAppointmentOutcomeRecord();
+        }
+    
         }
         
     }
