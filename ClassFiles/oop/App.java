@@ -116,7 +116,7 @@ public class App {
                                 matchedPatient.viewScheduledAppointmentStatus();
                                 break;
                             case 10:
-                                Hospital.updatePassword(matchedPatient.getID(), "Patient");
+                                Password.updatePassword(matchedPatient.getID(), "Patient", patientCredentialsDatabase);
                                 break;
                             case 11:
                                 matchedPatient.checkBills();
@@ -172,7 +172,7 @@ public class App {
                                             doctor.recordAppointmentOutcome();
                                             break;
                                         case 8:
-                                            Hospital.updatePassword(matchedHospitalStaff.getID(), "Doctor");
+                                            Password.updatePassword(matchedHospitalStaff.getID(), "Doctor", staffCredentialsDatabase);
                                             break;
                                         case 9:
                                             HospitalStaff.goodbyeMessage(matchedHospitalStaff);
@@ -205,7 +205,7 @@ public class App {
                                         pharmacist.submitReplenishRequest();
                                         break;
                                     case 5:
-                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Pharmacist");
+                                        Password.updatePassword(matchedHospitalStaff.getID(), "Pharmacist", staffCredentialsDatabase);
                                         break;
                                     case 6:
                                         HospitalStaff.goodbyeMessage(matchedHospitalStaff);
@@ -249,7 +249,7 @@ public class App {
                                         administrator.approveReplenishmentRequest(index-1);
                                         break;
                                     case 5:
-                                        Hospital.updatePassword(matchedHospitalStaff.getID(), "Staff Member");
+                                        Password.updatePassword(matchedHospitalStaff.getID(), "Staff Member", staffCredentialsDatabase);
                                         break;
                                     case 6:
                                         HospitalStaff.goodbyeMessage(matchedHospitalStaff);
