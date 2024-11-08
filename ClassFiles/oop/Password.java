@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Password {
+    //Call this to update and change the default assigned password
     public static void updateDefaultPassword(String id, Scanner sc, String role, String filePath)
     {
         String newPassword1, newPassword2;
@@ -25,11 +26,10 @@ public class Password {
                 System.out.println("Passwords do not match, please try again!");
             }
         } while (!newPassword1.equals(newPassword2));
-        //String hashedPassword = hashPassword(newPassword2);
         updatePasswordInCSV(filePath, id.toUpperCase(), newPassword2);        
         System.out.println("Your new password has been set.");
     }
-
+    //Calls this to request user to enter new password
     public static void updatePassword(String id, String role, String filePath)
     {
         Scanner sc = new Scanner(System.in);
@@ -43,11 +43,10 @@ public class Password {
                 System.out.println("Passwords do not match, please try again!");
             }
         } while (!newPassword1.equals(newPassword2));
-        //String hashedPassword = hashPassword(newPassword2);
         updatePasswordInCSV(filePath, id.toUpperCase(), newPassword2);
         System.out.println("Your new password has been set.");
     }
-
+    //Most functions call this function to update the newly input password into the CSV. This is the only function that takes the password input and hash it and store into the CSV
     public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
     {
         List<String> lines = new ArrayList<>();
@@ -81,7 +80,7 @@ public class Password {
             System.out.println("ID not found: " + patientID);
         }
     }
-
+    //Hashing algorithm itself
     public static String hashPassword(String password)
     {
         try {
