@@ -3,19 +3,18 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-
-import javax.print.Doc;
-
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
 
 public class App {
+    //Private variables to store the database file name/path
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
+    //Main program
     public static void main(String[] args)
     {        
-        Hospital hospital = new Hospital();
-        App.program();
+        Hospital hospital = new Hospital(); //Create and instantiate hospital
+        App.program(); //Run the application
     }
 
     public static void program()
@@ -43,10 +42,12 @@ public class App {
                 System.out.print("Enter your password: ");
                 password = sc.nextLine();
 
+                //Based on user input, we try to find if a patient or hospital staff exist
                 Patient matchedPatient = Hospital.findPatientById(id);
                 HospitalStaff matchedHospitalStaff = Hospital.findStaffById(id);
 
-                if ((matchedPatient != null) && (matchedHospitalStaff == null)) //Found patient
+                //Found patient
+                if ((matchedPatient != null) && (matchedHospitalStaff == null))
                 {
                     try (BufferedReader reader = new BufferedReader(new FileReader(patientCredentialsDatabase)))
                     {
@@ -57,6 +58,7 @@ public class App {
                         e.printStackTrace();
                     }
                 }
+                //Found staff
                 else if ((matchedPatient == null) && (matchedHospitalStaff != null)) //Found hospitalstaff
                 {
                     try (BufferedReader reader = new BufferedReader(new FileReader(staffCredentialsDatabase)))
@@ -68,6 +70,7 @@ public class App {
                         e.printStackTrace();
                     }
                 }
+                //Neither patient nor staff exist with the input ID, hence prompt error
                 else
                 {
                     System.out.println("Invalid ID. Please try again!");
@@ -79,7 +82,7 @@ public class App {
                 {
                     System.out.println("Invalid credentials or user ID not found.");
                 }
-                else if (matchedPatient != null)
+                else if (matchedPatient != null) //Authenticated as patient
                 {
                     Patient.welcomeMessage(matchedPatient);
                     loginSuccess = true;
@@ -132,7 +135,7 @@ public class App {
                         }
                     }
                 }
-                else if (matchedHospitalStaff != null)
+                else if (matchedHospitalStaff != null) //Authenticated as staff member, depending on type
                 {
                     HospitalStaff.welcomeMessage(matchedHospitalStaff);
                     loginSuccess = true;
@@ -142,12 +145,10 @@ public class App {
                         {
                             case "Doctor":
                                 Doctor doctor = Hospital.getDoctorObjectByStaffID(matchedHospitalStaff.getID());
-
                                 if (doctor != null) {
                                     doctor.checkPendingAppointmentsAlert();
                                     Menu.printDoctorMenu();
                                     menuChoice = Integer.parseInt(sc.nextLine());
-                                
                                     switch (menuChoice)
                                     {
                                         case 1:
