@@ -90,12 +90,12 @@ public class Hospital {
     }
 
     public static boolean processLoginPatient(BufferedReader reader, String id, String password, Patient matchedPatient, Scanner sc)
-            throws IOException {
-        String line;
+            throws IOException{
+        String line, hashedPassword = Password.hashPassword(password), defaultHashedPassword = Password.hashPassword("password");
         while ((line = reader.readLine()) != null) {
             String[] columns = line.split(",");
-            if (columns[0].equalsIgnoreCase(id) && password.equals(columns[1])) {
-                if ("password".equals(password)) {
+            if (columns[0].equalsIgnoreCase(id) && hashedPassword.equals(columns[1])) {
+                if (defaultHashedPassword.equals(hashedPassword)) {
                     Password.updateDefaultPassword(id, sc, "Patient", patientCredentialsDatabase);
                 }
                 return true;
@@ -106,11 +106,11 @@ public class Hospital {
 
     public static boolean processLoginHospitalStaff(BufferedReader reader, String id, String password, HospitalStaff matchedHospitalStaff, Scanner sc)
             throws IOException {
-        String line;
+                String line, hashedPassword = Password.hashPassword(password), defaultHashedPassword = Password.hashPassword("password");
         while ((line = reader.readLine()) != null) {
             String[] columns = line.split(",");
-            if (columns[0].equalsIgnoreCase(id) && password.equals(columns[1])) {
-                if ("password".equals(password)) {
+            if (columns[0].equalsIgnoreCase(id) && hashedPassword.equals(columns[1])) {
+                if (defaultHashedPassword.equals(hashedPassword)) {
                     Password.updateDefaultPassword(id, sc, "Staff", staffCredentialsDatabase);
                 }
                 return true;

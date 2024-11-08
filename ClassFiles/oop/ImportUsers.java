@@ -80,7 +80,7 @@ public class ImportUsers {
                 for (Patient patient : patients)
                 {
                     String patientID = patient.getID();
-                    String defaultPassword = "password";
+                    String defaultPassword = Password.hashPassword("password");
                     writer.println(patientID + "," + defaultPassword);
                 }
                 System.out.println("DEBUG: Patient Credentials file created successfully.");
@@ -146,7 +146,7 @@ public class ImportUsers {
                 // Write staff credentials
                 for (HospitalStaff hospitalStaff : staff) {
                     String staffID = hospitalStaff.getID();
-                    String defaultPassword = "password";
+                    String defaultPassword = Password.hashPassword("password");
                     writer.println(staffID + "," + defaultPassword);
                 }
                 System.out.println("DEBUG: Staff Credentials file created successfully.");

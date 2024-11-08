@@ -5,12 +5,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Password {
-    public static void updateDefaultPassword(String id, Scanner sc, String role, String filePath) {
+    public static void updateDefaultPassword(String id, Scanner sc, String role, String filePath)
+    {
         String newPassword1, newPassword2;
         System.out.println("You are required to change your password!");
         do {
@@ -22,11 +25,13 @@ public class Password {
                 System.out.println("Passwords do not match, please try again!");
             }
         } while (!newPassword1.equals(newPassword2));
-        updatePasswordInCSV(filePath, id.toUpperCase(), newPassword1);        
+        //String hashedPassword = hashPassword(newPassword2);
+        updatePasswordInCSV(filePath, id.toUpperCase(), newPassword2);        
         System.out.println("Your new password has been set.");
     }
 
-    public static void updatePassword(String id, String role, String filePath) {
+    public static void updatePassword(String id, String role, String filePath)
+    {
         Scanner sc = new Scanner(System.in);
         String newPassword1, newPassword2;
         do {
@@ -38,20 +43,22 @@ public class Password {
                 System.out.println("Passwords do not match, please try again!");
             }
         } while (!newPassword1.equals(newPassword2));
-        updatePasswordInCSV(filePath, id.toUpperCase(), newPassword1);
+        //String hashedPassword = hashPassword(newPassword2);
+        updatePasswordInCSV(filePath, id.toUpperCase(), newPassword2);
         System.out.println("Your new password has been set.");
     }
 
-    public static void updatePasswordInCSV(String filePath, String patientID, String newPassword) {
+    public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
+    {
         List<String> lines = new ArrayList<>();
-        String line;
+        String line, hashedPassword = hashPassword(newPassword);
         boolean isUpdated = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
                 if (columns[0].equals(patientID)) {
-                    columns[1] = newPassword;
+                    columns[1] = hashedPassword;
                     line = String.join(",", columns);
                     isUpdated = true;
                 }
@@ -72,6 +79,29 @@ public class Password {
             }
         } else {
             System.out.println("ID not found: " + patientID);
+        }
+    }
+
+    public static String hashPassword(String password)
+    {
+        try {
+            // Create a MessageDigest instance for SHA-256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            
+            // Convert the password to bytes and hash it
+            byte[] hashedBytes = digest.digest(password.getBytes());
+            
+            // Convert the byte array to a hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+            
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error: SHA-256 algorithm not found.");
         }
     }
 }
