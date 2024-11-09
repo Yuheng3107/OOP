@@ -14,12 +14,14 @@ import oop.Gender;
 import oop.Hospital;
 import oop.HospitalStaff;
 import oop.MedicineStock;
+import oop.Password;
 import oop.StatusOfAppointment;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     private int age;
-    private String filePath = "../../Medicine_List.csv";
-    private String staffFilePath = "../../Staff_List.csv";
+    private String filePath = "../Medicine_List.csv";
+    private String staffFilePath = "../Staff_List.csv";
+    private String credentialsFilePath = "StaffCredentialsDatabase.csv";
     
     /** 
      * @param name
@@ -520,6 +522,15 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             bw.write(newEntry);
             bw.newLine();
             System.out.println("New staff entry added successfully.");
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(credentialsFilePath, true))) {
+            String newEntry = staffID + "," + Password.hashPassword("password");
+            bw.write(newEntry);
+            bw.newLine();
+            System.out.println("Added staff credentials successfully, new password is: password");
         } catch (IOException e) {
             System.err.println("Error writing to the file: " + e.getMessage());
         }
