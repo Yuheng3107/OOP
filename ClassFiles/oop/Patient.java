@@ -594,7 +594,7 @@ public class Patient extends Role {
     }
 
     public void appendAppointmentToCSV(Appointment appointment) {
-        String fileName = "Appointments.csv";
+        String fileName = "../Appointments.csv";
         try (FileWriter writer = new FileWriter(fileName, true)) { // Open in append mode
             writer.append(appointment.getAppointmentDate().toString()).append(",")
                   .append(appointment.getAppointmentTimeSlot().getStart().toString()).append(",")
@@ -610,7 +610,7 @@ public class Patient extends Role {
     }
 
     public void updateAvailableTimeSlot(Appointment appointment) {
-        String fileName = "AvailableTimeSlot.csv";
+        String fileName = "../AvailableTimeSlot.csv";
         String line;
 
         ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV(fileName);        boolean updated = false;
