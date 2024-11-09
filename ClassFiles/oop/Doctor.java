@@ -1,8 +1,11 @@
 package oop;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputFilter.Status;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -452,15 +455,14 @@ public class Doctor extends HospitalStaff{
      * the valid ones. It also checks if any of the timeslots are booked or pending, 
      * and prevents removal in those cases.
      */ 
+    
     public void removeAvailableSlots() {
         
         // remove timeslot (check if availableSlots is empty)
         // cannot remove timeslot if appointment is booked for that timeslot
 
-        if (availableSlots.isEmpty()) {
-            System.out.println("No available slots to remove.");
-            return;
-        }
+        /* 
+        String fileName = "../AvailableTimeSlot.csv";
 
         TimeSlot timeSlotInput = getTimeSlotInput();
         LocalDate date = timeSlotInput.getDate();
@@ -502,7 +504,74 @@ public class Doctor extends HospitalStaff{
                 }
             }
             currentStart = nextHour; // move to next hour
+
         }
+        */
+        
+        // Define file path
+        String fileName = "../AvailableTimeSlot.csv";
+
+        // Get user input for date and time range
+        TimeSlot timeSlotInput = getTimeSlotInput();
+        LocalDate date = timeSlotInput.getDate();
+        LocalTime startTime = timeSlotInput.getStart();
+        LocalTime endTime = timeSlotInput.getEnd();
+
+        if (date == null || startTime == null || endTime == null) {
+            System.out.println("Invalid date or time range provided.");
+            return;
+        }
+
+        // Initialize lists for reading and updating CSV contents
+        List<String> updatedLines = new ArrayList<>();
+        boolean foundSlotsToRemove = false;
+
+        // Read and process each line of the CSV file
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                if (columns.length != 5) continue; // Skip invalid lines
+
+                // Parse the date and time slot from the CSV line
+                String doctorId = columns[0];
+                LocalDate fileDate = LocalDate.parse(columns[1]);
+                LocalTime slotStart = LocalTime.parse(columns[2]);
+                LocalTime slotEnd = LocalTime.parse(columns[3]);
+                boolean isAvailable = Boolean.parseBoolean(columns[4]);
+
+                // Create a time slot object for comparison
+                TimeSlot currentSlot = new TimeSlot(fileDate, slotStart, slotEnd);
+
+                // Check if the slot matches the specified date and time range
+                if (fileDate.equals(date) && !slotStart.isBefore(startTime) && slotEnd.isAfter(startTime) && isAvailable) {
+                    foundSlotsToRemove = true;
+                    System.out.println("Removed available timeslot " + slotStart + " to " + slotEnd +
+                            String.format(" on %s.", date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+                } else {
+                    // Add line to keep if not removing it
+                    updatedLines.add(line);
+                }
+            }
+
+            if (!foundSlotsToRemove) {
+                System.out.println("No matching available timeslots to remove.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Write the updated lines back to the CSV file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (String updatedLine : updatedLines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -716,6 +785,50 @@ public class Doctor extends HospitalStaff{
         }
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
     }
+
+    public void updateAppointmentStatus(Appointment appointment, StatusOfAppointment status) {
+        String fileName = "../Appointments.csv";
+        String line;
+
+        boolean updated = false;
+
+        List<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                
+                if (columns[0].equals(appointment.getAppointmentDate().toString()) && 
+                    columns[1].equals(appointment.getAppointmentTimeSlot().getStart().toString()) &&
+                    columns[2].equals(appointment.getAppointmentTimeSlot().getEnd().toString()) &&
+                    columns[3].equals(appointment.getDocID())) {
+    
+                    columns[5] = status.toString();  
+                    updated = true;
+                }
+                
+                // Join the columns back into a line and add to updatedLines
+                updatedLines.add(String.join(",", columns));
+            }
+            
+            if (updated) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                    for (String updatedLine : updatedLines) {
+                        writer.write(updatedLine);
+                        writer.newLine();  // Add a newline after each updated line
+                    }
+                    System.out.println("Appointment updated successfully.");
+                } catch (IOException e) {
+                    System.out.println("Error updating AvailableTimeSlot file: " + e.getMessage());
+                }
+            } else {
+                System.out.println("No matching appointment found to update.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * Accepts an appointment request by changing the status to "Confirmed" and moves it from the 
      * pending appointments list to the confirmed schedule.
@@ -724,18 +837,26 @@ public class Doctor extends HospitalStaff{
      */
    public void acceptAppointmentRequest(int appointmentNumber)
    {
+        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
+
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
             return;
         }
 
+        Appointment targetAppointment = pendingAppointments.get(appointmentNumber - 1);
+
+        updateAppointmentStatus(targetAppointment, StatusOfAppointment.Confirmed);
+
+        /*
         Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Confirmed;
         schedule.add(appointment);
         pendingAppointments.remove(appointment);
         Hospital.appointments.add(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");  
+        */
    }
 
    /**
@@ -746,18 +867,24 @@ public class Doctor extends HospitalStaff{
      */
    public void declineAppointmentRequest(int appointmentNumber)
     {
+        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
+
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
         }
 
+        Appointment targetAppointment = pendingAppointments.get(appointmentNumber-1);
+        updateAppointmentStatus(targetAppointment, StatusOfAppointment.Cancelled);
+
+        /*
         Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Cancelled;
         //add timeslots back into doctor's available timeslots
         addTimeSlotToAvailableSlots(appointment);
         pendingAppointments.remove(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been declined.");
-                
+        */
    }
 
    /**
@@ -828,6 +955,8 @@ public class Doctor extends HospitalStaff{
      */
    public void viewPendingAppointments()
    {
+        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
+
         int i = 1;
         if (pendingAppointments.isEmpty())
         {
@@ -962,12 +1091,24 @@ public class Doctor extends HospitalStaff{
         }
     }
 
+    public List<Appointment> getPendAppointmentsFromCSV() {
+        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
+
+        List<Appointment> pendingAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending))
+        .collect(Collectors.toList());    
+
+        return pendingAppointments;
+    }
+
+
     /**
      * Allows the doctor to accept or decline a pending appointment request. It displays the list of pending appointments and
      * prompts the user for their choice.
      */
     public void acceptOrDeclineAppointmentRequest()
     {
+        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
+        
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
