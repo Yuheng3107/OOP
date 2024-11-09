@@ -5,22 +5,20 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputFilter.Status;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Represents a Doctor in a hospital. The Doctor class extends the HospitalStaff class
@@ -1258,4 +1256,13 @@ public class Doctor extends HospitalStaff{
         } catch (IOException e) {
             e.printStackTrace();
         }
-}}
+    }
+
+
+    /**
+     * Prints a description of the role for a doctor.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("A doctor who diagnoses and treats patients.");
+    }
+}

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import oop.AdministratorLogic.ReplenishmentRequest;
+import AdministratorLogic.ReplenishmentRequest;
 
 /**
  * The {@code Pharmacist} class represents a pharmacist in the hospital system. 
@@ -241,5 +241,13 @@ public class Pharmacist extends HospitalStaff
         } catch (IOException e) {
             System.err.println("Error writing to the file: " + e.getMessage());
         }
+    }
+
+
+    /**
+     * Prints a description of the role for a pharmacist.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("A pharmacist who dispenses medications and manages inventory.");
     }
 }

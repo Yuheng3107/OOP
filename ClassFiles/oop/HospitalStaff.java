@@ -103,4 +103,12 @@ public abstract class HospitalStaff extends Role
     {
         System.out.println("Goodbye " + staff.getName() + "!\n");
     }
+
+
+    /**
+     * Prints a description of the role for a general hospital staff member.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("General hospital staff member.");
+    }
 }
