@@ -18,7 +18,8 @@ import oop.StatusOfAppointment;
 
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     private int age;
-    private String filePath = "Medicine_List.csv";
+    private String filePath = "../../Medicine_List.csv";
+    private String staffFilePath = "../../Staff_List.csv";
     
     /** 
      * @param name
@@ -34,11 +35,6 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         this.name = name;
         this.gender = gender;
         this.age = age;
-    }
-
-    public String getID()
-    {
-        return super.getID();
     }
 
     public void manageInventory() {
@@ -227,6 +223,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         // add staff member to Hospital
         Hospital.addStaffMember(staffName, age, staffID, gender, role);
         // add them to csv file, TODO
+        updateStaffCSV(staffName, age, staffID, gender, role);
         
 
 
@@ -513,5 +510,20 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         } catch (IOException e) {
             System.err.println("Error writing to the file: " + e.getMessage());
         }
+    }
+
+    public void updateStaffCSV(String staffName, int age, String staffID, Gender gender, String role)
+    {
+        // Append the new entry to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(staffFilePath, true))) {
+            String newEntry = staffID + "," + staffName + "," + role + "," + gender + "," + age;
+            bw.write(newEntry);
+            bw.newLine();
+            System.out.println("New staff entry added successfully.");
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
+
+        // write to credentials database
     }
 }
