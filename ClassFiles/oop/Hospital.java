@@ -331,7 +331,7 @@ public class Hospital {
 
     // If AvailableTimeSlots.csv is empty, for each doctor, add available timeslots of hourly time slots for the next two months.
 
-    public void generateDefaultAvailableTimeSlots() {
+    public static void generateDefaultAvailableTimeSlots() {
         String FILE_NAME = availabileTSFilePath;
         FileWriter writer = null;
     
@@ -374,7 +374,7 @@ public class Hospital {
         }
     }
     
-    public boolean isAvailableTSCSVEmpty(String fileName) {
+    public static boolean isAvailableTSCSVEmpty(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String headerLine = br.readLine(); // Read and skip the header line
 
