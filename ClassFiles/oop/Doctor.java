@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Represents a Doctor in a hospital. The Doctor class extends the HospitalStaff class
@@ -252,6 +254,18 @@ public class Doctor extends HospitalStaff{
         }
     }
     
+    public List<Appointment> getScheduledAppointments(LocalDate date) {
+        
+        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
+
+        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && 
+        appointment.getAppointmentDate().equals(date) &&
+        appointment.getAppointmentStatus().equals(StatusOfAppointment.Confirmed))
+        .collect(Collectors.toList());
+    
+        return scheduledAppointments;
+    }
+
     /**
      * Allows the doctor to view their schedule for a specific day.
      * The doctor is prompted to input a date, and the system outputs the schedule for that day.
@@ -267,6 +281,9 @@ public class Doctor extends HospitalStaff{
         System.out.println("\n<--- Upcoming Appointments --->");
         boolean hasAppointments = false;
         int i = 1;
+
+        List<Appointment> schedule = getScheduledAppointments(date);
+        
         for (Appointment appointment : schedule) {
             if (appointment.getAppointmentDate().equals(date)) {
                 hasAppointments = true;
@@ -985,9 +1002,30 @@ public class Doctor extends HospitalStaff{
      */
     public void getPatients() {
         
-        // clear the patient's list to avoid duplicated patient data
-        patients.clear();
+        // read the appointment csv, get unique list of patientIds under the doctorId
+        // read the patient csv to get the details of the patient and add update patients variable.
+
+        String appointmentsFile = "../Appointments.csv";
+        String patientsFile = "../Patients.csv";
+
+        Set<String> uniquePatientIds = new HashSet<>();
+        ArrayList<Appointment> appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFile);
+
+        for (Appointment appointment : appointments) {
+            if (appointment.getDocID().equals(doctorID)) {
+                uniquePatientIds.add(appointment.getPatientId());
+            }
+        }
+
+        ArrayList<Patient> allPatients = ImportUsers.readPatientsFromCSV(patientsFile);
         
+        for (Patient patient : allPatients) {
+            if (uniquePatientIds.contains(patient.getID())) {
+                this.patients.add(patient);
+            }
+        }
+
+        /*
         for (Appointment appointment : schedule) {
             Patient patient = Hospital.getPatientFromPatientID(appointment.getPatientId());
             if (patient != null && !patients.contains(patient)) {
@@ -1001,6 +1039,7 @@ public class Doctor extends HospitalStaff{
                 patients.add(patient);
             }
         }
+            */
         // sort the patients list array by patientID
         Collections.sort(patients, Comparator.comparing(Patient::getID));
     }
@@ -1041,8 +1080,28 @@ public class Doctor extends HospitalStaff{
 
         ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
         
-        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID)).collect(Collectors.toList());
+        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID) &&
+        timeslot.getIsAvail() == true)
+        .collect(Collectors.toList());
 
         return filteredAvailableTimeSlots;
     }
+
+    /*
+    public TimeSlot[] getAvailableTimeSlotsByDoctorDate(String docID, LocalDate date) {
+
+        ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
+        
+        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID) &&
+         timeslot.getDate().equals(date) && 
+         timeslot.getIsAvail() == true)
+        .collect(Collectors.toList());
+
+        List<TimeSlot> slotsForDay = new ArrayList<>();
+        for (AvailableTimeSlot slot : filteredAvailableTimeSlots) {
+            slotsForDay.add(slot.getTimeSlot());
+        }
+
+        return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
+    } */
 }
