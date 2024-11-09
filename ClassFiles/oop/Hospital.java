@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
@@ -406,6 +407,214 @@ public class Hospital {
         return;
     }
         
+    public static void registerNewPatient()
+    {
+        Scanner sc = new Scanner(System.in);
+        int blood;
+        String name, email, patientID, genderString, dateString;
+        LocalDate dateOfBirth = null;
+        Gender gender;
+        BloodType bloodType;
 
+        System.out.print("Enter your name: ");
+        name = sc.nextLine();
 
+        while(true)
+        {
+            System.out.print("Enter your date of birth, separated by hyphen (YYYY-MM-DD): ");
+            dateString = sc.nextLine();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try
+            {
+                dateOfBirth = LocalDate.parse(dateString, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please enter in yyyy-MM-dd format.");
+            }
+            if (dateOfBirth != null)
+            {
+                break;
+            }
+        }
+        while (true)
+        {
+            System.out.print("Select your gender (M/F): ");
+            genderString = sc.nextLine();
+            if (genderString.equalsIgnoreCase("M"))
+            {
+                gender = Gender.Male;
+                break;
+            }
+            else if (genderString.equalsIgnoreCase("F"))
+            {
+                gender = Gender.Female;
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid input! Please try again!");
+            }
+        }
+        while (true)
+        {
+            System.out.println("Select from the following bloodtypes:");
+            System.out.println("1. A+");
+            System.out.println("2. A-");
+            System.out.println("3. B+");
+            System.out.println("4. B-");
+            System.out.println("5. O+");
+            System.out.println("6. O-");
+            System.out.println("7. AB+");
+            System.out.println("8. AB-");
+            System.out.print("Choice: ");
+            blood = Integer.parseInt(sc.nextLine());
+            if (blood == 1)
+            {
+                bloodType = BloodType.APlus;
+                break;
+            }
+            else if (blood == 2)
+            {
+                bloodType = BloodType.AMinus;
+                break;
+            }
+            else if (blood == 3)
+            {
+                bloodType = BloodType.BPlus;
+                break;
+            }
+            else if (blood == 4)
+            {
+                bloodType = BloodType.BMinus;
+                break;
+            }
+            else if (blood == 5)
+            {
+                bloodType = BloodType.OPlus;
+                break;
+            }
+            else if (blood == 6)
+            {
+                bloodType = BloodType.OMinus;
+                break;
+            }
+            else if (blood == 7)
+            {
+                bloodType = BloodType.ABPlus;
+                break;
+            }
+            else if (blood == 8)
+            {
+                bloodType = BloodType.ABMinus;
+                break;
+            }
+            else
+            {
+                System.out.println("Invalid input! Please try again!");
+            }
+        }
+
+        System.out.print("Enter your email address: ");
+        email = sc.nextLine();
+
+        patientID = getLatestPatientID();
+
+        Patient patient = new Patient(name, patientID, dateOfBirth, gender, bloodType, email);
+        updatePatientInCSV(patientID, name, dateOfBirth, gender, bloodType, email);
+        patients.add(patient);
+        insertNewPatientCredentials(patientID);
+        System.out.println("Please note your default password to login is 'password', you will be prompted to change upon first login!");
+    }
+
+    public static String getLatestPatientID()
+    {
+        String latestPatientID = "";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(patientFilePath))) {
+            String line;
+            br.readLine(); // Skip header line
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                String patientID = fields[0].trim();
+                
+                // Compare and update latestPatientID if the current one is greater
+                if (latestPatientID.isEmpty() || patientID.compareTo(latestPatientID) > 0) {
+                    latestPatientID = patientID;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Extract the numeric part and increment it by 1
+        if (!latestPatientID.isEmpty()) {
+            int numericID = Integer.parseInt(latestPatientID.substring(1)) + 1;
+            return "P" + numericID;
+        }
+
+        // Return a unknown ID if no patients exist
+        return "Unknown";
+    }
+
+    public static void updatePatientInCSV(String patientID, String name, LocalDate dateOfBirth, Gender gender, BloodType bloodType, String email)
+    {
+        String dateOfBirthStr = dateOfBirth.toString();
+        String genderStr = gender.name();
+        String bloodTypeStr = "", phoneNumber = "null";
+
+        if (bloodType.name().equalsIgnoreCase("APlus"))
+        {
+            bloodTypeStr = "A+";
+        }
+        else if (bloodType.name().equalsIgnoreCase("AMinus"))
+        {
+            bloodTypeStr = "A-";
+        }
+        else if (bloodType.name().equalsIgnoreCase("BPlus"))
+        {
+            bloodTypeStr = "B+";
+        }
+        else if (bloodType.name().equalsIgnoreCase("BMinus"))
+        {
+            bloodTypeStr = "B-";
+        }
+        else if (bloodType.name().equalsIgnoreCase("OPlus"))
+        {
+            bloodTypeStr = "O+";
+        }
+        else if (bloodType.name().equalsIgnoreCase("OMinus"))
+        {
+            bloodTypeStr = "O-";
+        }
+        else if (bloodType.name().equalsIgnoreCase("ABPlus"))
+        {
+            bloodTypeStr = "AB+";
+        }
+        else if (bloodType.name().equalsIgnoreCase("ABMinus"))
+        {
+            bloodTypeStr = "AB-";
+        }
+
+        String newPatientRecord = String.join(",",patientID, name, dateOfBirthStr, genderStr, bloodTypeStr, email, phoneNumber);
+
+        try (FileWriter writer = new FileWriter(patientFilePath, true)) { // Open file in append mode
+            writer.write(newPatientRecord); // Write new patient record to a new line
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        initialise();
+    }
+
+    public static void insertNewPatientCredentials(String id)
+    {
+        String hashedPassword = Password.hashPassword("password");
+        // Create the new entry line
+        String newEntry = id + "," + hashedPassword;
+
+        try (FileWriter writer = new FileWriter(patientCredentialsDatabase, true)) { // Open file in append mode
+            writer.write("\n" + newEntry); // Append the new patient ID and hashed password on a new line
+            System.out.println("New patient credentials added successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

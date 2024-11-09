@@ -15,8 +15,6 @@ public class App {
     //Main program
     public static void main(String[] args)
     {
-        
-
         // initialise db for hospital
         Hospital.initialise();
         App.program(); //Run the application
@@ -25,6 +23,7 @@ public class App {
     public static void program()
     {
         Scanner sc;
+        int menuSystemChoice = 0;
         boolean loginSuccess = false, userLogout = false, systemLogout = false;
         String id, password;
         sc = new Scanner(System.in);
@@ -34,10 +33,32 @@ public class App {
             userLogout = false;
             while ((loginSuccess == false) && (userLogout == false))
             {
-                System.out.println("=========================================");
-                System.out.println("| Welcome to Hospital Management System |");
-                System.out.println("=========================================");
-                System.out.print("Enter your id (or -1 to quit): ");
+                while (true)
+                {
+                    Menu.printMainMenu();
+                    menuSystemChoice = Integer.parseInt(sc.nextLine());
+                    //Register new patient
+                    if (menuSystemChoice == 1)
+                    {
+                        break;
+                    }
+                    //Login to system
+                    else if (menuSystemChoice == 2)
+                    {
+                        Hospital.registerNewPatient();
+                    }
+                    //Quit program
+                    else if (menuSystemChoice == 3)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        System.out.println("Invalid input! Please try again!");
+                    }
+                }
+
+                System.out.print("Enter your Hospital ID (or -1 to quit): ");
                 id = sc.nextLine();
                 if (id.equals("-1"))
                 {

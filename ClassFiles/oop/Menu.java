@@ -1,6 +1,18 @@
 package oop;
 public class Menu {
 
+    public static void printMainMenu()
+    {
+        System.out.println("=========================================");
+        System.out.println("|      Hospital Management System       |");
+        System.out.println("=========================================");
+        System.out.println("| 1. Login                              |");
+        System.out.println("| 2. Register as new Patient            |");
+        System.out.println("| 3. Quit                               |");
+        System.out.println("=========================================");
+        System.out.print("Choice: ");
+    }
+
     public static void printPatientMenu()
     {
         System.out.println("=============================================");
