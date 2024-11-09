@@ -212,7 +212,7 @@ public class ImportUsers {
         }
         return medStocks;
     }
-    /* 
+    
 
     public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
         ArrayList<Appointment> appointments = new ArrayList<>();
@@ -259,7 +259,7 @@ public class ImportUsers {
 
         return appointments;
     }
-        */
+        
     /**
      * Reads available time slot information from a specified CSV file, creates {@link AvailableTimeSlot} objects, and
      * returns them in a list.
