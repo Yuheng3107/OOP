@@ -237,7 +237,7 @@ public class Doctor extends HospitalStaff{
         
         List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
 
-        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && 
+        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(super.getID()) && 
         appointment.getAppointmentDate().equals(date) &&
         appointment.getAppointmentStatus().equals(StatusOfAppointment.Confirmed))
         .collect(Collectors.toList());
@@ -249,7 +249,7 @@ public class Doctor extends HospitalStaff{
         
         List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
 
-        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && 
+        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(super.getID()) && 
         appointment.getAppointmentDate().equals(date) &&
         appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending))
         .collect(Collectors.toList());
@@ -374,7 +374,7 @@ public class Doctor extends HospitalStaff{
 
         List<Appointment> schedule = getScheduledAppointments(date);
         List<Appointment> pendingAppointments = getPendingAppointments(date);
-        TimeSlot[] availableSlots = getAvailability(date, doctorID);
+        TimeSlot[] availableSlots = getAvailability(date, super.getID());
 
         // add each hourly interval to availableSlots
         LocalTime slotStart = startTime;
@@ -1006,7 +1006,7 @@ public class Doctor extends HospitalStaff{
         ArrayList<Appointment> appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFile);
 
         for (Appointment appointment : appointments) {
-            if (appointment.getDocID().equals(doctorID)) {
+            if (appointment.getDocID().equals(super.getID())) {
                 uniquePatientIds.add(appointment.getPatientId());
             }
         }
@@ -1106,7 +1106,7 @@ public class Doctor extends HospitalStaff{
         try (FileWriter writer = new FileWriter(fileName, true)) {
 
             for (TimeSlot slot : availableSlots) {
-                writer.append(doctorID).append(",")
+                writer.append(super.getID()).append(",")
                     .append(slot.getDate().toString()).append(",")
                     .append(slot.getStart().toString()).append(",")
                     .append(slot.getEnd().toString()).append(",")
