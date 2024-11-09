@@ -36,26 +36,34 @@ public class App {
                 while (true)
                 {
                     Menu.printMainMenu();
-                    menuSystemChoice = Integer.parseInt(sc.nextLine());
-                    //Register new patient
-                    if (menuSystemChoice == 1)
+                    try
                     {
-                        break;
+                        menuSystemChoice = Integer.parseInt(sc.nextLine());
+                        //Register new patient
+                        if (menuSystemChoice == 1)
+                        {
+                            break;
+                        }
+                        //Login to system
+                        else if (menuSystemChoice == 2)
+                        {
+                            Hospital.registerNewPatient();
+                        }
+                        //Quit program
+                        else if (menuSystemChoice == 3)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            System.out.println("Invalid input! Please try again!");
+                        }
                     }
-                    //Login to system
-                    else if (menuSystemChoice == 2)
+                    catch (NumberFormatException e)
                     {
-                        Hospital.registerNewPatient();
+                        System.out.println("Invalid input. Please enter a number (1, 2, or 3).");
                     }
-                    //Quit program
-                    else if (menuSystemChoice == 3)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        System.out.println("Invalid input! Please try again!");
-                    }
+                    
                 }
 
                 System.out.print("Enter your Hospital ID (or -1 to quit): ");
