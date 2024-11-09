@@ -1,6 +1,14 @@
 package oop;
+/**
+ * The {@code Menu} class provides methods to print various menus for different user roles
+ * in the Hospital Management System. The menus guide the users (patients, doctors, pharmacists, 
+ * and administrators) through the available system options for performing tasks such as viewing 
+ * records, scheduling appointments, and managing data.
+ */
 public class Menu {
-
+    /**
+     * Prints the main menu with options for login, registration, and quitting the system.
+     */
     public static void printMainMenu()
     {
         System.out.println("=========================================");
@@ -12,7 +20,10 @@ public class Menu {
         System.out.println("=========================================");
         System.out.print("Choice: ");
     }
-
+    /**
+     * Prints the patient menu with options related to viewing medical records, managing appointments, 
+     * updating personal information, and checking bills.
+     */
     public static void printPatientMenu()
     {
         System.out.println("=============================================");
@@ -34,7 +45,10 @@ public class Menu {
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
-
+    /**
+     * Prints the doctor menu with options for managing patient records, viewing personal schedules,
+     * setting appointment availability, and handling appointment requests.
+     */
     public static void printDoctorMenu()
     {
         System.out.println("=============================================");
@@ -53,7 +67,10 @@ public class Menu {
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
-
+    /**
+     * Prints the pharmacist menu with options for managing prescription status, viewing medication inventory,
+     * and submitting replenishment requests.
+     */
     public static void printPharmacistMenu()
     {
         System.out.println("=============================================");
@@ -69,7 +86,10 @@ public class Menu {
         System.out.println("=============================================");
         System.out.print("Choice: ");
     }
-
+    /**
+     * Prints the administrator menu with options for managing hospital staff, appointments, medication inventory, 
+     * and approving replenishment requests.
+     */
     public static void printAdminMenu()
     {
         System.out.println("=============================================");
