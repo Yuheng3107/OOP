@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -74,16 +73,6 @@ public class Patient extends Role {
         scheduledAppointments = new ArrayList<>();
         appointmentOutcomes = new ArrayList<>();
         Hospital.patients.add(this);
-    }
-
-    /**
-     * Gets the name of the patient.
-     * 
-     * @return The name of the patient.
-     */
-    public String getName()
-    {
-        return name;
     }
 
     /**

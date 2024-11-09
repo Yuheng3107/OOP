@@ -53,11 +53,6 @@ public class Doctor extends HospitalStaff{
      */
     private ArrayList<Appointment> pendingAppointments; //for pending appointments
 
-    /**
-     * Contains the Staff ID of the doctor.
-     */
-    private String doctorID;
-
     // call this "formatter" to display dates in the format "dd-MM-yyyy"
     /**
      * Formatter used to display dates in the format "dd-MM-yyyy".
@@ -76,7 +71,6 @@ public class Doctor extends HospitalStaff{
     {
         super(name, doctorID, age, gender);
         this.availableSlots = generateDefaultTimeSlots();
-        this.doctorID = doctorID;
         patients = new ArrayList<>();
         schedule = new ArrayList<>();
         pendingAppointments = new ArrayList<>();
@@ -107,26 +101,6 @@ public class Doctor extends HospitalStaff{
         }
         // Convert the List to an array and return it
         return slots;
-    }
-
-    /**
-     * Returns the name of the doctor.
-     * 
-     * @return the doctor's name
-     */
-    public String getName()
-    {
-        return name;
-    }
-
-     /**
-     * Returns the unique ID of the doctor.
-     * 
-     * @return the doctor's ID
-     */
-    public String getID()
-    {
-        return doctorID;
     }
 
     /**
@@ -262,7 +236,7 @@ public class Doctor extends HospitalStaff{
         LocalDate date = getDateInput();
 
         // header
-        System.out.println(String.format("\n<--- %s's schedule on %s --->", getName(), date.format(formatter)));
+        System.out.println(String.format("\n<--- %s's schedule on %s --->", super.getName(), date.format(formatter)));
         
         System.out.println("\n<--- Upcoming Appointments --->");
         boolean hasAppointments = false;
@@ -282,7 +256,7 @@ public class Doctor extends HospitalStaff{
         }
 
         System.out.println("\n<--- Available Timeslots --->");
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date, doctorID);
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date, super.getID());
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -639,7 +613,7 @@ public class Doctor extends HospitalStaff{
      */
     public void viewAvailability(LocalDate date) {
 
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date, doctorID);
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date, super.getID());
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -654,7 +628,7 @@ public class Doctor extends HospitalStaff{
             System.out.println("No available slots on " + date.format(formatter) + ".");
             return;
         }
-        System.out.println("\n" + getName() + "'s Available slots on " + date.format(formatter));
+        System.out.println("\n" + super.getName() + "'s Available slots on " + date.format(formatter));
         for (TimeSlot slot : sortedSlots) {
             System.out.println(slot.start + " to " + slot.end);
         }
