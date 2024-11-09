@@ -14,9 +14,9 @@ import java.util.Scanner;
  * A class to manage password updates, password hashing, and storage of passwords in a CSV file.
  * It provides methods to update default passwords, set new passwords, and hash passwords using SHA-256.
  * 
- * @author: Ryan Ching
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class Password {
     //Call this to update and change the default assigned password

@@ -23,9 +23,9 @@ import oop.AdministratorLogic.ReplenishmentRequest;
  * staff members, updating staff information, handling patient registration, login, and managing
  * medicine stock, replenishment requests, and appointments.
  * 
- * @author: Ryan Ching, Tan Zhe Kai, Kuang Yu Heng, Kuang Yu Xuan
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Ryan Ching, Tan Zhe Kai, Kuang Yu Heng, Kuang Yu Xuan
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class Hospital {
     /**
