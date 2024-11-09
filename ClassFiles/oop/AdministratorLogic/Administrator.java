@@ -17,20 +17,34 @@ import oop.MedicineStock;
 import oop.Password;
 import oop.StatusOfAppointment;
 
+/**
+ * Represents an Administrator in the hospital system, managing hospital staff, appointments, and inventory.
+ * This class implements interfaces for staff management, appointment management, and inventory management.
+ * @author: Ryan Ching, Kuang Yu Heng
+ * @version: 1.0
+ * @since: 2024-11-09
+ */
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
+    /** The age of the administrator. */
     private int age;
+
+    /** The file path for the medicine list CSV file. */
     private String filePath = "../Medicine_List.csv";
+
+    /** The file path for the staff list CSV file. */
     private String staffFilePath = "../Staff_List.csv";
+
+    /** The file path for the staff credentials CSV file. */
     private String credentialsFilePath = "StaffCredentialsDatabase.csv";
     
-    /** 
-     * @param name
-     * @param id
-     * @param gender
-     * @param age
-     * @return 
-     */
-    
+    /**
+     * Constructs an Administrator object with the specified details.
+     * 
+     * @param name The name of the administrator.
+     * @param id The unique ID of the administrator.
+     * @param age The age of the administrator.
+     * @param gender The gender of the administrator.
+     */    
     public Administrator(String name, String id, int age, Gender gender)
     {
         super(name, id, age, gender);
@@ -39,6 +53,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         this.age = age;
     }
 
+    /**
+     * Manages the inventory, including adding, updating, removing, and viewing medicine stock.
+     */
     public void manageInventory() {
         // choose whether to add, update, remove or delete inventory
         System.out.println("Choose an option: ");
@@ -136,6 +153,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
     }
 
+    /**
+     * Displays appointment details including patient ID, doctor ID, appointment status,
+     * date, time, and outcome record if the appointment is confirmed.
+     */
     public void viewAppointmentDetails()
     {
         // prints out appointment details of the appointment
@@ -166,7 +187,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         
     }
 
-
+    /**
+     * Manages hospital staff, including adding, updating, removing, and displaying staff members.
+     */
     public void manageHospitalStaff()
     {
         // choose whether to add, update, remove or delete staff member
@@ -257,6 +280,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         return;
 
     }
+
+    /**
+     * Adds a new staff member to the hospital.
+     * 
+     * @param staffName The name of the staff member.
+     * @param age The age of the staff member.
+     * @param staffID The unique ID of the staff member.
+     * @param gender The gender of the staff member.
+     * @param role The role of the staff member.
+     */
     public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
     {
 
@@ -277,10 +310,13 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         Hospital.addStaffMember(staffName, age, staffID, gender, role);
         // add them to csv file, TODO
         updateStaffCSV(staffName, age, staffID, gender, role);
-        
-
-
     }
+
+    /**
+     * Updates a staff member's details such as name, age, or gender.
+     * 
+     * @param staffName The name of the staff member to update.
+     */
     public void updateStaffMember(String staffName)
     {
 
@@ -314,13 +350,23 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 Hospital.updateStaffGender(staffName, Gender.valueOf(gender));
                 break;
         }
-
-        
     }
+
+    /**
+     * Removes a staff member from the hospital.
+     * 
+     * @param staffName The name of the staff member to remove.
+     */
     public void removeStaffMember(String staffName)
     {
         Hospital.removeStaffMember(staffName);
     }
+
+    /**
+     * Displays a list of hospital staff based on a filter such as role, age, or gender.
+     * 
+     * @param filter The filter criterion ("role", "age", or "gender").
+     */
     public void displayStaff(String filter)
     {
         ArrayList<HospitalStaff> staffMembers = Hospital.getStaff();
@@ -351,6 +397,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             System.out.println("Gender: " + member.getGender());
         }
     }
+
+    /**
+     * Views the current medicine inventory.
+     */
     public void viewInventory()
     {
 
@@ -362,25 +412,42 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
         System.out.println("Inventory: ");
 
-
         for (MedicineStock stock : Hospital.inventory) {
             System.out.println();
             System.out.println("Name: " + stock.getName());
             System.out.println("Quantity: " + stock.getStock());
             System.out.println("Low stock level: " + stock.getLowStockLevel());
         }
-
     }
+
+    /**
+     * Approves a replenishment request for medicine stock.
+     * 
+     * @param index The index of the replenishment request to approve.
+     */
     public void approveReplenishmentRequest(int index)
     {
         // updates the replenishment request of hospital
         Hospital.replenishmentRequests.get(index).setApproved();
-
     }
+
+    /**
+     * Adds a new medicine stock to the inventory.
+     * 
+     * @param stock The medicine stock to add.
+     */
     public void addMedicineStock(MedicineStock stock)
     {
         Hospital.inventory.add(stock);
     }
+
+    /**
+     * Updates the stock and price of an existing medicine in the inventory.
+     * 
+     * @param name The name of the medicine to update.
+     * @param count The new quantity of the medicine.
+     * @param newPrice The new price of the medicine.
+     */
     public void updateMedicineStock(String name, int count, int newPrice) 
     {
         // first we need to find the index of the medicine
@@ -396,6 +463,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
         addMedicineStock(new MedicineStock(name, count, lowStockLevel, newPrice)); //change the price afterwards pls
     }
+
+    /**
+     * Deletes a medicine from the inventory.
+     * 
+     * @param name The name of the medicine to delete.
+     */
     public void deleteMedicineStock(String name)
     {
         for (int i = 0; i < Hospital.inventory.size(); i++) {
@@ -406,6 +479,13 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             }
         }
     }
+
+    /**
+     * Updates the low stock level of a specific medicine.
+     * 
+     * @param name The name of the medicine.
+     * @param newLevel The new low stock level.
+     */
     public void updateLowStockLevel(String name, int newLevel) {
         // first we need to find the index of the medicine
         for (int i = 0; i < Hospital.inventory.size(); i++) {
@@ -416,8 +496,15 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             }
         }
         System.out.println("No medicine with name " + name + " found.");
-
     }
+
+    /**
+     * Updates the CSV file with the new stock and price for a specific medicine.
+     * 
+     * @param name The name of the medicine to update.
+     * @param newStock The new stock level.
+     * @param newPrice The new price of the medicine.
+     */
     public void updateMedStockCSV(String name, int newStock, int newPrice)
     {
         List<String[]> data = new ArrayList<>();
@@ -456,6 +543,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
     }
 
+    /**
+     * Updates the CSV file with the new low stock level for a specific medicine.
+     * 
+     * @param name The name of the medicine.
+     * @param newStock The new low stock level.
+     */
     public void updateMedLowStockCSV(String name, int newStock)
     {
         List<String[]> data = new ArrayList<>();
@@ -493,6 +586,11 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
     }
 
+    /**
+     * Updates the CSV file to delete the entry for a specific medicine.
+     * 
+     * @param name The name of the medicine to delete.
+     */
     public void updateMedDeleteStockCSV(String name)
     {
         List<String[]> data = new ArrayList<>();
@@ -531,6 +629,14 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
     }
 
+    /**
+     * Updates the CSV file with a new medicine entry.
+     * 
+     * @param name The name of the medicine.
+     * @param iniStock The initial stock level of the medicine.
+     * @param lowStockLevel The low stock level of the medicine.
+     * @param price The price of the medicine.
+     */
     public void updateMedNewCSV(String name, int iniStock, int lowStockLevel, int price)
     {
         boolean exists = false;
@@ -565,6 +671,15 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
     }
 
+    /**
+     * Updates the CSV file with a new staff member's information.
+     * 
+     * @param staffName The name of the staff member.
+     * @param age The age of the staff member.
+     * @param staffID The ID of the staff member.
+     * @param gender The gender of the staff member.
+     * @param role The role of the staff member.
+     */
     public void updateStaffCSV(String staffName, int age, String staffID, Gender gender, String role)
     {
         // Append the new entry to the CSV file
