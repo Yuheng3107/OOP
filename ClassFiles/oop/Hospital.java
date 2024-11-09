@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
@@ -16,9 +19,12 @@ public class Hospital {
     public static ArrayList<Patient> patients = new ArrayList<Patient>();
     public static ArrayList<HospitalStaff> staffs = new ArrayList<HospitalStaff>();
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
+    public static ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<AvailableTimeSlot>();
 
     private static final String patientFilePath = "../Patient_List.csv";
     private static final String staffFilePath = "../Staff_List.csv";
+    private static final String appointmentsFilePath = "../Appointments.csv";
+    private static final String availabileTSFilePath = "../AvailableTimeSlot.csv";
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     private static final String medFilePath = "../Medicine_List.csv";
@@ -68,6 +74,9 @@ public class Hospital {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);
         inventory = ImportUsers.readMedicineFromCSV(medFilePath);
+        //appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFilePath);
+        availableTimeSlots = ImportUsers.readAvailableTSFromCSV(availabileTSFilePath);
+        generateDefaultAvailableTimeSlots();
     }
 
     public static Patient findPatientById(String id) {
@@ -305,4 +314,98 @@ public class Hospital {
             }
         }
     }
+
+    public static List<String> getListOfDoctorID() {
+
+        List<String> doctorIds = new ArrayList<>();
+        for (HospitalStaff member : staffs) {
+            String id = member.getID();
+
+            if (id.matches("D\\d{3}")) {
+                doctorIds.add(id);
+            }
+        }
+
+        return doctorIds;
+    }
+
+    // If AvailableTimeSlots.csv is empty, for each doctor, add available timeslots of hourly time slots for the next two months.
+
+    public void generateDefaultAvailableTimeSlots() {
+        String FILE_NAME = availabileTSFilePath;
+        FileWriter writer = null;
+    
+        try {
+            writer = new FileWriter(FILE_NAME, true); // Try to open the file
+    
+            if (isAvailableTSCSVEmpty(FILE_NAME)) {
+                List<String> doctorIds = Hospital.getListOfDoctorID();
+    
+                for (String doctorID : doctorIds) {
+                    ArrayList<TimeSlot> slots = Doctor.generateDefaultTimeSlots();
+    
+                    for (TimeSlot slot : slots) {
+                        String[] timeSlot = {
+                            doctorID,
+                            slot.date.toString(),
+                            slot.start.toString(),
+                            slot.end.toString(),
+                            "true"                        
+                        };
+                        writer.append(String.join(",", timeSlot));
+                        writer.append("\n");
+                    }
+                }
+                System.out.println("Default available timeslots generated successfully.");
+            } else {
+                System.out.println("AvailableTimeSlots.csv file is not empty. No new available timeslots added.");
+            }
+    
+        } catch (IOException e) {
+            System.out.println("Error while handling the file: " + e.getMessage());
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close(); // Always close the writer, even if an exception occurred
+                } catch (IOException e) {
+                    System.out.println("Error closing the writer: " + e.getMessage());
+                }
+            }
+        }
+    }
+    
+    public boolean isAvailableTSCSVEmpty(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String headerLine = br.readLine(); // Read and skip the header line
+
+            // Check if there's any other line after the header
+            return (br.readLine() == null); // Returns true if no more lines are present
+        } catch (IOException e) {
+            e.printStackTrace();
+            return true; // If there's an error reading, treat as empty
+        }
+    }
+
+    public void writeAppointmentToCSV(String fileName, String[] data) {
+        try (FileWriter writer = new FileWriter(fileName, true)) {
+            writer.append(String.join(",", data));
+            writer.append("n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    public static void getAvailableTimeSlots(String docID, LocalDate date) {
+        for (AvailableTimeSlot availableTimeSlot : availableTimeSlots) {
+            if (availableTimeSlot.getDocID().equals(docID) &&
+                availableTimeSlot.getDate().equals(date)) {
+                    System.out.println(availableTimeSlot.getStart() + " to " + availableTimeSlot.getEnd());
+                }
+        }
+        return;
+    }
+        
+
+
 }

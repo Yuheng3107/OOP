@@ -2,12 +2,18 @@ package oop;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.nio.file.Paths;
 
 import oop.AdministratorLogic.Administrator;
 
@@ -184,6 +190,67 @@ public class ImportUsers {
             e.printStackTrace();
         }
         return medStocks;
+    }
+
+    /* 
+
+    public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
+
+            while ((line = br.readLine()) != null)
+            {
+                String[] values = line.split(",");
+                String appointmentID = values[0];
+                LocalDate date = LocalDate.parse(values[1]);
+                LocalTime start = LocalTime.parse(values[2]);
+                LocalTime end = LocalTime.parse(values[3]);
+                TimeSlot timeSlot = new TimeSlot(date, start, end);
+                String doctorID = values[4];
+                String patientID = values[5];
+                String status = values[6];
+
+                Appointment appointment = new Appointment(date, timeSlot, doctorID, patientID);
+                appointments.add(appointment);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return appointments;
+    }
+        */
+
+    public static ArrayList<AvailableTimeSlot> readAvailableTSFromCSV(String filepath) {
+        ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<>();
+        String line;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
+
+            while ((line = br.readLine()) != null)
+            {
+                String[] values = line.split(",");
+                String doctorID = values[0];
+                LocalDate date = LocalDate.parse(values[1]);
+                LocalTime start = LocalTime.parse(values[2]);
+                LocalTime end = LocalTime.parse(values[3]);
+                TimeSlot timeSlot = new TimeSlot(date, start, end);
+                Boolean isAvail = Boolean.parseBoolean(values[4]);
+
+                AvailableTimeSlot availableTimeSlot = new AvailableTimeSlot(doctorID, date, timeSlot, isAvail);
+                availableTimeSlots.add(availableTimeSlot);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return availableTimeSlots;
     }
 
 }
