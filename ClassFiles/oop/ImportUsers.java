@@ -192,8 +192,6 @@ public class ImportUsers {
         return medStocks;
     }
 
-    /* 
-
     public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
         ArrayList<Appointment> appointments = new ArrayList<>();
         String line;
@@ -204,16 +202,32 @@ public class ImportUsers {
             while ((line = br.readLine()) != null)
             {
                 String[] values = line.split(",");
-                String appointmentID = values[0];
-                LocalDate date = LocalDate.parse(values[1]);
-                LocalTime start = LocalTime.parse(values[2]);
-                LocalTime end = LocalTime.parse(values[3]);
+                LocalDate date = LocalDate.parse(values[0]);
+                LocalTime start = LocalTime.parse(values[1]);
+                LocalTime end = LocalTime.parse(values[2]);
                 TimeSlot timeSlot = new TimeSlot(date, start, end);
-                String doctorID = values[4];
-                String patientID = values[5];
-                String status = values[6];
+                String doctorID = values[3];
+                String patientID = values[4];
+                String statusString = values[5];
+                
+                StatusOfAppointment status = StatusOfAppointment.Pending;
+                    switch(statusString)
+                    {
+                        case "Pending":
+                            status = StatusOfAppointment.Pending;
+                            break;
+                        case "Confirmed":
+                            status = StatusOfAppointment.Confirmed;
+                            break;
+                        case "Cancelled":
+                            status = StatusOfAppointment.Cancelled;
+                            break;
+                        case "Completed":
+                            status = StatusOfAppointment.Completed;
+                            break;
+                    }
 
-                Appointment appointment = new Appointment(date, timeSlot, doctorID, patientID);
+                Appointment appointment = new Appointment(date, timeSlot, doctorID, patientID, status);
                 appointments.add(appointment);
             }
         }
@@ -223,7 +237,6 @@ public class ImportUsers {
 
         return appointments;
     }
-        */
 
     public static ArrayList<AvailableTimeSlot> readAvailableTSFromCSV(String filepath) {
         ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<>();

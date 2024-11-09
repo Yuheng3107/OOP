@@ -202,6 +202,34 @@ public class Patient extends Role {
 
     public boolean checkForValidTimeSlot(Doctor doctor, TimeSlot timeSlot)
     {
+        // read AvailableTimeSlots.csv, and check for the specified time slot isAvail set to true
+
+        String fileName = "../AvailableTimeSlot.csv";
+        String line;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+
+                if (columns[0].equals(doctor.getID()) && columns[1].equals(timeSlot.getDate().toString()) &&
+                    columns[2].equals(timeSlot.getStart().toString()) &&
+                    columns[3].equals(timeSlot.getEnd().toString())) {
+
+                        if (columns[4].equals("true")) {
+                            return true;
+                        }
+
+                        else {
+                            return false;
+                        }
+                    }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
         int count = 0;
         TimeSlot[] availableSlots = doctor.getAvailability(timeSlot.getDate(), doctor.getID());
         for (int i = 0; i < availableSlots.length; i++)
@@ -225,8 +253,9 @@ public class Patient extends Role {
         {
             System.out.println("Doctor is not available. Please select another timeslot.");
         }
+            */
         return false;
-
+        
 
     }
     public void scheduleAppointment()
@@ -270,7 +299,7 @@ public class Patient extends Role {
             if (checkForValidTimeSlot(doctor, timeSlot) == true)
             {
                 //schedule appointment
-                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getID(), patientID);
+                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getID(), patientID, StatusOfAppointment.Pending);
                 
                 /*
                 addAppointmentToScheduledAppointments(appointment);
@@ -288,7 +317,7 @@ public class Patient extends Role {
                 appendAppointmentToCSV(appointment);
 
                 // update available timeslots.csv
-                updateAvailableTimeSlot(appointment);
+                updateAvailableTimeSlot(appointment, "false");
 
             }
             else
@@ -303,6 +332,7 @@ public class Patient extends Role {
         }
     }
 
+    // to remove
     public void addAppointmentToScheduledAppointments(Appointment appointment)
     {
         scheduledAppointments.add(appointment);
@@ -311,8 +341,17 @@ public class Patient extends Role {
     }
 
 
-    public ArrayList <Appointment> getScheduledAppointments()
+    public List <Appointment> getScheduledAppointments()
     {
+        // read appointment.csv to return user appointments that are status pending and confirmed
+
+        ArrayList<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
+                    
+        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getPatientId().equals(patientID) && (
+        appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending) || 
+        appointment.getAppointmentStatus().equals(StatusOfAppointment.Confirmed)))
+        .collect(Collectors.toList());
+
         return scheduledAppointments;
     }
 
@@ -333,15 +372,17 @@ public class Patient extends Role {
             {
                 System.out.println("Please choose the appointment to reschedule: (enter index)");
                 index = sc.nextInt();
-                if (index > scheduledAppointments.size())
+                if (index > getScheduledAppointments().size())
                 {
                     System.out.println("Invalid appointment number. Please try again.");
                 }
                 else
                 {
+
                     break;
                 }
             }
+            /*
             Appointment appointment = scheduledAppointments.get(index-1);
             Doctor doctor = Hospital.getDoctorObjectByStaffID(scheduledAppointments.get(index-1).doctorId);//remove from doctor's appointments
             if (appointment.status == StatusOfAppointment.Pending)
@@ -353,15 +394,77 @@ public class Patient extends Role {
                 doctor.deleteScheduleAppointment(appointment);
             }
             scheduledAppointments.remove(index-1); //remove from patient's appointments
-            scheduleAppointment();
+            */
+
+            // check if timeslot is available, if avail modify the same record by updating with new date, timeslot and status.
+            // update the timeslot in available.csv to unavailable.
+            
+            // get the appointment record to modify
+            Appointment targetAppointment = getScheduledAppointments().get(index-1);
+            
+            Doctor doctor = null;
+
+            while (true)
+            {
+                System.out.println("Which doctor do you want to schedule an appointment with? (enter index)");
+                Hospital.namesOfDoctors();
+                sc = new Scanner(System.in);
+                System.out.print("Choice: ");
+                int choiceOfDoctor = sc.nextInt();
+                doctor = Hospital.getDoctorByIndex(choiceOfDoctor-1);
+                if (doctor == null)
+                {
+                    continue;
+                }
+                else{
+                    break;
+                }
+            }
+            System.out.println("Type the year to book appointment:");
+            int year = sc.nextInt();
+            System.out.println("Type the month to book appointment (1-12):");
+            int month = sc.nextInt();
+            System.out.println("Type the day to book appointment:");
+            int day = sc.nextInt();
+            LocalDate date = LocalDate.of(year, month, day);
+            System.out.println("Type the start time of the appointment (24 hour clock)");
+            int start = sc.nextInt();
+            System.out.println("Type the end time of the appointment (24 hour clock)");
+            int end = sc.nextInt();
+            TimeSlot timeSlot = new TimeSlot(date, LocalTime.of(start,0), LocalTime.of(end,0));
+                
+                
+            //check if time slot is available
+            if (checkForValidTimeSlot(doctor, timeSlot) == true)
+            {
+                //schedule appointment
+                Appointment appointment = new Appointment(timeSlot.date, timeSlot, doctor.getID(), patientID, StatusOfAppointment.Pending);
+
+                // update appointments.csv
+                updateAppointment(targetAppointment, appointment);
+
+                // update the old time slot to available
+                updateAvailableTimeSlot(targetAppointment, "true");
+
+                // update the new time slot to unavailable
+                updateAvailableTimeSlot(appointment, "false");
+            }
+            else
+            {
+                System.out.println("TimeSlot is not available.");
+            }
+            
+            //scheduleAppointment();
+
         }
         catch (Exception e)
         {
             System.out.println("Invalid input. Returning to main menu.");
-        }   
-
-
+            return;
+        }
+        
     }
+    
     public void cancelAppointment()
     {
         int check = viewScheduledAppointments();
@@ -452,6 +555,9 @@ public class Patient extends Role {
     }
 
     public int viewScheduledAppointments(){
+        
+        List<Appointment> scheduledAppointments = getScheduledAppointments();
+
         if (scheduledAppointments.isEmpty())
         {
             System.out.println("No scheduled appointments.");
@@ -611,7 +717,7 @@ public class Patient extends Role {
         }
     }
 
-    public void updateAvailableTimeSlot(Appointment appointment) {
+    public void updateAvailableTimeSlot(Appointment appointment, String isAvail) {
         String fileName = "../AvailableTimeSlot.csv";
         String line;
 
@@ -630,7 +736,7 @@ public class Patient extends Role {
                     columns[3].equals(appointment.getAppointmentTimeSlot().getEnd().toString())) {
     
                     // Set availability to false in the matching row (columns[4] for availability)
-                    columns[4] = "false";  // This assumes the "isAvail" column is at index 4
+                    columns[4] = isAvail;  // This assumes the "isAvail" column is at index 4
                     updated = true;
                 }
                 
@@ -656,4 +762,57 @@ public class Patient extends Role {
             e.printStackTrace();
         }
     }
+
+    public void updateAppointment(Appointment targetAppointment, Appointment appointment) {
+        String fileName = "../Appointments.csv";
+        String line;
+
+        boolean updated = false;
+
+        List<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+                
+                // Check if this line matches the docID, date, and timeslot from the target appointment
+                if (columns[0].equals(targetAppointment.getAppointmentDate().toString()) && 
+                    columns[1].equals(targetAppointment.getAppointmentTimeSlot().getStart().toString()) &&
+                    columns[2].equals(targetAppointment.getAppointmentTimeSlot().getEnd().toString()) &&
+                    columns[3].equals(targetAppointment.getDocID()) && 
+                    columns[4].equals(patientID)) {
+    
+                    // update the same appointment record with new values
+                    columns[0] = appointment.getAppointmentDate().toString();
+                    columns[1] = appointment.getAppointmentTimeSlot().getStart().toString();
+                    columns[2] = appointment.getAppointmentTimeSlot().getEnd().toString();
+                    columns[3] = appointment.getDocID();
+                    columns[5] = "Pending"; 
+                                        
+                    updated = true;
+                }
+                
+                // Join the columns back into a line and add to updatedLines
+                updatedLines.add(String.join(",", columns));
+            }
+            // If appointment was updated, overwrite the file with the new content
+            if (updated) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                    for (String updatedLine : updatedLines) {
+                        writer.write(updatedLine);
+                        writer.newLine();  // Add a newline after each updated line
+                    }
+                    System.out.println("Reschuduled appointment successfully.");
+                } catch (IOException e) {
+                    System.out.println("Error updating Appointment.csv file: " + e.getMessage());
+                }
+            } else {
+                System.out.println("No matching appointment found to update.");
+            }        
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

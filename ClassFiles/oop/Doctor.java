@@ -574,7 +574,7 @@ public class Doctor extends HospitalStaff{
         }
 
         Appointment appointment = pendingAppointments.get(appointmentNumber-1);
-        appointment.status = StatusOfAppointment.Canceled;
+        appointment.status = StatusOfAppointment.Cancelled;
         //add timeslots back into doctor's available timeslots
         addTimeSlotToAvailableSlots(appointment);
         pendingAppointments.remove(appointment);

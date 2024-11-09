@@ -17,12 +17,13 @@ public class Appointment {
      * @param patientID
      * @return 
      */
-    public Appointment(LocalDate date, TimeSlot timeSlot, String doctorID, String patientID)
+    public Appointment(LocalDate date, TimeSlot timeSlot, String doctorID, String patientID, StatusOfAppointment status)
     {
         this.date = date;
         this.timeSlot = timeSlot;
         this.doctorId = doctorID;
         this.patientId = patientID;
+        this.status = status;
     }
     public LocalDate getAppointmentDate()
     {
