@@ -4,6 +4,9 @@ package oop;
  * in the Hospital Management System. The menus guide the users (patients, doctors, pharmacists, 
  * and administrators) through the available system options for performing tasks such as viewing 
  * records, scheduling appointments, and managing data.
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class Menu {
     /**

@@ -2,6 +2,9 @@ package oop;
 /**
  * The {@code BloodType} enum represents the different human blood types based on the ABO and RhD classification systems.
  * It includes the eight major blood types used for medical and blood transfusion purposes.
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  */
 public enum BloodType{
     /** Represents blood type O-negative. */

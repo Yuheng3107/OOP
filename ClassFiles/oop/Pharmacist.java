@@ -16,6 +16,9 @@ import oop.AdministratorLogic.ReplenishmentRequest;
  * This class provides functionalities specific to a pharmacist's role, 
  * including viewing appointment outcomes, updating prescription status, 
  * and managing medication stock levels.
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  * 
  * Inherits from {@link HospitalStaff}.
  */
