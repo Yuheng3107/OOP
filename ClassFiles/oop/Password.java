@@ -10,9 +10,25 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * A class to manage password updates, password hashing, and storage of passwords in a CSV file.
+ * It provides methods to update default passwords, set new passwords, and hash passwords using SHA-256.
+ * 
+ * @author: Ryan Ching
+ * @version: 1.0
+ * @since: 2024-11-09
+ */
 public class Password {
     //Call this to update and change the default assigned password
+    /**
+     * Updates the default password for a given user. Prompts the user to enter a new password.
+     * The new password is validated to ensure it matches the confirmed password before updating the CSV file.
+     *
+     * @param id        The unique identifier of the user (patient).
+     * @param sc        A Scanner object for receiving user input.
+     * @param role      The role of the user (e.g., admin, patient).
+     * @param filePath  The path to the CSV file where passwords are stored.
+     */
     public static void updateDefaultPassword(String id, Scanner sc, String role, String filePath)
     {
         String newPassword1, newPassword2;
@@ -30,6 +46,14 @@ public class Password {
         System.out.println("Your new password has been set.");
     }
     //Calls this to request user to enter new password
+    /**
+     * Prompts the user to enter a new password, which is validated and updated in the CSV file.
+     * The password is hashed before storing it.
+     *
+     * @param id        The unique identifier of the user (patient).
+     * @param role      The role of the user (e.g., admin, patient).
+     * @param filePath  The path to the CSV file where passwords are stored.
+     */
     public static void updatePassword(String id, String role, String filePath)
     {
         Scanner sc = new Scanner(System.in);
@@ -47,6 +71,13 @@ public class Password {
         System.out.println("Your new password has been set.");
     }
     //Most functions call this function to update the newly input password into the CSV. This is the only function that takes the password input and hash it and store into the CSV
+    /**
+     * Updates the password for a given patient ID in the CSV file. The password is hashed before being saved.
+     *
+     * @param filePath  The path to the CSV file where passwords are stored.
+     * @param patientID The unique identifier of the patient.
+     * @param newPassword The new password to be saved, in plain text (will be hashed before saving).
+     */
     public static void updatePasswordInCSV(String filePath, String patientID, String newPassword)
     {
         List<String> lines = new ArrayList<>();
@@ -81,6 +112,12 @@ public class Password {
         }
     }
     //Hashing algorithm itself
+    /**
+     * Hashes a password using the SHA-256 algorithm.
+     *
+     * @param password The password to be hashed.
+     * @return The hashed password as a hexadecimal string.
+     */
     public static String hashPassword(String password)
     {
         try {
