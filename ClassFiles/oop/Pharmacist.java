@@ -11,20 +11,39 @@ import java.util.Scanner;
 
 import oop.AdministratorLogic.ReplenishmentRequest;
 
-
+/**
+ * The {@code Pharmacist} class represents a pharmacist in the hospital system. 
+ * This class provides functionalities specific to a pharmacist's role, 
+ * including viewing appointment outcomes, updating prescription status, 
+ * and managing medication stock levels.
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
+ * 
+ * Inherits from {@link HospitalStaff}.
+ */
 public class Pharmacist extends HospitalStaff
-{
+{   /** Stores the file path to read the medicine */
     private String medFilePath = "Medicine_List.csv";
+    /**
+     * Constructs a {@code Pharmacist} instance with the specified details.
+     * Adds the pharmacist to the hospital's staff list.
+     * 
+     * @param name    the name of the pharmacist
+     * @param staffID the unique ID of the pharmacist
+     * @param age     the age of the pharmacist
+     * @param gender  the gender of the pharmacist
+     */
     public Pharmacist(String name, String staffID, int age, Gender gender) {
         super(name, staffID, age, gender);
         Hospital.staffs.add(this);
     }
-
-    public String getID()
-    {
-        return super.getID();
-    }
-
+    /**
+     * Prompts the user to enter a patient ID and displays the patient's 
+     * appointment outcome records.
+     * 
+     * If no appointment outcomes are available, a message is displayed.
+     */
     public void viewAppointmentOutcomeRecord()
     {
         Scanner sc = new Scanner(System.in);
@@ -56,7 +75,12 @@ public class Pharmacist extends HospitalStaff
         }
 
     }
-
+    /**
+     * Finds a patient by their unique ID and return it
+     * 
+     * @param id the unique ID of the patient
+     * @return the {@code Patient} object if found, {@code null} otherwise
+     */
     public static Patient findPatientById(String id)
     {
         for (Patient patient : Hospital.patients)
@@ -69,17 +93,13 @@ public class Pharmacist extends HospitalStaff
         return null;
     }
 
-    // public static void checkStockAlert()
-    // {
-    //     for (MedicineStock med : Hospital.inventory)
-    //     {
-    //         if (med.getStock() <= med.getLowStockLevel())
-    //         {
-    //             System.out.println("System alert: " + med.getName() + " is currently low on stock with " + med.getStock() + " units");
-    //         }
-    //     }
-    // }
-
+    /**
+     * Allows the pharmacist to update the prescription status of a patient's medication.
+     * The method prompts the pharmacist for a patient ID and displays the prescribed
+     * medications that have not yet been dispensed. If confirmed, the status of the
+     * medications is updated to dispensed, and the stock is adjusted in the system.
+     * Else, the system will indicate no changes were made.
+     */
     public void updatePrescriptionStatus()
     {
         Scanner sc = new Scanner(System.in);
@@ -160,7 +180,12 @@ public class Pharmacist extends HospitalStaff
             System.out.println("No pending medications to be dispensed for patient");
         }
     }
-
+    /**
+     * Submits a request to replenish the stock of a specified medicine. The pharmacist
+     * enters the medicine name and the requested quantity, and this information is 
+     * recorded in the hospital's list of replenishment requests which will be accessible
+     * and approvedby the administrator.
+     */
     public void submitReplenishRequest()
     {
         Scanner sc = new Scanner(System.in);
@@ -174,7 +199,13 @@ public class Pharmacist extends HospitalStaff
         ReplenishmentRequest request = new ReplenishmentRequest(medName, medNewStock);
         Hospital.replenishmentRequests.add(request);
     }
-
+    /**
+     * Updates the stock of a specified medicine in the CSV file that maintains 
+     * medicine records to ensure persistent data storage and accurate values
+     * 
+     * @param name     the name of the medicine to update
+     * @param newStock the new stock quantity to set for the medicine
+     */
     public void updateMedStockCSV(String name, int newStock)
     {
         List<String[]> data = new ArrayList<>();

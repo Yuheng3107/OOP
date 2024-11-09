@@ -2,22 +2,31 @@ package oop;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.nio.file.Paths;
 
 import oop.AdministratorLogic.Administrator;
-
+/**
+ * The {@code ImportUsers} class provides methods to read various types of data (patients, hospital staff, medicine stock,
+ * available time slots) from CSV files. It creates and manages necessary data objects and ensures that credentials are
+ * created for patients and staff if not already present.
+ *
+ * <p>This class is primarily designed for importing and initializing data from CSV files into the system and handles
+ * various types of data, such as patients, staff members, medicines, and available time slots.
+ */
 public class ImportUsers {
+    /**
+     * Reads patient information from a specified CSV file, creates {@link Patient} objects, and generates a
+     * credentials file with default passwords if it does not already exist.
+     *
+     * @param filePath the path to the CSV file containing patient data
+     * @return a list of {@link Patient} objects representing the patients listed in the CSV file
+     */
     public static ArrayList<Patient> readPatientsFromCSV(String filePath)
     {
         ArrayList<Patient> patients = new ArrayList<Patient>();
@@ -102,7 +111,13 @@ public class ImportUsers {
         }
         return patients;
     }
-
+    /**
+     * Reads hospital staff information from a specified CSV file, creates {@link HospitalStaff} objects, and generates a
+     * credentials file with default passwords if it does not already exist.
+     *
+     * @param filePath the path to the CSV file containing hospital staff data
+     * @return a list of {@link HospitalStaff} objects representing the hospital staff listed in the CSV file
+     */
     public static ArrayList<HospitalStaff> readStaffFromCSV(String filePath)
     {
         ArrayList<HospitalStaff> staff = new ArrayList<HospitalStaff>();
@@ -164,7 +179,13 @@ public class ImportUsers {
         }
         return staff;
     }
-
+    /**
+     * Reads medicine stock data from a specified CSV file and creates {@link MedicineStock} objects based on the
+     * contents of the file.
+     *
+     * @param filePath the path to the CSV file containing medicine stock data
+     * @return a list of {@link MedicineStock} objects representing the medicines and their stock information listed in the CSV file
+     */
     public static ArrayList<MedicineStock> readMedicineFromCSV(String filePath) {
         ArrayList<MedicineStock> medStocks = new ArrayList<>();
         String line;
@@ -191,6 +212,7 @@ public class ImportUsers {
         }
         return medStocks;
     }
+    /* 
 
     public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
         ArrayList<Appointment> appointments = new ArrayList<>();
@@ -237,7 +259,14 @@ public class ImportUsers {
 
         return appointments;
     }
-
+        */
+    /**
+     * Reads available time slot information from a specified CSV file, creates {@link AvailableTimeSlot} objects, and
+     * returns them in a list.
+     *
+     * @param filepath the path to the CSV file containing available time slot data
+     * @return a list of {@link AvailableTimeSlot} objects representing the available time slots listed in the CSV file
+     */
     public static ArrayList<AvailableTimeSlot> readAvailableTSFromCSV(String filepath) {
         ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<>();
         String line;
@@ -262,7 +291,6 @@ public class ImportUsers {
         catch (IOException e) {
             e.printStackTrace();
         }
-
         return availableTimeSlots;
     }
 
