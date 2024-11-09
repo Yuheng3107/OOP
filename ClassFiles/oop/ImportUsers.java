@@ -215,8 +215,13 @@ public class ImportUsers {
         }
         return medStocks;
     }
-    /* 
 
+    /**
+     * Reads appointment data from a specified CSV file and creates {@link Appointment} objects based on the contents of the file.
+     *
+     * @param filepath the path to the CSV file containing appointment data
+     * @return a list of {@link Appointment} objects representing the appointments listed in the CSV file
+     */
     public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
         ArrayList<Appointment> appointments = new ArrayList<>();
         String line;
@@ -262,7 +267,6 @@ public class ImportUsers {
 
         return appointments;
     }
-        */
     /**
      * Reads available time slot information from a specified CSV file, creates {@link AvailableTimeSlot} objects, and
      * returns them in a list.
