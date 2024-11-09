@@ -25,10 +25,32 @@ import oop.UserLogic.Role;
  * @since 2024-11-09
  */
 public class Patient extends Role {
+    /**
+     * Represents the medical record associated with this patient, containing detailed health
+     * information and history.
+     */
     private MedicalRecord medicalRecord;
+
+    /**
+     * A list of the patient's scheduled appointments, including only those appointments with a
+     * status of "Pending" or "Accepted".
+     */
     private ArrayList<Appointment> scheduledAppointments; //includes all appointments of patient with status Pending or Accepted
+
+    /**
+     * A list of outcomes from the patient's appointments, detailing the results, feedback, or
+     * other notes related to each appointment.
+     */
     public ArrayList<AppointmentOutcome> appointmentOutcomes;
+
+    /**
+     * The name of the patient.
+     */
     public String name;
+
+    /**
+     * A unique identifier for the patient within the medical record system.
+     */
     public String patientID;
 
     //public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
@@ -183,7 +205,7 @@ public class Patient extends Role {
     /**
      * Displays the available appointment slots for a specific doctor on a given date.
      * 
-     * @throws IOException If an I/O error occurs when reading available timeslots.
+     * Throws an exception if an I/O error occurs when reading available timeslots.
      */
     public void viewAvailableAppointmentSlots() //timeslots will be printed per hour
     {
@@ -310,7 +332,7 @@ public class Patient extends Role {
     /**
      * Allows the patient to schedule an appointment with a doctor, given the selected time slot.
      * 
-     * @throws IOException If an error occurs while reading or writing to the CSV files.
+     * Throws an exception if an error occurs while reading or writing to the CSV files.
      */
     public void scheduleAppointment()
     {

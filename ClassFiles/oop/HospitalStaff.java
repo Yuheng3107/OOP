@@ -10,9 +10,9 @@ import oop.UserLogic.Role;
  * methods to display welcome and goodbye messages.</p>
  * 
  * <p>Concrete classes that extend {@code HospitalStaff} should define specific roles such as {@code Doctor} or {@code Pharmacist}.</p>
- * @author: Kuang Yu Heng, Kuang Yu Xuan, Ryan Ching
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng, Kuang Yu Xuan, Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  */
 public abstract class HospitalStaff extends Role
 {

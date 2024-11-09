@@ -7,9 +7,9 @@ package oop;
  * 
  * <p>The {@code MedicineStock} class provides methods to get and set the details of the medicine, including
  * stock quantity, price, and low stock threshold.</p>
- * @author: Kuang Yu Heng, Kuang Yu Xuan, Ryan Ching
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng, Kuang Yu Xuan, Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class MedicineStock {
     /**
