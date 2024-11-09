@@ -1,5 +1,9 @@
 package oop;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,6 +17,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Arrays;
 
 /**
  * Represents a Doctor in a hospital. The Doctor class extends the HospitalStaff class
@@ -266,6 +271,18 @@ public class Doctor extends HospitalStaff{
         return scheduledAppointments;
     }
 
+    public List<Appointment> getPendingAppointments(LocalDate date) {
+        
+        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
+
+        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && 
+        appointment.getAppointmentDate().equals(date) &&
+        appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending))
+        .collect(Collectors.toList());
+    
+        return scheduledAppointments;
+    }
+
     /**
      * Allows the doctor to view their schedule for a specific day.
      * The doctor is prompted to input a date, and the system outputs the schedule for that day.
@@ -381,6 +398,10 @@ public class Doctor extends HospitalStaff{
             return;
         }
 
+        List<Appointment> schedule = getScheduledAppointments(date);
+        List<Appointment> pendingAppointments = getPendingAppointments(date);
+        TimeSlot[] availableSlots = getAvailability(date, doctorID);
+
         // add each hourly interval to availableSlots
         LocalTime slotStart = startTime;
         while (slotStart.isBefore(endTime)) {
@@ -402,7 +423,7 @@ public class Doctor extends HospitalStaff{
                 System.out.println(String.format("Cannot add timeslot on %s %s to %s as it is already booked.", date.format(formatter), slotStart, slotEnd));
             }
             // if timeslot is not booked, check if in availableSlots, else add it
-            else if (availableSlots.contains(timeSlot)) {
+            else if (Arrays.stream(availableSlots).anyMatch(slot->slot.equals(timeSlot))) {
                 System.out.println(String.format("Timeslot on %s %s to %s exists.", date.format(formatter), slotStart, slotEnd));
             } 
             else {
@@ -413,13 +434,12 @@ public class Doctor extends HospitalStaff{
 
         if (slotsToAdd.isEmpty()) {
             System.out.println("No timeslots to add.");
+            return;
         }
         else {
-            for (TimeSlot timeSlot : slotsToAdd) {
-                availableSlots.add(timeSlot);
+                updateAvailableSlotsCSV(slotsToAdd);
+                System.out.println("Added new available timeslot(s) successfully.");
             }
-            System.out.println("Added new available timeslot(s) successfully.");
-        }
 
         viewAvailability(date);
     }
@@ -1104,4 +1124,23 @@ public class Doctor extends HospitalStaff{
 
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
     } */
-}
+
+    private void updateAvailableSlotsCSV(List<TimeSlot> availableSlots) {
+    
+        String fileName = "../AvailableTimeSlot.csv";
+    
+        try (FileWriter writer = new FileWriter(fileName, true)) {
+
+            for (TimeSlot slot : availableSlots) {
+                writer.append(doctorID).append(",")
+                    .append(slot.getDate().toString()).append(",")
+                    .append(slot.getStart().toString()).append(",")
+                    .append(slot.getEnd().toString()).append(",")
+                    .append("true").append("\n");
+        
+                System.out.println("Timeslot added to Appointments.csv successfully.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+}}
