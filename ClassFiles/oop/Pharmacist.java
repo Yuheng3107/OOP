@@ -23,7 +23,7 @@ import oop.AdministratorLogic.ReplenishmentRequest;
  * Inherits from {@link HospitalStaff}.
  */
 public class Pharmacist extends HospitalStaff
-{
+{   /** Stores the file path to read the medicine */
     private String medFilePath = "Medicine_List.csv";
     /**
      * Constructs a {@code Pharmacist} instance with the specified details.
@@ -76,7 +76,7 @@ public class Pharmacist extends HospitalStaff
 
     }
     /**
-     * Finds a patient by their unique ID.
+     * Finds a patient by their unique ID and return it
      * 
      * @param id the unique ID of the patient
      * @return the {@code Patient} object if found, {@code null} otherwise
@@ -98,6 +98,7 @@ public class Pharmacist extends HospitalStaff
      * The method prompts the pharmacist for a patient ID and displays the prescribed
      * medications that have not yet been dispensed. If confirmed, the status of the
      * medications is updated to dispensed, and the stock is adjusted in the system.
+     * Else, the system will indicate no changes were made.
      */
     public void updatePrescriptionStatus()
     {
@@ -182,7 +183,8 @@ public class Pharmacist extends HospitalStaff
     /**
      * Submits a request to replenish the stock of a specified medicine. The pharmacist
      * enters the medicine name and the requested quantity, and this information is 
-     * recorded in the hospital's list of replenishment requests.
+     * recorded in the hospital's list of replenishment requests which will be accessible
+     * and approvedby the administrator.
      */
     public void submitReplenishRequest()
     {
@@ -199,7 +201,7 @@ public class Pharmacist extends HospitalStaff
     }
     /**
      * Updates the stock of a specified medicine in the CSV file that maintains 
-     * medicine records.
+     * medicine records to ensure persistent data storage and accurate values
      * 
      * @param name     the name of the medicine to update
      * @param newStock the new stock quantity to set for the medicine

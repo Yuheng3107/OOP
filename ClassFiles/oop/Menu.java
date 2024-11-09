@@ -24,8 +24,9 @@ public class Menu {
         System.out.print("Choice: ");
     }
     /**
-     * Prints the patient menu with options related to viewing medical records, managing appointments, 
-     * updating personal information, and checking bills.
+     * Prints the patient menu with options related to viewing medical records, updating their personal information, view available appointment slots,
+     * schedule/reschedule/cancel appointments, view past appointment outcome records and view scheduled appointment status. It also offers the option
+     * to change password and logout.
      */
     public static void printPatientMenu()
     {
@@ -49,8 +50,8 @@ public class Menu {
         System.out.print("Choice: ");
     }
     /**
-     * Prints the doctor menu with options for managing patient records, viewing personal schedules,
-     * setting appointment availability, and handling appointment requests.
+     * Prints the doctor menu with options for managing (view and update) patient records, viewing personal schedules,
+     * setting appointment availability, and handling (accept/decline) appointment requests, recording outcome records, changing password and logout
      */
     public static void printDoctorMenu()
     {
@@ -72,7 +73,7 @@ public class Menu {
     }
     /**
      * Prints the pharmacist menu with options for managing prescription status, viewing medication inventory,
-     * and submitting replenishment requests.
+     * submitting replenishment requests, changing password, and logout.
      */
     public static void printPharmacistMenu()
     {
