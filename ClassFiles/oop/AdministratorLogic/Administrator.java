@@ -57,6 +57,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 1:
 
                 // add inventory
+                try {
                 System.out.print("Enter name of the medicine: ");
                 name = scanner.nextLine();
                 System.out.print("Enter quantity of the medicine: ");
@@ -69,8 +70,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 updateMedNewCSV(name, quantity, lowStockLevel, price);
                 addMedicineStock(stock);
                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                    
+                }
             case 2:
                 // update inventory
+                try {
                 System.out.print("Enter name of the medicine to update: ");
                 //scanner.nextLine();
                 name = scanner.nextLine();
@@ -80,13 +89,26 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 int newPrice = Integer.parseInt(scanner.nextLine());
                 updateMedicineStock(name, quantity, newPrice);
                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
             case 3:
 
                 // remove inventory
+                try {
                 System.out.print("Enter name of the medicine to remove: ");
                 name = scanner.nextLine();
                 deleteMedicineStock(name);
                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
             case 4:
 
                 // view inventory
@@ -95,12 +117,20 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 5:
 
                 // update low stock level alert line of medicine
+                try {
                 System.out.print("Enter name of the medicine to update: ");
                 name = scanner.nextLine();
                 System.out.print("Enter new low stock level of the medicine: ");
-                lowStockLevel = Integer.parseInt(scanner.nextLine());
+                int lowStockLevel = Integer.parseInt(scanner.nextLine());
                 updateLowStockLevel(name, lowStockLevel);
-                break;
+                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
+               
            
         }
 
@@ -180,25 +210,46 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 break;
             case 2:
                 // update staff member
+                try {
                 sc.nextLine();
                 System.out.print("Enter name of staff member to update: ");
                 staffName = sc.nextLine();
                 updateStaffMember(staffName);
-
                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
+
             case 3:
                 // remove staff member
+                try {
                 sc.nextLine();
                 System.out.print("Enter name of staff member to remove: ");
                 String name = sc.nextLine();
                 removeStaffMember(name);            
                 break;
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
             case 4:
                 // display staff members, choose filter
+                try {
                 System.out.print("Enter filter: ");
                 String filter = sc.nextLine();
                 displayStaff(filter);
-                break;
+                break; 
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Invalid input, error: " + e.getMessage());
+                    break;
+                }
             default:
                 System.out.println("Invalid option. Please try again.");
         }
