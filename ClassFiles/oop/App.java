@@ -3,8 +3,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-
-import oop.Hospital;
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
 
@@ -39,7 +37,7 @@ public class App {
 
     /**
      * The file path for the staff credentials database.
-     * This file contains information about the staff members, including doctors, pharmacists, and other hospital employees.
+     * This file contains information about the staff members, including doctors, pharmacists, and administrators.
      * The file is used to verify login credentials and manage staff records.
      */
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";

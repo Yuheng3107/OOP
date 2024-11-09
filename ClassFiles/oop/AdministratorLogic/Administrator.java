@@ -308,7 +308,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
         // add staff member to Hospital
         Hospital.addStaffMember(staffName, age, staffID, gender, role);
-        // add them to csv file, TODO
+        // add them to csv file,
         updateStaffCSV(staffName, age, staffID, gender, role);
     }
 
