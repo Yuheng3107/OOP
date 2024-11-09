@@ -1,5 +1,4 @@
 package oop;
-import oop.UserLogic.Role;
 
 /**
  * The {@code HospitalStaff} class represents a staff member of a hospital. It extends the {@link Role} class
@@ -59,15 +58,6 @@ public abstract class HospitalStaff extends Role
         return staffID;
     }
 
-    /**
-     * Returns the name of the hospital staff member.
-     *
-     * @return The name of the staff member.
-     */
-    public String getName()
-    {
-        return name;
-    }
 
     /**
      * Returns the role of the hospital staff member as a string.
