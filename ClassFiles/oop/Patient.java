@@ -17,6 +17,13 @@ import java.util.stream.Collectors;
 
 import oop.UserLogic.Role;
 
+/**
+ * Represents a Patient in the hospital system. A Patient is a specialized {@link Role} that manages their own medical records, appointments,
+ * and personal information.
+ * @author Kuang Yu Xuan, Kuang Yu Heng, Ryan Ching, Tan Zhe Kai
+ * @version 1.0
+ * @since 2024-11-09
+ */
 public class Patient extends Role {
     private MedicalRecord medicalRecord;
     private ArrayList<Appointment> scheduledAppointments; //includes all appointments of patient with status Pending or Accepted
@@ -25,6 +32,17 @@ public class Patient extends Role {
     public String patientID;
 
     //public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, MedicalHistory medicalHistory, String email, Hospital hospital)
+    /**
+     * Constructs a Patient object with basic details such as name, patient ID, date of birth, gender, blood type, and email.
+     * Initializes the medical record, appointment lists, and adds the patient to the hospital system.
+     * 
+     * @param name The name of the patient.
+     * @param patientID The unique ID of the patient.
+     * @param dateOfBirth The patient's date of birth.
+     * @param gender The patient's gender.
+     * @param bloodType The patient's blood type.
+     * @param email The patient's email address.
+     */
     public Patient(String name, String patientID, LocalDate dateOfBirth, Gender gender, BloodType bloodType, String email)
     {
         super(name, gender);
@@ -36,20 +54,41 @@ public class Patient extends Role {
         Hospital.patients.add(this);
     }
 
+    /**
+     * Gets the name of the patient.
+     * 
+     * @return The name of the patient.
+     */
     public String getName()
     {
         return name;
     }
 
+    /**
+     * Gets the unique patient ID.
+     * 
+     * @return The patient ID.
+     */
     public String getID()
     {
         return patientID;
     }
 
+    /**
+     * Gets the medical record of the patient.
+     * 
+     * @return The patient's medical record.
+     */
     public MedicalRecord getMedicalRecord() {
         return this.medicalRecord;
     }
 
+    /**
+     * Updates the patient's personal information (email and phone number) by modifying the record in the CSV file.
+     * The patient is prompted to input new email and/or phone number.
+     * 
+     * @param patientID The unique ID of the patient whose information is being updated.
+     */
     public void updatePersonalInformation(String patientID)
     {
         Scanner sc = new Scanner(System.in);
@@ -141,6 +180,11 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Displays the available appointment slots for a specific doctor on a given date.
+     * 
+     * @throws IOException If an I/O error occurs when reading available timeslots.
+     */
     public void viewAvailableAppointmentSlots() //timeslots will be printed per hour
     {
         int year;
@@ -197,9 +241,15 @@ public class Patient extends Role {
             System.out.println("Invalid input. Returning to main menu.");
             return;
         }
-
     }
 
+    /**
+     * Checks if the given time slot for a specific doctor is available for scheduling.
+     * 
+     * @param doctor The doctor whose availability is being checked.
+     * @param timeSlot The time slot being checked for availability.
+     * @return {@code true} if the time slot is available, {@code false} otherwise.
+     */
     public boolean checkForValidTimeSlot(Doctor doctor, TimeSlot timeSlot)
     {
         // read AvailableTimeSlots.csv, and check for the specified time slot isAvail set to true
@@ -255,9 +305,13 @@ public class Patient extends Role {
         }
             */
         return false;
-        
-
     }
+
+    /**
+     * Allows the patient to schedule an appointment with a doctor, given the selected time slot.
+     * 
+     * @throws IOException If an error occurs while reading or writing to the CSV files.
+     */
     public void scheduleAppointment()
     {
         Doctor doctor = null;
@@ -333,6 +387,11 @@ public class Patient extends Role {
     }
 
     // to remove
+    /**
+     * Adds an appointment to the scheduled appointments list.
+     * 
+     * @param appointment The appointment to be added.
+     */
     public void addAppointmentToScheduledAppointments(Appointment appointment)
     {
         scheduledAppointments.add(appointment);
@@ -340,7 +399,11 @@ public class Patient extends Role {
         
     }
 
-
+    /**
+     * Retrieves a list of scheduled appointments for the current patient with either "Pending" or "Confirmed" status.
+     * 
+     * @return A list of appointments for the patient.
+     */
     public List <Appointment> getScheduledAppointments()
     {
         // read appointment.csv to return user appointments that are status pending and confirmed
@@ -355,7 +418,10 @@ public class Patient extends Role {
         return scheduledAppointments;
     }
 
-
+    /**
+     * Reschedules an existing appointment. It prompts the user to select an appointment, 
+     * verify the doctor's availability, and adjust the time slot if available.
+     */
     public void rescheduleAppointment()
     {
         int check = viewScheduledAppointments();
@@ -465,6 +531,10 @@ public class Patient extends Role {
         
     }
     
+    /**
+     * Cancels a selected scheduled appointment. Removes the appointment from the patient's schedule 
+     * and notifies the user of the successful cancellation.
+     */
     public void cancelAppointment()
     {
         int check = viewScheduledAppointments();
@@ -501,6 +571,9 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Displays the status of scheduled appointments. The user can select an appointment to view its status.
+     */
     public void viewScheduledAppointmentStatus()
     {
         int i = 1;
@@ -541,6 +614,9 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Displays the appointment outcomes records. If there are no records, a message is shown indicating no available outcomes.
+     */
     public void viewAppointmentOutcomeRecords()
     {
         if (appointmentOutcomes.isEmpty())
@@ -554,6 +630,11 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Displays the list of scheduled appointments. If there are no scheduled appointments, a message is shown.
+     * 
+     * @return 0 if there are appointments, -1 if none.
+     */
     public int viewScheduledAppointments(){
         
         List<Appointment> scheduledAppointments = getScheduledAppointments();
@@ -575,6 +656,10 @@ public class Patient extends Role {
         
     }
 
+    /**
+     * Displays the patient's medical record, including personal information, contact details, 
+     * past diagnoses, and treatments.
+     */
     // Patient medical record management
     public void viewMedicalRecord() {
 
@@ -619,6 +704,12 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Converts the given blood type enumeration into a string representation.
+     * 
+     * @param bloodType The blood type enumeration.
+     * @return The string representation of the blood type.
+     */
     public String getBloodTypeString(BloodType bloodType) {
         String blood = "";
         switch(medicalRecord.getBloodType().toString())
@@ -650,15 +741,31 @@ public class Patient extends Role {
         }
         return blood;
     }
+
+    /**
+     * Displays a welcome message for the patient.
+     * 
+     * @param patient The patient being welcomed.
+     */
     public static void welcomeMessage(Patient patient)
     {
         System.out.println("\nWelcome " + patient.getName() + "!");
     }
+
+    /**
+     * Displays a goodbye message for the patient.
+     * 
+     * @param patient The patient being bid farewell.
+     */
     public static void goodbyeMessage(Patient patient)
     {
         System.out.println("Goodbye " + patient.getName() + "!\n");
     }
 
+    /**
+     * Displays the patient's bill information based on appointment outcomes. 
+     * If no bills are found, a message is displayed indicating this.
+     */
     public void checkBills()
     {
         int i = 1;
@@ -701,6 +808,11 @@ public class Patient extends Role {
         
     }
 
+    /**
+     * Appends a new appointment record to the "Appointments.csv" file.
+     * 
+     * @param appointment The appointment to be added.
+     */
     public void appendAppointmentToCSV(Appointment appointment) {
         String fileName = "../Appointments.csv";
         try (FileWriter writer = new FileWriter(fileName, true)) { // Open in append mode
@@ -717,6 +829,12 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Updates the availability of a time slot in the "AvailableTimeSlot.csv" file based on an appointment.
+     * 
+     * @param appointment The appointment whose time slot availability is being updated.
+     * @param isAvail The availability status ("true" or "false").
+     */
     public void updateAvailableTimeSlot(Appointment appointment, String isAvail) {
         String fileName = "../AvailableTimeSlot.csv";
         String line;
@@ -763,6 +881,12 @@ public class Patient extends Role {
         }
     }
 
+    /**
+     * Updates an existing appointment in the "Appointments.csv" file with new details.
+     * 
+     * @param targetAppointment The original appointment to be updated.
+     * @param appointment The new appointment details to update the existing record.
+     */
     public void updateAppointment(Appointment targetAppointment, Appointment appointment) {
         String fileName = "../Appointments.csv";
         String line;
