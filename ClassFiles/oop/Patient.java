@@ -169,7 +169,9 @@ public class Patient extends Role {
             
                     ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
                     
-                    List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(chosenDoctor.getID()) && timeslot.getDate().equals(date))
+                    List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(chosenDoctor.getID()) && 
+                    timeslot.getDate().equals(date) && 
+                    timeslot.getIsAvail() == true)
                     .collect(Collectors.toList());
                     
                     if (filteredAvailableTimeSlots.isEmpty()) {
@@ -613,12 +615,7 @@ public class Patient extends Role {
         String fileName = "../AvailableTimeSlot.csv";
         String line;
 
-        ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV(fileName);        boolean updated = false;
-
-        List<AvailableTimeSlot> targetTimeSlot = availableTimeSlots.stream()
-        .filter(timeslot->timeslot.getDocID().equals(appointment.getDocID()) &&
-        timeslot.getTimeSlot().equals(appointment.getAppointmentTimeSlot()))
-        .collect(Collectors.toList());
+        boolean updated = false;
 
         List<String> updatedLines = new ArrayList<>();
 
