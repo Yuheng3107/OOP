@@ -23,8 +23,7 @@ public class Hospital {
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     private static final String medFilePath = "../Medicine_List.csv";
 
-    public Hospital()
-    {
+    public static final void initialise() {
         loadHospitalData();
     }
 
@@ -64,7 +63,7 @@ public class Hospital {
         System.out.println("No staff with name " + staffName + " found.");
     }
 
-    private void loadHospitalData()
+    private static void loadHospitalData()
     {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);

@@ -78,7 +78,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 name = scanner.nextLine();
                 System.out.print("Enter new quantity of the medicine: ");
                 quantity = Integer.parseInt(scanner.nextLine());
-                updateMedicineStock(name, quantity);
+                System.out.print("Enter price of the medicine: ");
+                int newPrice = Integer.parseInt(scanner.nextLine());
+                updateMedicineStock(name, quantity, newPrice);
                 break;
             case 3:
 
@@ -209,8 +211,24 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     public void addStaffMember(String staffName, int age, String staffID, Gender gender, String role)
     {
 
+        if (staffName.isEmpty() || age <= 0 || staffID.isEmpty() || role.isEmpty()) {
+            System.out.println("Invalid input. Please try again.");
+            return;
+        }
+
+        if (staffID.toLowerCase().charAt(0) != role.toLowerCase().charAt(0)) {
+            System.out.println("Patient code must match role code. Please try again.");
+            return;
+        }
+
+        // CAPS id
+        staffID = staffID.toUpperCase();
+
         // add staff member to Hospital
         Hospital.addStaffMember(staffName, age, staffID, gender, role);
+        // add them to csv file, TODO
+        
+
 
     }
     public void updateStaffMember(String staffName)
@@ -313,7 +331,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
         Hospital.inventory.add(stock);
     }
-    public void updateMedicineStock(String name, int count) 
+    public void updateMedicineStock(String name, int count, int newPrice) 
     {
         // first we need to find the index of the medicine
         int lowStockLevel = 0;
@@ -321,12 +339,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
             if (Hospital.inventory.get(i).getName().equals(name)) {
                 lowStockLevel = Hospital.inventory.get(i).getLowStockLevel();
-                updateMedStockCSV(name, count);
+                updateMedStockCSV(name, count, newPrice);
                 Hospital.inventory.remove(i);
                 break; // Exit the loop after removing
             }
         }
-        addMedicineStock(new MedicineStock(name, count, lowStockLevel, 0)); //change the price afterwards pls
+        addMedicineStock(new MedicineStock(name, count, lowStockLevel, newPrice)); //change the price afterwards pls
     }
     public void deleteMedicineStock(String name)
     {
@@ -341,15 +359,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     public void updateLowStockLevel(String name, int newLevel) {
         // first we need to find the index of the medicine
         for (int i = 0; i < Hospital.inventory.size(); i++) {
-            if (Hospital.inventory.get(i).getName().equals(name)) {
+            if (Hospital.inventory.get(i).getName().toLowerCase().equals(name.toLowerCase())) {
                 Hospital.inventory.get(i).setLowStockLevel(newLevel);
                 updateMedLowStockCSV(name, newLevel);
-                break; // Exit the loop after removing
+                return;
             }
         }
+        System.out.println("No medicine with name " + name + " found.");
 
     }
-    public void updateMedStockCSV(String name, int newStock)
+    public void updateMedStockCSV(String name, int newStock, int newPrice)
     {
         List<String[]> data = new ArrayList<>();
         boolean found = false;
@@ -359,8 +378,9 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
-                if (fields[0].equals(name)) {
+                if (fields[0].toLowerCase().equals(name.toLowerCase())) {
                     fields[1] = String.valueOf(newStock); // Update the stock
+                    fields[2] = String.valueOf(newPrice);
                     found = true;
                 }
                 data.add(fields);
@@ -396,7 +416,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
-                if (fields[0].equals(name)) {
+                if (fields[0].toLowerCase().equals(name.toLowerCase())) {
                     fields[2] = String.valueOf(newStock); // Update the Low stock level
                     found = true;
                 }
@@ -434,7 +454,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 String[] fields = line.split(",");
                 
                 // Only add the line to `data` if the medicine name does not match
-                if (!fields[0].equals(name)) {
+                if (!fields[0].toLowerCase().equals(name.toLowerCase())) {
                     data.add(fields);
                 } else {
                     found = true;
@@ -469,7 +489,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
-                if (fields[0].equals(name)) {
+                if (fields[0].toLowerCase().equals(name.toLowerCase())) {
                     exists = true;
                     break;
                 }

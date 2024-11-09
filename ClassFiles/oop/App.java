@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+
+import oop.Hospital;
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
 
@@ -12,8 +14,11 @@ public class App {
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     //Main program
     public static void main(String[] args)
-    {        
-        Hospital hospital = new Hospital(); //Create and instantiate hospital
+    {
+        
+
+        // initialise db for hospital
+        Hospital.initialise();
         App.program(); //Run the application
     }
 
