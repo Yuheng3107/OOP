@@ -8,11 +8,47 @@ import oop.Hospital;
 import oop.AdministratorLogic.Administrator;
 import oop.AdministratorLogic.ReplenishmentRequest;
 
+/**
+ * The {@code App} class represents the main entry point of the hospital management system.
+ * It handles user interaction, such as logging in as a patient or staff member, navigating through menus,
+ * and performing various operations based on the user's role in the system.
+ * <p>
+ * The program allows users to log in with their credentials, view medical records, update personal information,
+ * schedule and manage appointments, and access other hospital services. It also provides functionality for 
+ * hospital staff, including doctors, pharmacists, and administrators, to manage medical records, inventory, 
+ * and other administrative tasks.
+ * </p>
+ * <p>
+ * The application offers a menu-driven interface, where users can choose from various actions based on their role.
+ * It supports different roles such as "Doctor", "Pharmacist", "Staff Member", and "Patient", with each role having specific functionalities.
+ * </p>
+ * 
+ * @author Ryan Ching
+ * @version 1.0
+ * @since 2024-11-09
+ */
 public class App {
     //Private variables to store the database file name/path
+
+    /**
+     * The file path for the patient credentials database.
+     * This file contains information about the patients registered in the hospital system.
+     * The file is used to verify login credentials and manage patient records.
+     */
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
+
+    /**
+     * The file path for the staff credentials database.
+     * This file contains information about the staff members, including doctors, pharmacists, and other hospital employees.
+     * The file is used to verify login credentials and manage staff records.
+     */
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
-    //Main program
+    
+    /**
+     * Main method that initializes the hospital system and starts the application.
+     * 
+     * @param args command-line arguments (not used in this application)
+     */
     public static void main(String[] args)
     {
         // initialise db for hospital
@@ -20,6 +56,11 @@ public class App {
         App.program(); //Run the application
     }
 
+    /**
+     * This method contains the main logic of the application, including displaying menus and handling user input
+     * for different roles. It allows patients and hospital staff to interact with the system based on their role
+     * and perform different operations.
+     */
     public static void program()
     {
         Scanner sc;

@@ -18,6 +18,9 @@ import oop.AdministratorLogic.Administrator;
  *
  * <p>This class is primarily designed for importing and initializing data from CSV files into the system and handles
  * various types of data, such as patients, staff members, medicines, and available time slots.
+ * @author Ryan Ching, Tan Zhe Kai
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class ImportUsers {
     /**
@@ -212,8 +215,13 @@ public class ImportUsers {
         }
         return medStocks;
     }
-    
 
+    /**
+     * Reads appointment data from a specified CSV file and creates {@link Appointment} objects based on the contents of the file.
+     *
+     * @param filepath the path to the CSV file containing appointment data
+     * @return a list of {@link Appointment} objects representing the appointments listed in the CSV file
+     */
     public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
         ArrayList<Appointment> appointments = new ArrayList<>();
         String line;
@@ -259,7 +267,6 @@ public class ImportUsers {
 
         return appointments;
     }
-        
     /**
      * Reads available time slot information from a specified CSV file, creates {@link AvailableTimeSlot} objects, and
      * returns them in a list.
