@@ -154,7 +154,7 @@ public class Patient extends Role
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (columns[0].equals(patientID))
+                if (columns[0].equalsIgnoreCase(patientID))
                 {
                     if (emailChoice.equalsIgnoreCase("y"))
                     {

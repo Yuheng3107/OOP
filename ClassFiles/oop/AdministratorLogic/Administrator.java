@@ -64,7 +64,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("3. Remove medicine from inventory");
         System.out.println("4. View Inventory");
         System.out.println("5. Update low stock level alert line of medicine");
-        System.out.println("Enter your choice: ");
+        System.out.print("Enter your choice: ");
 
         Scanner scanner = new Scanner(System.in);
         String name;
@@ -203,6 +203,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("2. Update staff member");
         System.out.println("3. Remove staff member");
         System.out.println("4. Display staff members");
+        System.out.print("Choice: ");
         Scanner sc = new Scanner(System.in);
         int opt = sc.nextInt();
          
@@ -220,21 +221,18 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 System.out.print("Enter staff ID: ");
                 String staffID = sc.nextLine();
 
-                System.out.print("Enter staff role: ");
+                System.out.print("Enter staff role(Doctor/Pharmacist): ");
                 String role = sc.nextLine();
 
-                System.out.println("Enter staff gender: ");
+                System.out.print("Enter staff gender (Male/Female): ");
                 try {
-                    String genderString = sc.next();
-                    System.out.println(genderString);
+                    String genderString = sc.nextLine();
                     Gender gender = Gender.valueOf(genderString);
                     addStaffMember(staffName, age, staffID, gender, role);
                 }
-
                 catch (IllegalArgumentException e) {
                     System.out.println("Invalid gender. Please enter Male or Female.");
                 }   
-
                 break;
             case 2:
                 // update staff member
@@ -736,7 +734,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             String newEntry = staffID + "," + Password.hashPassword("password");
             bw.write(newEntry);
             bw.newLine();
-            System.out.println("Added staff credentials successfully, new password is: password");
+            System.out.println("Successfully added " + staffName + " into the system. Please take note the default password is 'password'");
         } catch (IOException e) {
             System.err.println("Error writing to the file: " + e.getMessage());
         }
