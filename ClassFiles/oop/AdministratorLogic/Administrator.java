@@ -434,6 +434,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
         // updates the replenishment request of hospital
         Hospital.replenishmentRequests.get(index).setApproved();
+        int amount = Hospital.replenishmentRequests.get(index).amount;
+        String name = Hospital.replenishmentRequests.get(index).medicineName;
+// updates file
+        Hospital.inventory.forEach(med -> {
+            if (med.getName().equals(name)) {
+                updateMedStockCSV(name, amount+med.getStock(), med.getPrice());
+            }
+        });
+        
+
     }
 
     /**
