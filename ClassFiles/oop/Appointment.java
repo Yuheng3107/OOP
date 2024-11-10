@@ -114,9 +114,9 @@ public class Appointment {
      * 
      * @param Date The new date for the appointment.
      */
-    public void setAppointmentDate(LocalDate Date)
+    public void setAppointmentDate(LocalDate date)
     {
-        this.date = Date;
+        this.date = date;
     }
 
     /**
@@ -134,9 +134,9 @@ public class Appointment {
      * 
      * @param doctorId The new doctor ID for the appointment.
      */
-    public void setDocID(String doctorId)
+    public void setDocID(String doctorID)
     {
-        this.doctorId = doctorId;
+        this.doctorId = doctorID;
     }
 
     /**
