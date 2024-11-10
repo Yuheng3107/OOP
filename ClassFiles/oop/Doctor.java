@@ -812,6 +812,12 @@ public class Doctor extends HospitalStaff{
      */
     public void recordAppointmentOutcome()
     {
+        
+        if (schedule.isEmpty())
+        {
+            System.out.println("No scheduled appointments to record appoinment outcome.");
+            return;
+        }
         try{
             Scanner sc;
             int choice;
