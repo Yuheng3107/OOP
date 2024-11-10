@@ -643,7 +643,6 @@ public class Doctor extends HospitalStaff{
      * specified date and returns them as an array of {@link TimeSlot} objects.
      * 
      * @param date The date for which the availability is requested.
-     * @param doctorID The ID of the doctor whose availability is being requested.
      * @return An array of {@link TimeSlot} objects representing the available slots.
      */
     public TimeSlot[] getAvailability(LocalDate date) {

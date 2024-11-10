@@ -467,6 +467,10 @@ public class Hospital {
         }
     }
 
+    /**
+     * Checks for any pending replenishment by the pharmacist.
+     * If there are, it will be printed out.
+     */
     public static void checkPendingReplenishment()
     {
         for (ReplenishmentRequest request : replenishmentRequests)

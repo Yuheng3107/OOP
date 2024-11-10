@@ -37,7 +37,6 @@ public class Appointment {
      * @param timeSlot The time slot for the appointment.
      * @param doctorID The ID of the doctor.
      * @param patientID The ID of the patient.
-     * @param status The status of the appointment.
      */
     public Appointment(LocalDate date, TimeSlot timeSlot, String doctorID, String patientID)
     {
@@ -111,8 +110,7 @@ public class Appointment {
     
     /**
      * Sets the date of the appointment.
-     * 
-     * @param Date The new date for the appointment.
+     * @param date The new date for the appointment.
      */
     public void setAppointmentDate(LocalDate date)
     {
@@ -131,8 +129,7 @@ public class Appointment {
 
     /**
      * Sets the ID of the doctor for the appointment.
-     * 
-     * @param doctorId The new doctor ID for the appointment.
+     * @param doctorID The new doctor ID for the appointment.
      */
     public void setDocID(String doctorID)
     {
