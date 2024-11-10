@@ -29,13 +29,13 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     private int age;
 
     /** The file path for the medicine list CSV file. */
-    private String filePath = "../Medicine_List.csv";
+    private final String  medicineFilePath = "../Medicine_List.csv";
 
     /** The file path for the staff list CSV file. */
-    private String staffFilePath = "../Staff_List.csv";
+    private final String staffFilePath = "../Staff_List.csv";
 
     /** The file path for the staff credentials CSV file. */
-    private String credentialsFilePath = "StaffCredentialsDatabase.csv";
+    private final String credentialsFilePath = "StaffCredentialsDatabase.csv";
     
     /**
      * Constructs an Administrator object with the specified details.
@@ -511,7 +511,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         boolean found = false;
 
         // Read the CSV file
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -533,7 +533,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
         // Write the updated data back to the CSV file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(medicineFilePath))) {
             for (String[] fields : data) {
                 bw.write(String.join(",", fields));
                 bw.newLine();
@@ -555,7 +555,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         boolean found = false;
 
         // Read the CSV file
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -576,7 +576,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
         // Write the updated data back to the CSV file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(medicineFilePath))) {
             for (String[] fields : data) {
                 bw.write(String.join(",", fields));
                 bw.newLine();
@@ -596,7 +596,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         List<String[]> data = new ArrayList<>();
         boolean found = false;
         // Read the CSV file and store lines except the one to delete
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -619,7 +619,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
         // Write the updated data (without the deleted line) back to the CSV file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(medicineFilePath))) {
             for (String[] fields : data) {
                 bw.write(String.join(",", fields));
                 bw.newLine();
@@ -641,7 +641,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     {
         boolean exists = false;
         // Check if the medicine already exists in the file
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(medicineFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -661,7 +661,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
         // Append the new entry to the CSV file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(medicineFilePath, true))) {
             String newEntry = name + "," + iniStock + "," + lowStockLevel + "," + price;
             bw.write(newEntry);
             bw.newLine();

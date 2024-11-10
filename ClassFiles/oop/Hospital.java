@@ -570,7 +570,7 @@ public class Hospital {
      * @param fileName The CSV file where the appointment data will be written.
      * @param data The appointment data to be written.
      */
-    public void writeAppointmentToCSV(String fileName, String[] data) {
+    public static void writeAppointmentToCSV(String fileName, String[] data) {
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.append(String.join(",", data));
             writer.append("n");
