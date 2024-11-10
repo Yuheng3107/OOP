@@ -1,12 +1,5 @@
 package oop;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputFilter.Status;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,10 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
 
 /**
  * Represents a Doctor in a hospital. The Doctor class extends the HospitalStaff class
@@ -235,30 +224,6 @@ public class Doctor extends HospitalStaff{
             System.out.println("Invalid input. Returning to main menu.");
         }
     }
-    
-    public List<Appointment> getScheduledAppointments(LocalDate date) {
-        
-        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
-
-        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(super.getID()) && 
-        appointment.getAppointmentDate().equals(date) &&
-        appointment.getAppointmentStatus().equals(StatusOfAppointment.Confirmed))
-        .collect(Collectors.toList());
-    
-        return scheduledAppointments;
-    }
-
-    public List<Appointment> getPendingAppointments(LocalDate date) {
-        
-        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
-
-        List<Appointment> scheduledAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(super.getID()) && 
-        appointment.getAppointmentDate().equals(date) &&
-        appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending))
-        .collect(Collectors.toList());
-    
-        return scheduledAppointments;
-    }
 
     /**
      * Allows the doctor to view their schedule for a specific day.
@@ -275,8 +240,6 @@ public class Doctor extends HospitalStaff{
         System.out.println("\n<--- Upcoming Appointments --->");
         boolean hasAppointments = false;
         int i = 1;
-
-        List<Appointment> schedule = getScheduledAppointments(date);
         
         for (Appointment appointment : schedule) {
             if (appointment.getAppointmentDate().equals(date)) {
@@ -293,7 +256,7 @@ public class Doctor extends HospitalStaff{
         }
 
         System.out.println("\n<--- Available Timeslots --->");
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date, super.getID());
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -375,10 +338,6 @@ public class Doctor extends HospitalStaff{
             return;
         }
 
-        List<Appointment> schedule = getScheduledAppointments(date);
-        List<Appointment> pendingAppointments = getPendingAppointments(date);
-        TimeSlot[] availableSlots = getAvailability(date, super.getID());
-
         // add each hourly interval to availableSlots
         LocalTime slotStart = startTime;
         while (slotStart.isBefore(endTime)) {
@@ -400,7 +359,7 @@ public class Doctor extends HospitalStaff{
                 System.out.println(String.format("Cannot add timeslot on %s %s to %s as it is already booked.", date.format(formatter), slotStart, slotEnd));
             }
             // if timeslot is not booked, check if in availableSlots, else add it
-            else if (Arrays.stream(availableSlots).anyMatch(slot->slot.equals(timeSlot))) {
+            else if (availableSlots.contains(timeSlot)) {
                 System.out.println(String.format("Timeslot on %s %s to %s exists.", date.format(formatter), slotStart, slotEnd));
             } 
             else {
@@ -414,9 +373,11 @@ public class Doctor extends HospitalStaff{
             return;
         }
         else {
-                updateAvailableSlotsCSV(slotsToAdd);
-                System.out.println("Added new available timeslot(s) successfully.");
+            for (TimeSlot timeSlot : slotsToAdd) {
+                availableSlots.add(timeSlot);
             }
+            System.out.println("Added new available timeslot(s) successfully.");
+        }
 
         viewAvailability(date);
     }
@@ -435,8 +396,10 @@ public class Doctor extends HospitalStaff{
         // remove timeslot (check if availableSlots is empty)
         // cannot remove timeslot if appointment is booked for that timeslot
 
-        /* 
-        String fileName = "../AvailableTimeSlot.csv";
+        if (availableSlots.isEmpty()) {
+            System.out.println("No available slots to remove.");
+            return;
+        }
 
         TimeSlot timeSlotInput = getTimeSlotInput();
         LocalDate date = timeSlotInput.getDate();
@@ -471,7 +434,7 @@ public class Doctor extends HospitalStaff{
                 );
 
                 if (isBooked || isPending) {
-                    System.out.println("Cannot remove timeslot " + currentStart + " to " + nextHour + String.format("on %s as it is booked.", date.format(formatter)));
+                    System.out.println("Cannot remove timeslot " + currentStart + " to " + nextHour + String.format(" on %s as it is booked.", date.format(formatter)));
                 }
                 else {
                     System.out.println("Cannot remove timeslot " + currentStart + " to " + nextHour + String.format(" on %s as it does not exist.", date.format(formatter)));
@@ -480,72 +443,6 @@ public class Doctor extends HospitalStaff{
             currentStart = nextHour; // move to next hour
 
         }
-        */
-        
-        // Define file path
-        String fileName = "../AvailableTimeSlot.csv";
-
-        // Get user input for date and time range
-        TimeSlot timeSlotInput = getTimeSlotInput();
-        LocalDate date = timeSlotInput.getDate();
-        LocalTime startTime = timeSlotInput.getStart();
-        LocalTime endTime = timeSlotInput.getEnd();
-
-        if (date == null || startTime == null || endTime == null) {
-            System.out.println("Invalid date or time range provided.");
-            return;
-        }
-
-        // Initialize lists for reading and updating CSV contents
-        List<String> updatedLines = new ArrayList<>();
-        boolean foundSlotsToRemove = false;
-
-        // Read and process each line of the CSV file
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                if (columns.length != 5) continue; // Skip invalid lines
-
-                // Parse the date and time slot from the CSV line
-                String doctorId = columns[0];
-                LocalDate fileDate = LocalDate.parse(columns[1]);
-                LocalTime slotStart = LocalTime.parse(columns[2]);
-                LocalTime slotEnd = LocalTime.parse(columns[3]);
-                boolean isAvailable = Boolean.parseBoolean(columns[4]);
-
-                // Create a time slot object for comparison
-                TimeSlot currentSlot = new TimeSlot(fileDate, slotStart, slotEnd);
-
-                // Check if the slot matches the specified date and time range
-                if (fileDate.equals(date) && !slotStart.isBefore(startTime) && slotEnd.isAfter(startTime) && isAvailable) {
-                    foundSlotsToRemove = true;
-                    System.out.println("Removed available timeslot " + slotStart + " to " + slotEnd +
-                            String.format(" on %s.", date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
-                } else {
-                    // Add line to keep if not removing it
-                    updatedLines.add(line);
-                }
-            }
-
-            if (!foundSlotsToRemove) {
-                System.out.println("No matching available timeslots to remove.");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Write the updated lines back to the CSV file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            for (String updatedLine : updatedLines) {
-                writer.write(updatedLine);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     /**
@@ -719,7 +616,7 @@ public class Doctor extends HospitalStaff{
      */
     public void viewAvailability(LocalDate date) {
 
-        TimeSlot[] timeSlotsToDisplay = getAvailability(date, super.getID());
+        TimeSlot[] timeSlotsToDisplay = getAvailability(date);
         List<TimeSlot> sortedSlots = new ArrayList<>(List.of(timeSlotsToDisplay));
 
         Collections.sort(sortedSlots, new Comparator<TimeSlot>() {
@@ -749,58 +646,15 @@ public class Doctor extends HospitalStaff{
      * @param doctorID The ID of the doctor whose availability is being requested.
      * @return An array of {@link TimeSlot} objects representing the available slots.
      */
-    public TimeSlot[] getAvailability(LocalDate date, String doctorID) {
+    public TimeSlot[] getAvailability(LocalDate date) {
         List<TimeSlot> slotsForDay = new ArrayList<>();
-        List<AvailableTimeSlot> availableTimeSlots = getAvailableTimeSlotsByDoctor(doctorID);
-        for (AvailableTimeSlot slot : availableTimeSlots) {
+
+        for (TimeSlot slot : availableSlots) {
             if (slot.getDate().equals(date)) {
-                slotsForDay.add(slot.getTimeSlot());
+                slotsForDay.add(slot);
             }
         }
         return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
-    }
-
-    public void updateAppointmentStatus(Appointment appointment, StatusOfAppointment status) {
-        String fileName = "../Appointments.csv";
-        String line;
-
-        boolean updated = false;
-
-        List<String> updatedLines = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",");
-                
-                if (columns[0].equals(appointment.getAppointmentDate().toString()) && 
-                    columns[1].equals(appointment.getAppointmentTimeSlot().getStart().toString()) &&
-                    columns[2].equals(appointment.getAppointmentTimeSlot().getEnd().toString()) &&
-                    columns[3].equals(appointment.getDocID())) {
-    
-                    columns[5] = status.toString();  
-                    updated = true;
-                }
-                
-                // Join the columns back into a line and add to updatedLines
-                updatedLines.add(String.join(",", columns));
-            }
-            
-            if (updated) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                    for (String updatedLine : updatedLines) {
-                        writer.write(updatedLine);
-                        writer.newLine();  // Add a newline after each updated line
-                    }
-                    System.out.println("Appointment updated successfully.");
-                } catch (IOException e) {
-                    System.out.println("Error updating AvailableTimeSlot file: " + e.getMessage());
-                }
-            } else {
-                System.out.println("No matching appointment found to update.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     
     /**
@@ -809,28 +663,20 @@ public class Doctor extends HospitalStaff{
      *
      * @param appointmentNumber The appointment number (index in pendingAppointments list) to accept.
      */
-   public void acceptAppointmentRequest(int appointmentNumber)
-   {
-        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
-
+    public void acceptAppointmentRequest(int appointmentNumber)
+    {
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
             return;
         }
-
-        Appointment targetAppointment = pendingAppointments.get(appointmentNumber - 1);
-
-        updateAppointmentStatus(targetAppointment, StatusOfAppointment.Confirmed);
-
-        /*
+        
         Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Confirmed;
         schedule.add(appointment);
         pendingAppointments.remove(appointment);
         Hospital.appointments.add(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been accepted.");  
-        */
    }
 
    /**
@@ -841,24 +687,17 @@ public class Doctor extends HospitalStaff{
      */
    public void declineAppointmentRequest(int appointmentNumber)
     {
-        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
-
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
         }
 
-        Appointment targetAppointment = pendingAppointments.get(appointmentNumber-1);
-        updateAppointmentStatus(targetAppointment, StatusOfAppointment.Cancelled);
-
-        /*
         Appointment appointment = pendingAppointments.get(appointmentNumber-1);
         appointment.status = StatusOfAppointment.Cancelled;
         //add timeslots back into doctor's available timeslots
         addTimeSlotToAvailableSlots(appointment);
         pendingAppointments.remove(appointment);
         System.out.println("Appointment for " + appointment.date + " "+ appointment.timeSlot.start + " to " + appointment.timeSlot.end + " has been declined.");
-        */
    }
 
    /**
@@ -929,8 +768,6 @@ public class Doctor extends HospitalStaff{
      */
    public void viewPendingAppointments()
    {
-        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
-
         int i = 1;
         if (pendingAppointments.isEmpty())
         {
@@ -1065,24 +902,12 @@ public class Doctor extends HospitalStaff{
         }
     }
 
-    public List<Appointment> getPendAppointmentsFromCSV() {
-        List<Appointment> appointments = ImportUsers.readAppointmentsFromCSV("../Appointments.csv");
-
-        List<Appointment> pendingAppointments = appointments.stream().filter(appointment->appointment.getDocID().equals(doctorID) && appointment.getAppointmentStatus().equals(StatusOfAppointment.Pending))
-        .collect(Collectors.toList());    
-
-        return pendingAppointments;
-    }
-
-
     /**
      * Allows the doctor to accept or decline a pending appointment request. It displays the list of pending appointments and
      * prompts the user for their choice.
      */
     public void acceptOrDeclineAppointmentRequest()
-    {
-        List<Appointment> pendingAppointments = getPendAppointmentsFromCSV();
-        
+    {        
         if (pendingAppointments.isEmpty())
         {
             System.out.println("No pending appointments.");
@@ -1137,30 +962,9 @@ public class Doctor extends HospitalStaff{
      */
     public void getPatients() {
         
-        // read the appointment csv, get unique list of patientIds under the doctorId
-        // read the patient csv to get the details of the patient and add update patients variable.
+        // clear the patient's list to avoid duplicated patient data
+        patients.clear();
 
-        String appointmentsFile = "../Appointments.csv";
-        String patientsFile = "../Patients.csv";
-
-        Set<String> uniquePatientIds = new HashSet<>();
-        ArrayList<Appointment> appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFile);
-
-        for (Appointment appointment : appointments) {
-            if (appointment.getDocID().equals(super.getID())) {
-                uniquePatientIds.add(appointment.getPatientId());
-            }
-        }
-
-        ArrayList<Patient> allPatients = ImportUsers.readPatientsFromCSV(patientsFile);
-        
-        for (Patient patient : allPatients) {
-            if (uniquePatientIds.contains(patient.getID())) {
-                this.patients.add(patient);
-            }
-        }
-
-        /*
         for (Appointment appointment : schedule) {
             Patient patient = Hospital.getPatientFromPatientID(appointment.getPatientId());
             if (patient != null && !patients.contains(patient)) {
@@ -1174,7 +978,7 @@ public class Doctor extends HospitalStaff{
                 patients.add(patient);
             }
         }
-            */
+
         // sort the patients list array by patientID
         Collections.sort(patients, Comparator.comparing(Patient::getID));
     }
@@ -1204,58 +1008,4 @@ public class Doctor extends HospitalStaff{
             }
         }
     }
-
-    /**
-     * Retrieves the available time slots for a given doctor by filtering the time slots based on the doctor's ID.
-     *
-     * @param docID The ID of the doctor whose available time slots are to be retrieved.
-     * @return A list of available time slots for the specified doctor.
-     */
-    public List<AvailableTimeSlot> getAvailableTimeSlotsByDoctor(String docID) {
-
-        ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
-        
-        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID) &&
-        timeslot.getIsAvail() == true)
-        .collect(Collectors.toList());
-
-        return filteredAvailableTimeSlots;
-    }
-
-    /*
-    public TimeSlot[] getAvailableTimeSlotsByDoctorDate(String docID, LocalDate date) {
-
-        ArrayList<AvailableTimeSlot> availableTimeSlots = ImportUsers.readAvailableTSFromCSV("../AvailableTimeSlot.csv");
-        
-        List<AvailableTimeSlot> filteredAvailableTimeSlots = availableTimeSlots.stream().filter(timeslot->timeslot.getDocID().equals(docID) &&
-         timeslot.getDate().equals(date) && 
-         timeslot.getIsAvail() == true)
-        .collect(Collectors.toList());
-
-        List<TimeSlot> slotsForDay = new ArrayList<>();
-        for (AvailableTimeSlot slot : filteredAvailableTimeSlots) {
-            slotsForDay.add(slot.getTimeSlot());
-        }
-
-        return slotsForDay.toArray(new TimeSlot[0]);  // Convert list to array
-    } */
-
-    private void updateAvailableSlotsCSV(List<TimeSlot> availableSlots) {
-    
-        String fileName = "../AvailableTimeSlot.csv";
-    
-        try (FileWriter writer = new FileWriter(fileName, true)) {
-
-            for (TimeSlot slot : availableSlots) {
-                writer.append(super.getID()).append(",")
-                    .append(slot.getDate().toString()).append(",")
-                    .append(slot.getStart().toString()).append(",")
-                    .append(slot.getEnd().toString()).append(",")
-                    .append("true").append("\n");
-        
-                System.out.println("Timeslot added to Appointments.csv successfully.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-}}
+}
