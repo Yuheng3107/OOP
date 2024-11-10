@@ -293,6 +293,7 @@ public class App {
                                 break;
                             case "Staff Member":
                                 Hospital.checkStockAlert();
+                                Hospital.checkPendingReplenishment();
                                 Menu.printAdminMenu();
                                 menuChoice = Integer.parseInt(sc.nextLine());
                                 Administrator administrator = Hospital.getAdministratorObjectByStaffID(matchedHospitalStaff.getID());
