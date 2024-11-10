@@ -23,7 +23,8 @@ import oop.UserLogic.Role;
  * @version 1.0
  * @since 2024-11-09
  */
-public class Patient extends Role implements welcomeGoodbyeMessageInterface{
+public class Patient extends Role
+{
     /**
      * Represents the medical record associated with this patient, containing detailed health
      * information and history.

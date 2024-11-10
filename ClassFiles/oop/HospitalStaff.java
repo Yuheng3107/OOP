@@ -14,7 +14,7 @@ import oop.UserLogic.Role;
  * @version 1.0
  * @since 2024-11-09
  */
-public abstract class HospitalStaff extends Role implements welcomeGoodbyeMessageInterface
+public abstract class HospitalStaff extends Role
 {
     /**
      * The age of the hospital staff member.
