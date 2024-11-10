@@ -180,7 +180,12 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         System.out.println("End time: " + appointment.timeSlot.end);
         // print appointment detail outcome for completed appointments
         if (appointment.status.equals(StatusOfAppointment.Confirmed)) {
-            appointment.appointmentOutcome.printAppointmentOutcomeRecord();
+            if (appointment.appointmentOutcome == null) {
+                System.out.println("No appointment outcome.");
+            }
+            else {
+             appointment.appointmentOutcome.printAppointmentOutcomeRecord();
+           }
         }
     
         }
