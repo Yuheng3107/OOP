@@ -59,15 +59,6 @@ public abstract class HospitalStaff extends Role
         return staffID;
     }
 
-    /**
-     * Returns the name of the hospital staff member.
-     *
-     * @return The name of the staff member.
-     */
-    public String getName()
-    {
-        return name;
-    }
 
     /**
      * Returns the role of the hospital staff member as a string.
@@ -112,5 +103,13 @@ public abstract class HospitalStaff extends Role
     public static void goodbyeMessage(HospitalStaff staff)
     {
         System.out.println("Goodbye " + staff.getName() + "!\n");
+    }
+
+
+    /**
+     * Prints a description of the role for a general hospital staff member.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("General hospital staff member.");
     }
 }

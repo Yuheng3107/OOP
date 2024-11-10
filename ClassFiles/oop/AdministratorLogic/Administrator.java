@@ -703,4 +703,11 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
 
         // write to credentials database
     }
+
+    /**
+     * Prints a description of the role for an administrator.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("An administrator responsible for managing hospital operations.");
+    }
 }

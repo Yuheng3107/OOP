@@ -242,4 +242,12 @@ public class Pharmacist extends HospitalStaff
             System.err.println("Error writing to the file: " + e.getMessage());
         }
     }
+
+
+    /**
+     * Prints a description of the role for a pharmacist.
+     */
+    public void retrieveRoleDescription(){
+        System.out.println("A pharmacist who dispenses medications and manages inventory.");
+    }
 }
