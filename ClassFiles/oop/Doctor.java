@@ -67,7 +67,7 @@ public class Doctor extends HospitalStaff{
     /**
      * Formatter used to display dates in the format "dd-MM-yyyy".
      */
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     /**
      * Constructs a new Doctor object.

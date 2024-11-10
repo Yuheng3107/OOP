@@ -27,12 +27,12 @@ public class AvailableTimeSlot {
      * @version 1.0
      * @since 2024-11-09
      */
-    public String doctorId;
+    private String doctorId;
 
     /**
      * The date of the available time slot.
      */
-    public LocalDate date;
+    private LocalDate date;
 
     /**
      * The time slot details, including start and end times.
@@ -42,7 +42,7 @@ public class AvailableTimeSlot {
     /**
      * Indicates whether the doctor is available for appointments during this time slot.
      */
-    public boolean isAvail;
+    private boolean isAvail;
 
     /**
      * Constructs an {@code AvailableTimeSlot} object with the provided doctor ID, date, time slot, and availability status.
