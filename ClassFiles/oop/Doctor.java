@@ -842,8 +842,16 @@ public class Doctor extends HospitalStaff{
             // Collect prescribed medications
             List<PrescribedMedication> medications = new ArrayList<>();
             System.out.println("Please specify the medications to prescribe for the patient.");
+            System.out.println("Medicine Inventory Stock");
+            System.out.println("------------------------");
+            for (MedicineStock medStock : Hospital.inventory)
+            {
+                System.out.println(medStock.getName());
+            }
+            System.out.println("------------------------");
             while (true)
             {
+                
                 System.out.print("Enter medication name (or 'done' to finish): ");
                 String medicationName = sc.nextLine();
                 if (medicationName.equalsIgnoreCase("done"))
