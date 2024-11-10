@@ -142,7 +142,7 @@ public class Hospital {
     {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);
-        inventory = ImportUsers.readMedicineFromCSV(medFilePath);
+        inventory = ImportMed.readMedicineFromCSV(medFilePath);
         //appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFilePath);
         availableTimeSlots = ImportUsers.readAvailableTSFromCSV(availabileTSFilePath);
         generateDefaultAvailableTimeSlots();
