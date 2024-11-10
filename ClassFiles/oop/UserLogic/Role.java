@@ -5,7 +5,7 @@ import oop.Gender;
  * This class contains basic information about a role, including the role's name and gender.
  * It provides methods for managing role attributes such as name and gender, and retrieving the role's details.
  */
-public class Role {
+public abstract class Role {
     /**
      * The name of the role (e.g., "Doctor", "Patient", "Nurse").
      */

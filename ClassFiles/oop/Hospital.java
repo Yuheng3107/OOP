@@ -46,10 +46,6 @@ public class Hospital {
      * List of all replenishment requests for medicines.
      */
     public static ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<ReplenishmentRequest>();
-    /**
-     * List of available time slots for doctors.
-     */
-    public static ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<AvailableTimeSlot>();
 
     /**
      * Path to the file containing patient data.
@@ -59,14 +55,6 @@ public class Hospital {
      * Path to the file containing staff data.
      */
     private static final String staffFilePath = "../Staff_List.csv";
-    /**
-     * Path to the file containing appointment data.
-     */
-    private static final String appointmentsFilePath = "../Appointments.csv";
-    /**
-     * Path to the file containing available time slots.
-     */
-    private static final String availabileTSFilePath = "../AvailableTimeSlot.csv";
     /**
      * Path to the file containing patient credentials.
      */
@@ -143,9 +131,6 @@ public class Hospital {
         patients = ImportUsers.readPatientsFromCSV(patientFilePath);
         staffs = ImportUsers.readStaffFromCSV(staffFilePath);
         inventory = ImportMed.readMedicineFromCSV(medFilePath);
-        //appointments = ImportUsers.readAppointmentsFromCSV(appointmentsFilePath);
-        availableTimeSlots = ImportUsers.readAvailableTSFromCSV(availabileTSFilePath);
-        generateDefaultAvailableTimeSlots();
     }
     /**
      * Finds a patient by their ID.
@@ -481,118 +466,6 @@ public class Hospital {
             }
         }
     }
-
-    /**
-     * Retrieves the list of doctor IDs (IDs that start with 'D' and are followed by three digits).
-     * @return A list of doctor IDs.
-     */
-    public static List<String> getListOfDoctorID() {
-
-        List<String> doctorIds = new ArrayList<>();
-        for (HospitalStaff member : staffs) {
-            String id = member.getID();
-
-            if (id.matches("D\\d{3}")) {
-                doctorIds.add(id);
-            }
-        }
-
-        return doctorIds;
-    }
-
-    // If AvailableTimeSlots.csv is empty, for each doctor, add available timeslots of hourly time slots for the next two months.
-    /**
-     * Generates default available time slots for doctors if the AvailableTimeSlots.csv is empty.
-     * This method generates hourly time slots for the next two months for each doctor.
-     */
-    public static void generateDefaultAvailableTimeSlots() {
-        String FILE_NAME = availabileTSFilePath;
-        FileWriter writer = null;
-    
-        try {
-            writer = new FileWriter(FILE_NAME, true); // Try to open the file
-    
-            if (isAvailableTSCSVEmpty(FILE_NAME)) {
-                List<String> doctorIds = Hospital.getListOfDoctorID();
-    
-                for (String doctorID : doctorIds) {
-                    ArrayList<TimeSlot> slots = Doctor.generateDefaultTimeSlots();
-    
-                    for (TimeSlot slot : slots) {
-                        String[] timeSlot = {
-                            doctorID,
-                            slot.date.toString(),
-                            slot.start.toString(),
-                            slot.end.toString(),
-                            "true"                        
-                        };
-                        writer.append(String.join(",", timeSlot));
-                        writer.append("\n");
-                    }
-                }
-                System.out.println("Default available timeslots generated successfully.");
-            } else {
-                System.out.println("AvailableTimeSlots.csv file is not empty. No new available timeslots added.");
-            }
-    
-        } catch (IOException e) {
-            System.out.println("Error while handling the file: " + e.getMessage());
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close(); // Always close the writer, even if an exception occurred
-                } catch (IOException e) {
-                    System.out.println("Error closing the writer: " + e.getMessage());
-                }
-            }
-        }
-    }
-
-    /**
-     * Checks if the AvailableTimeSlots.csv file is empty.
-     * @param fileName The path to the CSV file.
-     * @return true if the file is empty or only contains the header; false otherwise.
-     */
-    public static boolean isAvailableTSCSVEmpty(String fileName) {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String headerLine = br.readLine(); // Read and skip the header line
-
-            // Check if there's any other line after the header
-            return (br.readLine() == null); // Returns true if no more lines are present
-        } catch (IOException e) {
-            e.printStackTrace();
-            return true; // If there's an error reading, treat as empty
-        }
-    }
-
-    /**
-     * Appends a new appointment record to the specified CSV file.
-     * @param fileName The CSV file where the appointment data will be written.
-     * @param data The appointment data to be written.
-     */
-    public static void writeAppointmentToCSV(String fileName, String[] data) {
-        try (FileWriter writer = new FileWriter(fileName, true)) {
-            writer.append(String.join(",", data));
-            writer.append("n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Retrieves the available time slots for a specific doctor on a given date.
-     * @param docID The ID of the doctor.
-     * @param date The date for which the available time slots are to be retrieved.
-     */
-    public static void getAvailableTimeSlots(String docID, LocalDate date) {
-        for (AvailableTimeSlot availableTimeSlot : availableTimeSlots) {
-            if (availableTimeSlot.getDocID().equals(docID) &&
-                availableTimeSlot.getDate().equals(date)) {
-                    System.out.println(availableTimeSlot.getStart() + " to " + availableTimeSlot.getEnd());
-                }
-        }
-        return;
-    }
     
     /**
      * Registers a new patient by prompting for their personal and medical details, 
@@ -713,7 +586,7 @@ public class Hospital {
         updatePatientInCSV(patientID, name, dateOfBirth, gender, bloodType, email);
         patients.add(patient);
         insertNewPatientCredentials(patientID);
-        System.out.println("Please note your default password to login is 'password', you will be prompted to change upon first login!");
+        System.out.println("Please note Hospital ID is " + patientID + ", your default password to login is 'password', you will be prompted to change upon first login!");
     }
 
     /**

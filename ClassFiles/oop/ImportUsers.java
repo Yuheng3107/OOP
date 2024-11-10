@@ -101,7 +101,7 @@ public class ImportUsers {
                     String defaultPassword = Password.hashPassword("password");
                     writer.println(patientID + "," + defaultPassword);
                 }
-                System.out.println("DEBUG: Patient Credentials file created successfully.");
+                //System.out.println("DEBUG: Patient Credentials file created successfully.");
             }
             catch (IOException e)
             {
@@ -110,7 +110,7 @@ public class ImportUsers {
         }
         else
         {
-            System.out.println("DEBUG: Patient Credentials file already exists.");
+            //System.out.println("DEBUG: Patient Credentials file already exists.");
         }
         return patients;
     }
@@ -173,99 +173,13 @@ public class ImportUsers {
                     String defaultPassword = Password.hashPassword("password");
                     writer.println(staffID + "," + defaultPassword);
                 }
-                System.out.println("DEBUG: Staff Credentials file created successfully.");
+                //System.out.println("DEBUG: Staff Credentials file created successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("DEBUG: Staff Credentials file already exists.");
+            //System.out.println("DEBUG: Staff Credentials file already exists.");
         }
         return staff;
     }
-
-    /**
-     * Reads appointment data from a specified CSV file and creates {@link Appointment} objects based on the contents of the file.
-     *
-     * @param filepath the path to the CSV file containing appointment data
-     * @return a list of {@link Appointment} objects representing the appointments listed in the CSV file
-     */
-    public static ArrayList<Appointment> readAppointmentsFromCSV(String filepath) {
-        ArrayList<Appointment> appointments = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                LocalDate date = LocalDate.parse(values[0]);
-                LocalTime start = LocalTime.parse(values[1]);
-                LocalTime end = LocalTime.parse(values[2]);
-                TimeSlot timeSlot = new TimeSlot(date, start, end);
-                String doctorID = values[3];
-                String patientID = values[4];
-                String statusString = values[5];
-                
-                StatusOfAppointment status = StatusOfAppointment.Pending;
-                    switch(statusString)
-                    {
-                        case "Pending":
-                            status = StatusOfAppointment.Pending;
-                            break;
-                        case "Confirmed":
-                            status = StatusOfAppointment.Confirmed;
-                            break;
-                        case "Cancelled":
-                            status = StatusOfAppointment.Cancelled;
-                            break;
-                        case "Completed":
-                            status = StatusOfAppointment.Completed;
-                            break;
-                    }
-
-                Appointment appointment = new Appointment(date, timeSlot, doctorID, patientID, status);
-                appointments.add(appointment);
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return appointments;
-    }
-    /**
-     * Reads available time slot information from a specified CSV file, creates {@link AvailableTimeSlot} objects, and
-     * returns them in a list.
-     *
-     * @param filepath the path to the CSV file containing available time slot data
-     * @return a list of {@link AvailableTimeSlot} objects representing the available time slots listed in the CSV file
-     */
-    public static ArrayList<AvailableTimeSlot> readAvailableTSFromCSV(String filepath) {
-        ArrayList<AvailableTimeSlot> availableTimeSlots = new ArrayList<>();
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
-            String headerLine = br.readLine(); // Throwaway variable to skip reading 1st line in CSV
-
-            while ((line = br.readLine()) != null)
-            {
-                String[] values = line.split(",");
-                String doctorID = values[0];
-                LocalDate date = LocalDate.parse(values[1]);
-                LocalTime start = LocalTime.parse(values[2]);
-                LocalTime end = LocalTime.parse(values[3]);
-                TimeSlot timeSlot = new TimeSlot(date, start, end);
-                Boolean isAvail = Boolean.parseBoolean(values[4]);
-
-                AvailableTimeSlot availableTimeSlot = new AvailableTimeSlot(doctorID, date, timeSlot, isAvail);
-                availableTimeSlots.add(availableTimeSlot);
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return availableTimeSlots;
-    }
-
 }
