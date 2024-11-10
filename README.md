@@ -1,6 +1,10 @@
 #SC2002
 
-Completed Test Cases:
-Test Case 20
-Test Case 21
-Test Case 22
+To setup the project run
+
+```
+javac oop/*.java
+java oop/App.java
+```
+
+in the ClassFiles directory
