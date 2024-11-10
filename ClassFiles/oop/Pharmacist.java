@@ -192,8 +192,35 @@ public class Pharmacist extends HospitalStaff
         String medName;
         int medNewStock;
         Hospital.viewMedicineStock();
-        System.out.print("\nEnter the name of the medicine to submit: ");
-        medName = sc.nextLine();
+        System.out.println("------------------------");
+        while(true)
+        {
+            boolean found = false;
+            System.out.print("Enter the name of the medicine to submit: ");
+            medName = sc.nextLine();
+            // Read the CSV file
+            try (BufferedReader br = new BufferedReader(new FileReader(medFilePath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] fields = line.split(",");
+                    if (fields[0].trim().equalsIgnoreCase(medName.trim())) {
+                        found = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error reading the file: " + e.getMessage());
+                return;
+            }
+            if (found != false)
+            {
+                break;
+            }
+            else
+            {
+                System.out.println("Medicine cannot be found in the inventory, please try again!");
+            }
+        }
         System.out.print("Enter quantity of the medicine in replenishment request: ");
         medNewStock = Integer.parseInt(sc.nextLine());
         ReplenishmentRequest request = new ReplenishmentRequest(medName, medNewStock);
