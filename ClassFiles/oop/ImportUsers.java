@@ -101,7 +101,7 @@ public class ImportUsers {
                     String defaultPassword = Password.hashPassword("password");
                     writer.println(patientID + "," + defaultPassword);
                 }
-                System.out.println("DEBUG: Patient Credentials file created successfully.");
+                //System.out.println("DEBUG: Patient Credentials file created successfully.");
             }
             catch (IOException e)
             {
@@ -110,7 +110,7 @@ public class ImportUsers {
         }
         else
         {
-            System.out.println("DEBUG: Patient Credentials file already exists.");
+            //System.out.println("DEBUG: Patient Credentials file already exists.");
         }
         return patients;
     }
@@ -173,12 +173,12 @@ public class ImportUsers {
                     String defaultPassword = Password.hashPassword("password");
                     writer.println(staffID + "," + defaultPassword);
                 }
-                System.out.println("DEBUG: Staff Credentials file created successfully.");
+                //System.out.println("DEBUG: Staff Credentials file created successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("DEBUG: Staff Credentials file already exists.");
+            //System.out.println("DEBUG: Staff Credentials file already exists.");
         }
         return staff;
     }

@@ -586,7 +586,7 @@ public class Hospital {
         updatePatientInCSV(patientID, name, dateOfBirth, gender, bloodType, email);
         patients.add(patient);
         insertNewPatientCredentials(patientID);
-        System.out.println("Please note your default password to login is 'password', you will be prompted to change upon first login!");
+        System.out.println("Please note Hospital ID is " + patientID + ", your default password to login is 'password', you will be prompted to change upon first login!");
     }
 
     /**
