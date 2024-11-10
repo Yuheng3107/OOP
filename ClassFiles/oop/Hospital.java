@@ -466,6 +466,17 @@ public class Hospital {
             }
         }
     }
+
+    public static void checkPendingReplenishment()
+    {
+        for (ReplenishmentRequest request : replenishmentRequests)
+        {
+            if (request.status == "Pending")
+            {
+                System.out.println("System alert: Pending replenishment request for " + request.medicineName);
+            }
+        }
+    }
     
     /**
      * Registers a new patient by prompting for their personal and medical details, 
