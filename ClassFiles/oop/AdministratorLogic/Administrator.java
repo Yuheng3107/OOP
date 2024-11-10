@@ -257,7 +257,8 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 sc.nextLine();
                 System.out.print("Enter name of staff member to remove: ");
                 String name = sc.nextLine();
-                removeStaffMember(name);            
+                removeStaffMember(name);
+                deleteStaffCSV(name);            
                 break;
                 }
                 catch(Exception e)
@@ -268,6 +269,7 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
             case 4:
                 // display staff members, choose filter
                 try {
+                    sc.nextLine();
                 System.out.print("Enter filter: ");
                 String filter = sc.nextLine();
                 displayStaff(filter);
@@ -328,31 +330,38 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Choose an option: ");
-        System.out.println("1. Update staff name");
-        System.out.println("2. Update staff age");
-        System.out.println("3. Update staff gender 🤡");
+        System.out.println("1. Update staff age");
+        System.out.println("2. Update staff gender");
         int option = sc.nextInt();
         
 
         switch (option) {
             case 1:
-                // update staff name
-                sc.nextLine();
-                System.out.print("Enter new staff name: ");
-                String newStaffName = sc.nextLine();
-                Hospital.updateStaffName(staffName, newStaffName);
-                break;
-            case 2:
                 // update staff age
+                sc.nextLine();
                 System.out.print("Enter new staff age: ");
                 age = Integer.parseInt(sc.nextLine());
                 Hospital.updateStaffAge(staffName, age);
+                Hospital.staffs.forEach(staff -> {
+                    if (staff.getName().equals(staffName)) {
+                        deleteStaffCSV(staffName);
+                        updateStaffCSV(staff.getName(), staff.age, staff.staffID, staff.gender, staff.getRole());
+                    }
+                });
+                
                 break;
-            case 3:
+            case 2:
                 // update staff gender
+                sc.nextLine();
                 System.out.print("Enter new staff gender: ");
                 String gender = sc.nextLine();
                 Hospital.updateStaffGender(staffName, Gender.valueOf(gender));
+                Hospital.staffs.forEach(staff -> {
+                    if (staff.getName().equals(staffName)) {
+                        deleteStaffCSV(staffName);
+                        updateStaffCSV(staff.getName(), staff.age, staff.staffID, staff.gender, staff.getRole());
+                    }
+                });
                 break;
         }
     }
@@ -391,6 +400,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
                 // sort by gender
                 staffMembers.sort((s1, s2) -> s1.getGender().compareTo(s2.getGender()));
                 break;
+
+            default:
+                System.out.println("Invalid filter. Please try again.");
+                return;
         }
 
         for (HospitalStaff member : staffMembers) {
@@ -436,12 +449,14 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         Hospital.replenishmentRequests.get(index).setApproved();
         int amount = Hospital.replenishmentRequests.get(index).amount;
         String name = Hospital.replenishmentRequests.get(index).medicineName;
-// updates file
+        // updates file
+        
         Hospital.inventory.forEach(med -> {
             if (med.getName().equals(name)) {
-                updateMedStockCSV(name, amount+med.getStock(), med.getPrice());
+                updateMedStockCSV(name, amount + med.getStock(), med.getPrice());
             }
         });
+        
         
 
     }
@@ -687,6 +702,16 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     }
 
     /**
+     * Updates the CSV file by removing staff
+     * 
+     * @param name The name of the medicine.
+     * @param iniStock The initial stock level of the medicine.
+     * @param lowStockLevel The low stock level of the medicine.
+     * @param price The price of the medicine.
+     */
+    
+
+    /**
      * Updates the CSV file with a new staff member's information.
      * 
      * @param staffName The name of the staff member.
@@ -717,6 +742,49 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
         }
 
         // write to credentials database
+    }
+
+    /**
+     * Updates the CSV file to delete the entry for a specific staff
+     * 
+     * @param name The name of the medicine to delete.
+     */
+    public void deleteStaffCSV(String name)
+    {
+        List<String[]> data = new ArrayList<>();
+        boolean found = false;
+        // Read the CSV file and store lines except the one to delete
+        try (BufferedReader br = new BufferedReader(new FileReader(staffFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                // Only add the line to `data` if the staff name does not match
+                if (!fields[1].toLowerCase().equals(name.toLowerCase())) {
+                    data.add(fields);
+                } else {
+                    found = true;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("Medicine name not found in the CSV file.");
+            return;
+        }
+
+        // Write the updated data (without the deleted line) back to the CSV file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(staffFilePath))) {
+            for (String[] fields : data) {
+                bw.write(String.join(",", fields));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the file: " + e.getMessage());
+        }
     }
 
     /**

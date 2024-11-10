@@ -97,8 +97,7 @@ public class Hospital {
      */
     public static void updateStaffAge(String staffName, int newStaffAge) {
 
-        for (HospitalStaff staff : staffs) {
-            System.out.println(staff.getName());   
+        for (HospitalStaff staff : staffs) { 
             if (staff.getName().equals(staffName)) {
                 staff.setAge(newStaffAge);
                 System.out.println("Staff age updated successfully.");
