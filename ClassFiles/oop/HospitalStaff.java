@@ -1,4 +1,5 @@
 package oop;
+import oop.UserLogic.Role;
 
 /**
  * The {@code HospitalStaff} class represents a staff member of a hospital. It extends the {@link Role} class

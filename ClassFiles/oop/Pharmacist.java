@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import AdministratorLogic.ReplenishmentRequest;
+import oop.AdministratorLogic.ReplenishmentRequest;
 
 /**
  * The {@code Pharmacist} class represents a pharmacist in the hospital system. 
