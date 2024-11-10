@@ -221,10 +221,25 @@ public class Pharmacist extends HospitalStaff
                 System.out.println("Medicine cannot be found in the inventory, please try again!");
             }
         }
-        System.out.print("Enter quantity of the medicine in replenishment request: ");
-        medNewStock = Integer.parseInt(sc.nextLine());
-        ReplenishmentRequest request = new ReplenishmentRequest(medName, medNewStock);
-        Hospital.replenishmentRequests.add(request);
+        while (true)
+        {
+            System.out.print("Enter quantity of the medicine in replenishment request: ");
+            try
+            {
+                medNewStock = Integer.parseInt(sc.nextLine());
+                if (medNewStock <= 0)
+                {
+                    throw new NumberFormatException("Invalid input! Please try again!");
+                }
+                ReplenishmentRequest request = new ReplenishmentRequest(medName, medNewStock);
+                Hospital.replenishmentRequests.add(request);
+                break;
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input! Please try again!");
+            }
+        }
     }
     /**
      * Updates the stock of a specified medicine in the CSV file that maintains 
