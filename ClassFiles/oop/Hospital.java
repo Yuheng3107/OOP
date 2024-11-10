@@ -56,11 +56,11 @@ public class Hospital {
      */
     private static final String staffFilePath = "../Staff_List.csv";
     /**
-     * Path to the file containing patient credentials.
+     * Path to the file containing patient login credentials.
      */
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
     /**
-     * Path to the file containing staff credentials.
+     * Path to the file containing staff login credentials.
      */
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     /**

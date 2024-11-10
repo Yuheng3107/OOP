@@ -18,7 +18,7 @@ import oop.AdministratorLogic.ReplenishmentRequest;
  * </p>
  * <p>
  * The application offers a menu-driven interface, where users can choose from various actions based on their role.
- * It supports different roles such as "Doctor", "Pharmacist", "Staff Member", and "Patient", with each role having specific functionalities.
+ * It supports different roles such as "Doctor", "Pharmacist", "Administrator", and "Patient", with each role having specific functionalities.
  * </p>
  * 
  * @author Ryan Ching
@@ -31,14 +31,14 @@ public class App {
     /**
      * The file path for the patient credentials database.
      * This file contains information about the patients registered in the hospital system.
-     * The file is used to verify login credentials and manage patient records.
+     * The file is used to verify login credentials.
      */
     private static final String patientCredentialsDatabase = "PatientCredentialsDatabase.csv";
 
     /**
      * The file path for the staff credentials database.
      * This file contains information about the staff members, including doctors, pharmacists, and administrators.
-     * The file is used to verify login credentials and manage staff records.
+     * The file is used to verify login credentials.
      */
     private static final String staffCredentialsDatabase = "StaffCredentialsDatabase.csv";
     

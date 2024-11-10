@@ -318,7 +318,7 @@ public class Doctor extends HospitalStaff{
     // option 1 of setAvailability() - add available slots
     /**
      * Adds available timeslots to the schedule.
-     * This method prompts the user to enter a time slot, checks if each hourly interval 
+     * This method prompts the doctor to enter a time slot, checks if each hourly interval 
      * from the start time to the end time is available, and then adds the valid ones 
      * to the available slots list. It also checks if the timeslot is already booked 
      * or pending in the schedule and prevents duplicates.
@@ -385,7 +385,7 @@ public class Doctor extends HospitalStaff{
     // option 2 of setAvailability - remove available slots
     /**
      * Removes available timeslots from the schedule.
-     * This method prompts the user to enter a time slot, checks if each hourly interval 
+     * This method prompts the doctor to enter a time slot, checks if each hourly interval 
      * from the start time to the end time exists in the available slots list, and removes 
      * the valid ones. It also checks if any of the timeslots are booked or pending, 
      * and prevents removal in those cases.
@@ -541,7 +541,7 @@ public class Doctor extends HospitalStaff{
 
     /**
      * Prompts the user to input a date, ensuring the date is valid and in the future.
-     * The user is asked to input the year, month, and day, with validation for each.
+     * The doctor is asked to input the year, month, and day, with validation for each.
      * The method returns a valid {@link LocalDate} object if the input is correct.
      * 
      * @return A valid {@link LocalDate} object representing the user-provided date.
