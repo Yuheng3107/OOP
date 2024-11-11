@@ -268,8 +268,9 @@ public class Hospital {
             if (member instanceof Doctor)
             {
                 System.out.println(i + ") Dr. " + member.getName());
+                i++;
             }
-            i++;
+            
         }
     }
 
