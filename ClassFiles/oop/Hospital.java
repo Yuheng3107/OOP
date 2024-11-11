@@ -507,7 +507,7 @@ public class Hospital {
             {
                 dateOfBirth = LocalDate.parse(dateString, formatter);
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please enter in yyyy-MM-dd format.");
+                System.out.println("Invalid date format. Please enter in YYYY-MM-DD format.");
             }
             if (dateOfBirth != null)
             {
