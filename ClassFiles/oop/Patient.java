@@ -266,11 +266,11 @@ public class Patient extends Role
         {
             if (availableSlots[i].start == timeSlot.start)
             {
-                while (timeSlot.end.isAfter(availableSlots[i].end) || timeSlot.end.equals(availableSlots[i].end))
-                {
+                while (i < availableSlots.length && (timeSlot.end.isAfter(availableSlots[i].end) || timeSlot.end.equals(availableSlots[i].end))) {
                     count++;
                     i++;
                 }
+                
                 break;
             }
         }
@@ -278,10 +278,6 @@ public class Patient extends Role
         if (count == duration.toHours()) //can schedule appointment
         {
             return true;
-        }
-        else
-        {
-            System.out.println("Doctor is not available. Please select another timeslot.");
         }
         return false;
     }
@@ -329,10 +325,16 @@ public class Patient extends Role
                 return;
             }
 
-            System.out.println("Type the start time of the appointment (e.g. '14' for 2pm");
+            System.out.println("Type the start time of the appointment (e.g. type '14' for 2pm)");
             int start = sc.nextInt();
-            System.out.println("Type the end time of the appointment (e.g. '14' for 2pm)");
+            System.out.println("Type the end time of the appointment (e.g. type '14' for 2pm)");
             int end = sc.nextInt();
+            if (start >= end)
+            {
+                System.out.println("Error: Start time must be before end time.");
+                System.out.println("Returning to main menu.");
+                return;
+            }
             TimeSlot timeSlot = new TimeSlot(date, LocalTime.of(start,0), LocalTime.of(end,0));
             
             
