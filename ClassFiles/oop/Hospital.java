@@ -596,10 +596,8 @@ public class Hospital {
         email = sc.nextLine();
 
         patientID = getLatestPatientID();
-
-        Patient patient = new Patient(name, patientID, dateOfBirth, gender, bloodType, email);
+        
         updatePatientInCSV(patientID, name, dateOfBirth, gender, bloodType, email);
-        patients.add(patient);
         insertNewPatientCredentials(patientID);
         System.out.println("Please note Hospital ID is " + patientID + ", your default password to login is 'password', you will be prompted to change upon first login!");
     }
@@ -689,7 +687,7 @@ public class Hospital {
         String newPatientRecord = String.join(",",patientID, name, dateOfBirthStr, genderStr, bloodTypeStr, email, phoneNumber);
 
         try (FileWriter writer = new FileWriter(patientFilePath, true)) { // Open file in append mode
-            writer.write(newPatientRecord); // Write new patient record to a new line
+            writer.write(newPatientRecord + "\r"); // Write new patient record to a new line
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -707,7 +705,7 @@ public class Hospital {
         String newEntry = id + "," + hashedPassword;
 
         try (FileWriter writer = new FileWriter(patientCredentialsDatabase, true)) { // Open file in append mode
-            writer.write(newEntry); // Append the new patient ID and hashed password on a new line
+            writer.write("\n" + newEntry); // Append the new patient ID and hashed password on a new line
             System.out.println("New patient credentials added successfully.");
         } catch (IOException e) {
             e.printStackTrace();

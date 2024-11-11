@@ -158,10 +158,7 @@ public class Doctor extends HospitalStaff{
      */
     public void updateMedicalRecord()
     {
-        // method to update the patient list
-        List<Patient> allPatients = getAllPatients();
-
-        if (allPatients.isEmpty()) {
+        if (Hospital.patients.isEmpty()) {
             System.out.println("No patients to update medical record.");
             return;
         }
@@ -169,7 +166,7 @@ public class Doctor extends HospitalStaff{
         // display list of patients to select from
         int i = 1;
         System.out.println("Select a patient to update their medical record: ");
-        for (Patient patient : allPatients) {
+        for (Patient patient : Hospital.patients) {
             System.out.println(String.format("[%d] %s", i, patient.getName()));
             i++;
         }
@@ -178,12 +175,12 @@ public class Doctor extends HospitalStaff{
             Scanner sc = new Scanner(System.in);
             int choice = sc.nextInt();
 
-            if (choice < 1 || choice > allPatients.size()) {
+            if (choice < 1 || choice > Hospital.patients.size()) {
                 System.out.println("Invalid selection. Returning to main menu.");
                 return;
             }
 
-            Patient selectedPatient = allPatients.get(choice-1);
+            Patient selectedPatient = Hospital.patients.get(choice-1);
             System.out.println("Would you like to add new [1] diagnosis or [2] treatment plan?");
             
             choice = sc.nextInt();
@@ -994,15 +991,6 @@ public class Doctor extends HospitalStaff{
 
         // sort the patients list array by patientID
         Collections.sort(patients, Comparator.comparing(Patient::getID));
-    }
-
-    /**
-     * Returns a list of all patients in the hospital's database.
-     *
-     * @return A list of all patients.
-     */
-    public ArrayList<Patient> getAllPatients() {
-        return new ArrayList<>(Hospital.patients);
     }
 
     /**
