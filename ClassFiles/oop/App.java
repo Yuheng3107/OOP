@@ -78,12 +78,12 @@ public class App {
                     try
                     {
                         menuSystemChoice = Integer.parseInt(sc.nextLine());
-                        //Register new patient
+                        //Login to system
                         if (menuSystemChoice == 1)
                         {
                             break;
                         }
-                        //Login to system
+                        //Register new patient
                         else if (menuSystemChoice == 2)
                         {
                             Hospital.registerNewPatient();

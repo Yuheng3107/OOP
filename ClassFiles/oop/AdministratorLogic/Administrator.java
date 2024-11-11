@@ -29,10 +29,10 @@ public class Administrator extends HospitalStaff implements StaffManagementInter
     private int age;
 
     /** The file path for the medicine list CSV file. */
-    private final String  medicineFilePath = "../Medicine_List.csv";
+    private final String  medicineFilePath = "Medicine_List.csv";
 
     /** The file path for the staff list CSV file. */
-    private final String staffFilePath = "../Staff_List.csv";
+    private final String staffFilePath = "Staff_List.csv";
 
     /** The file path for the staff credentials CSV file. */
     private final String credentialsFilePath = "StaffCredentialsDatabase.csv";

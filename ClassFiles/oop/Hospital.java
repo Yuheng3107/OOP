@@ -50,11 +50,11 @@ public class Hospital {
     /**
      * Path to the file containing patient data.
      */
-    private static final String patientFilePath = "../Patient_List.csv";
+    private static final String patientFilePath = "Patient_List.csv";
     /**
      * Path to the file containing staff data.
      */
-    private static final String staffFilePath = "../Staff_List.csv";
+    private static final String staffFilePath = "Staff_List.csv";
     /**
      * Path to the file containing patient login credentials.
      */
@@ -66,7 +66,7 @@ public class Hospital {
     /**
      * Path to the file containing medicine data.
      */
-    private static final String medFilePath = "../Medicine_List.csv";
+    private static final String medFilePath = "Medicine_List.csv";
 
     /**
      * Initializes the hospital system by loading data from files.
@@ -707,7 +707,7 @@ public class Hospital {
         String newEntry = id + "," + hashedPassword;
 
         try (FileWriter writer = new FileWriter(patientCredentialsDatabase, true)) { // Open file in append mode
-            writer.write("\n" + newEntry); // Append the new patient ID and hashed password on a new line
+            writer.write(newEntry); // Append the new patient ID and hashed password on a new line
             System.out.println("New patient credentials added successfully.");
         } catch (IOException e) {
             e.printStackTrace();
