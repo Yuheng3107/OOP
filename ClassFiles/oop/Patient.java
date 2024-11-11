@@ -1,7 +1,6 @@
 package oop;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import oop.UserLogic.Role;
 
@@ -205,13 +203,20 @@ public class Patient extends Role
         int day;
         Scanner sc = new Scanner(System.in);
         try{
+            System.out.println("\nNote: You can only view available appointment slots up to 2 months in advance.\n");
             System.out.println("Type the year to view available appointment slots:");
             year = sc.nextInt();
-            System.out.println("Type the month to view available appointment slots:");
+            System.out.println("Type the month to view available appointment slots: (1-12)");
             month = sc.nextInt();
             System.out.println("Type the day to view available appointment slots:");
             day = sc.nextInt();
             LocalDate date = LocalDate.of(year, month, day);
+            if (date.isBefore(LocalDate.now().plusDays(1)) || date.isAfter(LocalDate.now().plusDays(1).plusMonths(2)))
+            {
+                System.out.println("Error: Date must be within 2 months from tomorrow.");
+                System.out.println("Returning to main menu.");
+                return;
+            }
     
             // ensure the choice is valid
             while (true)
@@ -295,7 +300,7 @@ public class Patient extends Role
             Scanner sc;
             while (true)
             {
-                System.out.println("Which doctor do you want to schedule an appointment with? (enter index)");
+                System.out.println("Which doctor do you want to schedule an appointment with? (enter index) ");
                 Hospital.namesOfDoctors();
                 sc = new Scanner(System.in);
                 System.out.print("Choice: ");
@@ -309,6 +314,7 @@ public class Patient extends Role
                     break;
                 }
             }
+            System.out.println("\nNote: You can only view available appointment slots up to 2 months in advance.\n");
             System.out.println("Type the year to book appointment:");
             int year = sc.nextInt();
             System.out.println("Type the month to book appointment (1-12):");
@@ -316,9 +322,16 @@ public class Patient extends Role
             System.out.println("Type the day to book appointment:");
             int day = sc.nextInt();
             LocalDate date = LocalDate.of(year, month, day);
-            System.out.println("Type the start time of the appointment (24 hour clock)");
+            if (date.isBefore(LocalDate.now().plusDays(1)) || date.isAfter(LocalDate.now().plusDays(1).plusMonths(2))) //checking if date entered is within 2 months from tomorrow
+            {
+                System.out.println("Error: Date must be within 2 months from tomorrow.");
+                System.out.println("Returning to main menu.");
+                return;
+            }
+
+            System.out.println("Type the start time of the appointment (e.g. '14' for 2pm");
             int start = sc.nextInt();
-            System.out.println("Type the end time of the appointment (24 hour clock)");
+            System.out.println("Type the end time of the appointment (e.g. '14' for 2pm)");
             int end = sc.nextInt();
             TimeSlot timeSlot = new TimeSlot(date, LocalTime.of(start,0), LocalTime.of(end,0));
             
