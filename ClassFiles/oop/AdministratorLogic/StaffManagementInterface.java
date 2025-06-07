@@ -6,9 +6,9 @@ import oop.Gender;
  * Interface for managing hospital staff within the system.
  * This interface provides methods for adding, updating, removing, and displaying staff members,
  * as well as managing hospital staff overall.
- * @author: Kuang Yu Heng
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng
+ * @version 1.0
+ * @since 2024-11-09
  */
 public interface StaffManagementInterface {
     /**

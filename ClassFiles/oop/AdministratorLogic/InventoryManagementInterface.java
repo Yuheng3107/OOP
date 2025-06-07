@@ -5,9 +5,9 @@ import oop.MedicineStock;
  * Interface to define the methods for managing the inventory of medicines.
  * This interface is implemented by classes that provide functionality for 
  * adding, updating, viewing, and managing the stock of medicines in the inventory.
- * @author: Kuang Yu Heng
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng
+ * @version 1.0
+ * @since 2024-11-09
  */
 public interface InventoryManagementInterface {
     /**

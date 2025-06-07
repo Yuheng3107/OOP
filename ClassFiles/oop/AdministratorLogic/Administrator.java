@@ -20,9 +20,9 @@ import oop.StatusOfAppointment;
 /**
  * Represents an Administrator in the hospital system, managing hospital staff, appointments, and inventory.
  * This class implements interfaces for staff management, appointment management, and inventory management.
- * @author: Ryan Ching, Kuang Yu Heng
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Ryan Ching, Kuang Yu Heng
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class Administrator extends HospitalStaff implements StaffManagementInterface, AppointmentManagementInterface, InventoryManagementInterface {
     /** The age of the administrator. */

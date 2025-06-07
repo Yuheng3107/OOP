@@ -8,9 +8,9 @@ import oop.Hospital;
  * A replenishment request contains the name of the medicine, the amount requested,
  * and its approval status. The request can be approved by the administrator, which
  * updates the inventory accordingly.
- * @author: Kuang Yu Heng
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng
+ * @version 1.0
+ * @since 2024-11-09
  */
 public class ReplenishmentRequest {
     /** The amount of medicine requested for replenishment. */

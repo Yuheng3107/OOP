@@ -6,9 +6,9 @@ package oop.AdministratorLogic;
  * 
  * <p>Any class that implements this interface must provide an implementation for the 
  * {@link #viewAppointmentDetails()} method to display or retrieve the details of appointments.</p>
- * @author: Kuang Yu Heng
- * @version: 1.0
- * @since: 2024-11-09
+ * @author Kuang Yu Heng
+ * @version 1.0
+ * @since 2024-11-09
  */
 public interface AppointmentManagementInterface {
     /**
